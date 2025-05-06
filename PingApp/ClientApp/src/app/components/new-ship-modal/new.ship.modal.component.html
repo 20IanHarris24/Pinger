@@ -1,0 +1,22 @@
+<div class="modal-header">
+  <h4 class="modal-title">New Ship</h4>
+  <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss('Cross click')"></button>
+</div>
+
+
+<div class="modal-body">
+  <form [formGroup]="regForm">
+    <label for="name-Ship">ShipName :</label>
+    <input id="name-Ship" type="text" formControlName="name"/>
+
+    <label for="host-Addr">HostAddr :</label>
+    <input id="host-Addr" type="text" formControlName="hostAddr"/>
+  </form>
+</div>
+
+
+<div class="modal-footer">
+  <button type="button" class="btn btn-outline-purple" (click)="activeModal.close('Close click')">Close</button>
+  <button type="submit" [disabled]= "regForm.invalid" class="btn btn-outline-primary" (click) = "onSubmitAddShip()"  >Submit</button>
+  <button type="button" class="btn btn-outline-secondary" >Cancel</button>
+</div>

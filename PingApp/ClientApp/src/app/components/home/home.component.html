@@ -1,0 +1,43 @@
+<div class="page-header d-print-none">
+  <div class="container-xl">
+    <div class="row g-2 align-items-center">
+      <div class="col">
+        <h2 class="page-title">
+          DevOps
+        </h2>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="page-body mt-3">
+  <div class="container">
+    <h3>Ships list</h3>
+    <div class="row row-deck row-cards" style="min-height: 10rem">
+      <div class="col-3" *ngFor="let refreshStatus of ships$ | async ; trackBy: getShipId">
+        <div class="card">
+          <div class="card-body">
+            <h2 class="card-title">{{'Ship name:   ' + refreshStatus.name}}</h2>
+            <p class="card-text">{{'Ship id:   ' + refreshStatus.id}}</p>
+            <p class="card-text">{{refreshStatus.result}}</p>
+            <p class="card-text">{{'Hostaddr:   ' + refreshStatus.hostAddr}}</p>
+          </div>
+        </div>
+      </div>
+<!--      <div class="col-4">-->
+<!--        <div class="card">-->
+<!--          <div class="card-body" style="height: 10rem"></div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--      <div class="col-4">-->
+<!--        <div class="card">-->
+<!--          <div class="card-body" style="height: 10rem"></div>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--      <div class="col-12">-->
+<!--        <div class="card">-->
+<!--          <div class="card-body" style="height: 10rem"></div>-->
+<!--        </div>-->
+<!--      </div>-->
+    </div>
+  </div>
+</div>
