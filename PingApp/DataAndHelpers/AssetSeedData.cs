@@ -13,7 +13,6 @@ namespace PingApp.DataAndHelpers
 
 
                 ShipModel[] ships = SeedShipsDb(configuration);
-                // object[] shipObjectsList = ships.Cast<object>().ToArray();
                 await db.ShipModel.AddRangeAsync(ships);
                 Console.WriteLine($"Ships seeded.....");
 

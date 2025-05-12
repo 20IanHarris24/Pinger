@@ -25,8 +25,10 @@ namespace PingApp
                 // builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
                 builder.Services.AddSignalR();
                 builder.Services.AddHostedService<ShipStatusService>();
+                // builder.Services.AddDbContext<PingAppDbContext>(options =>
+                // options.UseNpgsql(builder.Configuration.GetConnectionString("DatabaseConnection")));
                 builder.Services.AddDbContext<PingAppDbContext>(options =>
-                options.UseNpgsql(builder.Configuration.GetConnectionString("DatabaseConnection")));
+                options.UseSqlite(builder.Configuration.GetConnectionString("DatabaseConnection")));
 
 
                 Log.Logger = new LoggerConfiguration().WriteTo.Console().CreateLogger();

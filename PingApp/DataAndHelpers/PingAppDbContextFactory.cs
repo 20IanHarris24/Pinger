@@ -18,7 +18,7 @@ namespace PingApp.DataAndHelpers
 
 
             var optionsBuilder = new DbContextOptionsBuilder<PingAppDbContext>();
-            optionsBuilder.UseNpgsql(dbConnectionString);
+            optionsBuilder.UseSqlite(dbConnectionString);
 
             return new PingAppDbContext(optionsBuilder.Options);
         }
