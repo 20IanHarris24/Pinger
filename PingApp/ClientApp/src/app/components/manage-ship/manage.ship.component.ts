@@ -1,13 +1,11 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import {
-  IShipModel,
-  ShipsClient,
-} from '../../services/api/pingapp-api.service';
+import {  IShipModel,   ShipsClient,} from '../../services/api/pingapp-api.service';
 import { ButtonComponent } from '../button/button.component';
 import { NewShipModalComponent } from '../new-ship-modal/new.ship.modal.component';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UpdateShipModalComponent } from '../update-ship-modal/update.ship.modal.component';
 import { BehaviorSubject } from 'rxjs';
+import {ButtonFunctionService} from '../../services/button.function.service';
 
 @Component({
   selector: 'app-manageShip',
@@ -16,49 +14,47 @@ import { BehaviorSubject } from 'rxjs';
   styleUrl: './manage.ship.component.scss',
 })
 export class ManageShipComponent {
-  actionType: 'New' | 'Update' | 'View All Ships' = 'New';
-  // allShips$ = new BehaviorSubject<IShipModel[]>([]);
-  @Output() getShipsSelect = new EventEmitter<IShipModel[]>();
-  @Output() getAllShips = new EventEmitter<void>();
 
-  constructor(
-    protected client: ShipsClient,
-    protected modalService: NgbModal
+  /*allShips$ = new BehaviorSubject<IShipModel[]>([]);
+  @Output() getShipsSelect = new EventEmitter<IShipModel[]>();
+  @Output() getAllShips = new EventEmitter<void>();*/
+
+  constructor(protected buttonFunctions: ButtonFunctionService
+    // protected client: ShipsClient,
+    // protected modalService: NgbModal
   ) {}
 
-  handleActionSelection(action: 'New' | 'Update' | 'View All Ships') {
+  handleActionSelection(action: 'New' | 'View All Ships') {
     console.log(`Action selected: ${action}`);
+    this.buttonFunctions.select(action);
 
-    switch (action) {
+    /*switch (action) {
       case 'New':
         this.openModalNew();
         break;
-      case 'Update':
+     /!* case 'Update':
         this.openModalUpdate();
-        break;
+        break;*!/
       case 'View All Ships':
-        this.getAllShips.emit();
-        console.log('showing all ships');
+        // this.getAllShips.emit();
+        this.onClickGetShips();
+        console.log('case: view all ships');
         break;
-    }
+    }*/
   }
 
-  openModalNew() {
+  /*openModalNew() {
     console.log('Opening modal for new ship registration');
     this.modalService.open(NewShipModalComponent);
-  }
+  }*/
 
-  openModalUpdate() {
-    console.log('Opening modal to update a ship');
-    this.modalService.open(UpdateShipModalComponent);
-  }
 
-  // onClickGetShips() {
-  //   console.log("button pressed get all ships");
-  //   // this.client.getAllShips().subscribe((ships) => {
-  //   //   console.log("Ships Loaded", ships);
-  //   //   this.allShips$.next(ships);
-  //   //   this.getShipsSelect.emit(ships);
-  //   // });
-  // }
+  /*onClickGetShips() {
+    console.log("button pressed get all ships");
+    this.client.getAllShips().subscribe((ships) => {
+      console.log("Ships Loaded", ships);
+      this.allShips$.next(ships);
+      this.getShipsSelect.emit(ships);
+    });
+  }*/
 }

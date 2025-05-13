@@ -1,0 +1,6 @@
+Admin page: 'view all ships button' to display database objects in the designated part of the screen
+Displayed all ships: on click off a ship object choose either update or delete (modal)
+Update: new modal
+Delete: modal message that the delete is successful
+New button: 'style model more'
+Remove update button in the choose action window

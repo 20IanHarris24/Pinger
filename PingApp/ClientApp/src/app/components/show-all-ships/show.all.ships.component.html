@@ -1,7 +1,7 @@
 
       <h2> Ship Database</h2>
-        <div class="row row-deck row-cards" style="min-height: 10rem">
-          <div class="col-4" *ngFor="let aShip of allShips | async">
+        <div class="row row-deck row-cards" style="min-height: 10rem" *ngIf="ships.length > 0">
+          <div class="col-4" *ngFor="let aShip of ships">
             <div class="card">
               <div class="card-body">
                 <h2 class="card-title">{{'Ship name:   ' + aShip.name}}</h2>
@@ -11,4 +11,7 @@
             </div>
           </div>
         </div>
+      <div *ngIf="ships.length === 0 ">
+        <p>No ships available</p>
+      </div>
 

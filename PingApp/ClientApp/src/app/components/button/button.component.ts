@@ -9,7 +9,7 @@ import { Component, EventEmitter, Output } from "@angular/core";
 export class ButtonComponent {
   // allShips$ = new BehaviorSubject<IShipModel[]>([]);
 
-  @Output() actionSelection = new EventEmitter<"New" | "Update" | "View All Ships">();
+  @Output() actionSelection = new EventEmitter<"New" | "View All Ships">();
 
   constructor() {}
 
@@ -23,7 +23,7 @@ export class ButtonComponent {
   //   });
   // }
 
-  onActionSelect(action: "New" | "Update" | "View All Ships"): void {
+  onActionSelect(action: "New" | "View All Ships"): void {
     this.actionSelection.emit(action);
     console.log(`button pressed - Emitting action: ${action}`);
   }
