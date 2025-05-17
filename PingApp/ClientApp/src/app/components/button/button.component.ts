@@ -9,37 +9,13 @@ import { Component, EventEmitter, Output } from "@angular/core";
 export class ButtonComponent {
   // allShips$ = new BehaviorSubject<IShipModel[]>([]);
 
-  @Output() actionSelection = new EventEmitter<"New" | "View All Ships">();
+  @Output() actionSelection = new EventEmitter<"New">();
 
   constructor() {}
 
-  // onClickGetShips(): void {
-  //   console.log("button pressed get all ships");
-  //
-  //   this._shipApi.getAllShips().subscribe((ships) => {
-  //     console.log("Ships Loaded", ships);
-  //     this.allShips$.next(ships);
-  //     this.getShipsSelect.emit(ships);
-  //   });
-  // }
-
-  onActionSelect(action: "New" | "View All Ships"): void {
+  onActionSelect(action: "New" ): void {
     this.actionSelection.emit(action);
-    console.log(`button pressed - Emitting action: ${action}`);
+    // console.log(`button pressed - Emitting action: ${action}`);
   }
 
-  // registerShip() {
-  //   this.actionSelection.emit("New");
-  //   console.log("button pressed register new ship");
-  // }
-  //
-  // updateShip() {
-  //   this.actionSelection.emit("Update");
-  //   console.log("button pressed update ship");
-  // }
-  //
-  // displayAllShips() {
-  //   this.actionSelection.emit("View All Ships");
-  //   console.log("button pressed display all ships");
-  // }
 }

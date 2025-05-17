@@ -172,7 +172,8 @@ export class ShipsClient {
         }));
     }
 
-    protected processDeleteShip(response: HttpResponseBase): Observable<FileResponse> {
+
+  protected processDeleteShip(response: HttpResponseBase): Observable<FileResponse> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :

@@ -4,7 +4,7 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { ShipModel, ShipsClient } from '../../services/api/pingapp-api.service';
 
 @Component({
-  selector: 'app-modal-manage-ship',
+  selector: 'app-newShipModal',
   imports: [ReactiveFormsModule],
   standalone: true,
   templateUrl: './new.ship.modal.component.html',

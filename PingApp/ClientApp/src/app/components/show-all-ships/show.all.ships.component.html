@@ -1,17 +1,22 @@
 
-      <h2> Ship Database</h2>
-        <div class="row row-deck row-cards" style="min-height: 10rem" *ngIf="ships.length > 0">
-          <div class="col-4" *ngFor="let aShip of ships">
-            <div class="card">
-              <div class="card-body">
+     <h2> Ship Database</h2>
+       <div *ngIf="(ships$ | async) as ships; else noShips">
+         <div *ngIf="ships.length > 0;">
+          <div class="row row-deck row-cards" style="min-height: 10rem">
+           <div class="col-4" *ngFor="let aShip of ships$ | async; let i = index">
+            <div class="card" >
+              <div class="card-body" (mouseenter) = "onMouseOver(i)" (mouseleave)="onMouseOff()">
                 <h2 class="card-title">{{'Ship name:   ' + aShip.name}}</h2>
-                <!--                    <p class="card-text">{{'Ship id:   ' + aNew.id}}</p>-->
-                <!--                    <p class="card-text">{{'Hostaddr:   ' + aNew.hostAddr}}</p>-->
+                <span *ngIf = "i == hoverIndex">
+                    <button class="btn btn-md btn-outline-primary" type="button" (click)="buttonService.select('Edit', aShip)">Edit</button>
+                    <button class="btn btn-md btn-outline-primary" type="button" (click)="buttonService.select('Delete', aShip)">Delete</button>
+                </span>
               </div>
             </div>
           </div>
         </div>
-      <div *ngIf="ships.length === 0 ">
-        <p>No ships available</p>
       </div>
-
+     </div>
+      <ng-template #noShips>
+       <p>No ships displayed</p>
+     </ng-template>

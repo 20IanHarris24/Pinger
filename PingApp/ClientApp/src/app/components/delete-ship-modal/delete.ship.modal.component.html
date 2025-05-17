@@ -1,0 +1,20 @@
+<div class="modal-header">
+  <h4 class="modal-title">DELETE</h4>
+<!--  <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss('Cross click')"></button>-->
+</div>
+
+
+<div class="modal-body">
+  <ng-container [ngSwitch]="deleteStatus">
+        <p *ngSwitchCase="'idle'">🛑 Are you sure? Once deleted the information cannot be recovered 🛑</p>
+        <p *ngSwitchCase="'loading'">⏳ Deleting ship, please wait...</p>
+        <p *ngSwitchCase="'success'">🟢 Ship successfully deleted! 🚢</p>
+        <p *ngSwitchCase="'error'" class="text-danger">❌ {{ errorMessage }}</p>
+  </ng-container>
+</div>
+
+
+<div class="modal-footer" *ngIf="deleteStatus !== 'loading'">
+  <button type="button" class="btn btn-outline-purple" (click) = "activeModal.dismiss('Cancel')">Cancel</button>
+  <button type="button" class="btn btn-outline-secondary" (click) = "confirm()">Confirm</button>
+</div>

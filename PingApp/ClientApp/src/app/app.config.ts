@@ -10,7 +10,8 @@ import { API_BASE_URL } from './services/api/pingapp-api.service';
 import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { shipReducer } from './state/reducers/ship.reducers';
-// import { ShipEffects } from "./state/effects/ship.effects";
+import {ShipEffects} from './state/effects/ship.effects';
+
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -22,7 +23,7 @@ export const appConfig: ApplicationConfig = {
         },
         {}
       ),
-      EffectsModule.forRoot() //shipEffects
+      EffectsModule.forRoot([ShipEffects]) //shipEffects
     ),
     provideRouter(routes),
     provideHttpClient(),
