@@ -5,7 +5,7 @@
 
 
 <div class="modal-body">
-  <form [formGroup]="regForm">
+  <form [formGroup]="newForm">
     <label for="name-Ship">ShipName :</label>
     <input id="name-Ship" type="text" formControlName="name"/>
 
@@ -17,6 +17,6 @@
 
 <div class="modal-footer">
   <button type="button" class="btn btn-outline-purple" (click)="activeModal.close('Close click')">Close</button>
-  <button type="submit" [disabled]= "regForm.invalid" class="btn btn-outline-primary" (click) = "onSubmitAddShip()"  >Submit</button>
+  <button type="submit" [disabled]= "newForm.invalid" class="btn btn-outline-primary" (click) = "onAddShip()"  >Submit</button>
   <button type="button" class="btn btn-outline-secondary" >Cancel</button>
 </div>

@@ -17,7 +17,6 @@ namespace PingApp.Controllers
 
         public ShipController(PingAppDbContext shipContext,  ILogger<ShipController> logger)
         {
-
             _shipContext = shipContext;
             _logger = logger;
         }
@@ -29,7 +28,7 @@ namespace PingApp.Controllers
         {
             var allShips = await _shipContext.ShipModel.ToListAsync();
 
-            if (allShips == null || allShips.Count == 0)
+            if (allShips.Count == 0)
             {
                 return NotFound("No ships found");
             }
@@ -40,8 +39,9 @@ namespace PingApp.Controllers
 
 
 
-        [HttpGet("/shipid/{id}")]
-        public async Task<ActionResult<IEnumerable<ShipModel>>> GetShipsByShipId(Guid id)
+        [HttpGet("/shipid/{id:guid}")]
+        
+        public async Task<ActionResult<ShipModel>> GetShipByShipId(Guid id)
         {
             try
             {
@@ -49,26 +49,26 @@ namespace PingApp.Controllers
                 var ship = await _shipContext.ShipModel
                     .Where(ship => ship.Id == id)
                     .AsNoTracking()
-                    .ToListAsync();
+                    .FirstOrDefaultAsync();
 
 
-                if (!ship.Any())
+                if (ship == null)
                 {
-                    return NotFound("No ship found with that specified name.");
+                    return NotFound("No ship found with that specified Id.");
                 }
-
+            
                 return Ok(ship);
             }
             catch (Exception ex)
             {
                 // Log the exception (implement logging as needed)
-                _logger.LogError(ex, "Error fetching ship {shipId}", id);
+                _logger.LogError(ex, "Error fetching ship : {id}",id);
 
                 return StatusCode(500, "Internal server error occurred while processing the request.");
             }
         }
 
-        [HttpDelete("{id}")]
+        [HttpDelete("/{id:guid}")]
         public async Task<IActionResult> DeleteShip(Guid id)
         {
             var selectedShip = await _shipContext.ShipModel.FindAsync(id);
@@ -85,26 +85,34 @@ namespace PingApp.Controllers
         }
 
         [HttpPost("/register")]
-        public async Task<ActionResult<ShipModel>> RegisterShip(ShipModel regShipModel)
+        public async Task<ActionResult<ShipNewDto>> RegisterShip([FromBody] ShipNewDto regShipModel)
         {
             var regShip = new ShipModel {Name = regShipModel.Name, HostAddr = regShipModel.HostAddr };
             _shipContext.ShipModel.Add(regShip);
             await _shipContext.SaveChangesAsync();
 
-            return Ok(regShip);
-        }
+            return Ok(
+            
+            new ShipNewDto
+            {
+                Id = regShip.Id,
+                Name = regShip.Name,
+                HostAddr = regShip.HostAddr
+                    
+            });
+       }
 
 
 
 
 
         [HttpPut("/{id}")]
-        public async Task<IActionResult> UpdateShipModel( Guid id, [FromBody] ShipUpdateDto shipModel)
+        public async Task<IActionResult> UpdateShipModel(Guid id, [FromBody] ShipUpdateDto shipModel)
         {
-            if (id != shipModel.Id)
-            {
-                return BadRequest();
-            }
+            // if (id != shipModel.)
+            // {
+            //     return BadRequest();
+            // }
 
             if (!ModelState.IsValid)
             {

@@ -5,10 +5,18 @@ import {
   deleteShip,
   deleteShipFailure,
   deleteShipSuccess,
-  loadAllShips, loadAllShipsFailure,
-  loadAllShipsSuccess
+  loadAllShips,
+  loadAllShipsFailure,
+  loadAllShipsSuccess,
+  loadShip,
+  loadShipFailure,
+  loadShipSuccess,
+  registerShip, registerShipFailure, registerShipSuccess,
+  updateShip,
+  updateShipFailure,
+  updateShipSuccess
 } from '../actions/ship.actions';
-import {IShipResult, ShipsClient} from '../../services/api/pingapp-api.service';
+import {IShipResult, ShipModel, ShipsClient, ShipUpdateDto} from '../../services/api/pingapp-api.service';
 import {ButtonFunctionService} from '../../services/button.function.service';
 
 
@@ -83,6 +91,107 @@ export class ShipEffects {
     )
   );
 
+  loadShip$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(loadShip),
+      tap(() => {
+        console.log('[Effect] loadShip$ fired')
+       }),
+      switchMap(({ id }) =>
+        this.client.getShipByShipId(id).pipe(
+          map((ship: ShipModel) => {
+            const enrichedShip: IShipResult =
+              {
+              ...ship.toJSON(),
+              result: ''
+            };
+            console.log('[Effect] Enriched ship:', enrichedShip);
+            return loadShipSuccess({ship: enrichedShip});
+          }),
+          tap(() => {
+            console.log('[Error] No enriched ship found')
+          }),
+           catchError((error) => of(loadShipFailure({ error })))
+        )
+      )
+    )
+  );
+
+  loadShipSuccess$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(loadShipSuccess),
+      tap(() => {
+        console.log('[Effect] loadShipSuccess$ fired');
+      })
+    ),
+    { dispatch: false }
+  );
+
+
+  registerShip$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(registerShip),
+      tap(() => {
+        console.log('[Effect] registerShip$ fired');
+      }),
+      switchMap(({ newShipDto }) =>
+        this.client.registerShip(newShipDto).pipe(
+          map((response) => registerShipSuccess({ newShip: response })),
+          tap(() => {
+            console.log('[Error] No ship registered')
+          }),
+
+
+          catchError((error) => of(registerShipFailure({ error })))
+        )
+      )
+    )
+  );
+
+  registerShipSuccess$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(registerShipSuccess),
+      map(() => loadAllShips())
+    )
+  );
+
+
+
+
+
+
+
+  updateShip$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(updateShip),
+      tap(() => {
+        console.log('[Effect] updateShip$ fired');
+      }),
+      switchMap(({ id, updateDto }) =>
+        this.client.updateShipModel(id, updateDto).pipe(
+          map(() => updateShipSuccess()),
+          tap(() => {
+            console.log('[Effect] updateShipSuccess dispatched');
+          }),
+          catchError((error) => {
+            console.log('[Error] Ship update failed');
+            return of(updateShipFailure({ error }));
+          })
+        )
+      )
+    )
+  );
+
+
+  updateShipSuccess$ = createEffect(() =>
+      this.actions$.pipe(
+        ofType(updateShipSuccess),
+        map(() => loadAllShips()),
+        tap(() => {
+          console.log('[Effect] updateShipSuccess$ fired');
+        })
+      ),
+  );
 
 
 }

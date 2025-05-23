@@ -6,7 +6,7 @@
            <div class="col-4" *ngFor="let aShip of ships$ | async; let i = index">
             <div class="card" >
               <div class="card-body" (mouseenter) = "onMouseOver(i)" (mouseleave)="onMouseOff()">
-                <h2 class="card-title">{{'Ship name:   ' + aShip.name}}</h2>
+                <h2 class="card-title">{{'Ship title:   ' + aShip.name}}</h2>
                 <span *ngIf = "i == hoverIndex">
                     <button class="btn btn-md btn-outline-primary" type="button" (click)="buttonService.select('Edit', aShip)">Edit</button>
                     <button class="btn btn-md btn-outline-primary" type="button" (click)="buttonService.select('Delete', aShip)">Delete</button>

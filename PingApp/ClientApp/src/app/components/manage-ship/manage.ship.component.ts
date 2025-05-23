@@ -13,8 +13,8 @@ export class ManageShipComponent {
 
    constructor(protected buttonServices: ButtonFunctionService) {}
 
-  handleActionSelection(action: 'New' | 'View All Ships') {
+  handleActionSelection(action: 'New') {
     // console.log(`Action selected: ${action}`);
-    this.buttonServices.selectAction(action);
+    this.buttonServices.select(action);
   }
 }

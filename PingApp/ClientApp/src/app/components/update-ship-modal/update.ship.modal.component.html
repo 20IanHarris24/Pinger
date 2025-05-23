@@ -1,1 +1,20 @@
-<p>update-ship-modal works!</p>
+<div class="modal-header">
+  <h4 class="modal-title">EDIT</h4>
+  <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss('Cross click')"></button>
+</div>
+
+
+<div class="modal-body">
+  <form [formGroup]="updateForm">
+    <label for="name-Ship">ShipName :</label>
+    <input id="name-Ship" type="text" formControlName="name" />
+    <label for="host-Addr">HostAddr :</label>
+    <input id="host-Addr" type="text" formControlName="hostAddr"/>
+  </form>
+</div>
+
+
+<div class="modal-footer">
+  <button type="submit" [disabled]= "!updateForm.dirty || updateForm.invalid" class="btn btn-outline-primary" (click) = "onSubmit()">Submit</button>
+  <button type="button" class="btn btn-outline-secondary" (click)="onCancel()" >Cancel</button>
+</div>

@@ -2,7 +2,7 @@ import { Injectable} from '@angular/core';
 import {IShipModel} from './api/pingapp-api.service';
 import { BehaviorSubject} from 'rxjs';
 import {NewShipModalComponent} from '../components/new-ship-modal/new.ship.modal.component';
-// import {UpdateShipModalComponent} from '../components/update-ship-modal/update.ship.modal.component';
+import {UpdateShipModalComponent} from '../components/update-ship-modal/update.ship.modal.component';
 import {DeleteShipModalComponent} from '../components/delete-ship-modal/delete.ship.modal.component';
 import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 
@@ -20,6 +20,7 @@ export class ButtonFunctionService {
    _allShips$: BehaviorSubject<IShipModel[]>;
 
 
+
   constructor(protected modalService: NgbModal) {
 
     this._allShips$ = new BehaviorSubject<IShipModel[]>([]);
@@ -28,68 +29,31 @@ export class ButtonFunctionService {
 
   }
 
-  selectAction(action: 'New'|'View All Ships') {
-    //console.log(`Action requested: ${action}`);
 
+  select(action: 'New'): void;
+  select(action: 'Edit' | 'Delete', shipInFocus: IShipModel): void;
+  select(action: 'New' | 'Edit' | 'Delete', shipInFocus?: IShipModel): void {
     switch (action) {
       case 'New':
         this.openModalNew();
-      break;
-      // case 'View All Ships':
-      //   this.callAllShips();
-      // break;
-    }
-  }
-
-
-  select(action: 'Edit'|'Delete', shipInFocus: IShipModel) {
-    //console.log(`Action requested: ${action}`);
-
-    switch (action) {
+        break;
       case 'Edit':
-         this.openModalUpdate();
-         console.log('Action:', action);
-         break;
+        if (shipInFocus) {
+          this.openModalUpdate(shipInFocus.id);
+          console.log('ship to be updated', shipInFocus.id);
+        }
+        break;
       case 'Delete':
-         this.openModalDelete(shipInFocus.id);
-         console.log('Action:', action);
-         console.log('ship to be deleted', shipInFocus.id);
-         break;
+        if (shipInFocus) {
+          this.openModalDelete(shipInFocus.id);
+          console.log('ship to be deleted', shipInFocus.id);
+        }
+        break;
     }
   }
 
 
-  // callAllShips() {
-  //   //console.log("button pressed get all ships");
-  //   return this.client.getAllShips().subscribe((ships) => {
-  //     this._allShips$.next(ships);
-  //     //console.log("Ships Loaded", ships);
-  //     });
-  // }
 
-
-  // confirmDeleteShip(id: string) {
-  //  console.log('ship dB id:', id);
-  //  this._deleteStatus$.next('loading');
-  //
-  //  this.client.deleteShip(id).subscribe({
-  //     next: (response: FileResponse | null) => {
-  //       if (response?.status === 200 || response && response?.status === 204 || response === null) {
-  //         this._deleteStatus$.next('success');
-  //         console.log('Delete Success:',response?.status ?? 'null (204)');
-  //       } else {
-  //         this._deleteStatus$.next('error');
-  //         console.log('Unexpected response code:',response?.status);
-  //       }
-  //
-  //     },
-  //     error: (err) => {
-  //       this._deleteStatus$.next('error');
-  //       this._deleteErrorMessage$.next(err.message('Unexpected error.'));
-  //     }
-  //
-  //   });
-  // }
 
   openModalNew() {
     //console.log('Opening modal for new ship registration');
@@ -97,9 +61,11 @@ export class ButtonFunctionService {
   }
 
 
-  openModalUpdate() {
+  openModalUpdate(id:string) {
     console.log('Opening modal to update a ship');
-    // const modalRef = this.modalService.open(UpdateShipModalComponent);
+    console.log('object in updateModal', id);
+    const modalRef = this.modalService.open(UpdateShipModalComponent);
+    modalRef.componentInstance.editShipId = id;
 
   }
 
@@ -112,5 +78,8 @@ export class ButtonFunctionService {
 
 
   }
+
+
+
 
 }

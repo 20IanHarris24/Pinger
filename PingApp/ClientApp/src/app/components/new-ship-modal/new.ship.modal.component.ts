@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { ShipModel, ShipsClient } from '../../services/api/pingapp-api.service';
+import {ShipNewDto} from '../../services/api/pingapp-api.service';
+import {Store} from '@ngrx/store';
+import {registerShip} from '../../state/actions/ship.actions';
 
 @Component({
   selector: 'app-newShipModal',
@@ -11,26 +13,29 @@ import { ShipModel, ShipsClient } from '../../services/api/pingapp-api.service';
   styleUrl: './new.ship.modal.component.scss',
 })
 export class NewShipModalComponent {
-  private _shipRegSet = new ShipModel();
-  protected regForm: FormGroup;
+
+  private _newShip = new ShipNewDto();
+  protected newForm!: FormGroup;
 
   constructor(
-    protected activeModal: NgbActiveModal,
-    private _shipApi: ShipsClient
-  ) {
-    this.regForm = new FormGroup({
+    protected activeModal: NgbActiveModal, protected store: Store)
+  {
+    this.newForm = new FormGroup({
       name: new FormControl<string>('', { nonNullable: true }),
       hostAddr: new FormControl<string>('', { nonNullable: true }),
     });
   }
 
-  onSubmitAddShip(): void {
+  onAddShip(): void {
     console.log('button pressed add ship');
 
-    if (this.regForm.valid) {
-      this._shipRegSet = ShipModel.fromJS(this.regForm.value);
-      console.log(this.regForm.value);
-      this._shipApi.registerShip(this._shipRegSet).subscribe();
+    if (this.newForm.valid) {
+
+      this._newShip.name = this.newForm.controls['name'].value;
+      this._newShip.hostAddr = this.newForm.controls['hostAddr'].value;
+      console.log(this._newShip);
+      this.store.dispatch(registerShip({newShipDto: this._newShip}));
+      this.newForm.reset();
     }
   }
 }

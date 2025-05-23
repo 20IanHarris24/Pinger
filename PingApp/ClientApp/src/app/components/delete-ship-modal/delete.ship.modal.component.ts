@@ -52,7 +52,6 @@ export class DeleteShipModalComponent {
   }
 
   confirm(): void {
-    // this.buttonServices.confirmDeleteShip(this.chosenShipToDelete);
     this.store.dispatch(deleteShip({ id: this.chosenShipToDelete }));
   }
 
