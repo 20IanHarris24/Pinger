@@ -1,5 +1,5 @@
 import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {catchError, map, of, switchMap, tap} from 'rxjs';
+import {catchError, delay, map, mergeMap, of, switchMap, tap} from 'rxjs';
 import {inject, Injectable} from '@angular/core';
 import {
   deleteShip,
@@ -11,12 +11,12 @@ import {
   loadShip,
   loadShipFailure,
   loadShipSuccess,
-  registerShip, registerShipFailure, registerShipSuccess,
+  registerShip, registerShipFailure, registerShipSuccess, setAddedShipId, setEditedShipId,
   updateShip,
   updateShipFailure,
   updateShipSuccess
 } from '../actions/ship.actions';
-import {IShipResult, ShipModel, ShipsClient, ShipUpdateDto} from '../../services/api/pingapp-api.service';
+import {IShipModel, IShipResult, ShipModel, ShipsClient} from '../../services/api/pingapp-api.service';
 import {ButtonFunctionService} from '../../services/button.function.service';
 
 
@@ -91,6 +91,18 @@ export class ShipEffects {
     )
   );
 
+  loadAllShipsSuccess$ = createEffect(() =>
+      this.actions$.pipe(
+        ofType(loadAllShipsSuccess),
+        tap((ships) => {
+          console.log('[Effect] loadAllShipsSuccess$ fired and API returned ships: ', ships);
+        })
+      ),
+    { dispatch: false }
+  );
+
+
+
   loadShip$ = createEffect(() =>
     this.actions$.pipe(
       ofType(loadShip),
@@ -151,12 +163,21 @@ export class ShipEffects {
   registerShipSuccess$ = createEffect(() =>
     this.actions$.pipe(
       ofType(registerShipSuccess),
-      map(() => loadAllShips())
-    )
+      mergeMap(({newShip}) => [
+        loadAllShips(),
+        setAddedShipId({idTrack: newShip.id}),
+    ])
+   )
   );
 
 
-
+  clearAddedShipId$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(setAddedShipId),
+      delay(3000),
+      map(() => setAddedShipId({ idTrack: null }))
+    )
+  );
 
 
 
@@ -169,7 +190,7 @@ export class ShipEffects {
       }),
       switchMap(({ id, updateDto }) =>
         this.client.updateShipModel(id, updateDto).pipe(
-          map(() => updateShipSuccess()),
+          map((response: IShipModel) => updateShipSuccess({ editShip: response })),
           tap(() => {
             console.log('[Effect] updateShipSuccess dispatched');
           }),
@@ -183,17 +204,28 @@ export class ShipEffects {
   );
 
 
+
   updateShipSuccess$ = createEffect(() =>
-      this.actions$.pipe(
-        ofType(updateShipSuccess),
-        map(() => loadAllShips()),
-        tap(() => {
-          console.log('[Effect] updateShipSuccess$ fired');
-        })
-      ),
+    this.actions$.pipe(
+      ofType(updateShipSuccess),
+      tap(() => {
+        console.log('[Effect] updateShipSuccess$ fired');
+      }),
+      mergeMap(({ editShip }) => [
+        loadAllShips(),
+        setEditedShipId({ idEdit: editShip.id }),
+      ])
+    )
   );
 
 
+
+  clearEditedShipId$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(setEditedShipId),
+      delay(3000),
+      map(() => setEditedShipId({ idEdit: null }))
+    )
+  );
+
 }
-
-

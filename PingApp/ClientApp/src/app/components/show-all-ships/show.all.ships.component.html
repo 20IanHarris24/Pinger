@@ -1,22 +1,69 @@
 
-     <h2> Ship Database</h2>
-       <div *ngIf="(ships$ | async) as ships; else noShips">
-         <div *ngIf="ships.length > 0;">
+     <h2> Current Ship Database</h2>
+
+     <div class="spinner_pos">
+
+
+     <ng-container  *ngIf="viewModel$ | async as vm">
+       <ng-container *ngIf="vm.loading; else showShips">
+         <app-spinner></app-spinner>
+       </ng-container>
+
+
+
+      <ng-template #showShips>
+       <ng-container *ngIf="vm.ships.length >0; else noShips">
           <div class="row row-deck row-cards" style="min-height: 10rem">
-           <div class="col-4" *ngFor="let aShip of ships$ | async; let i = index">
-            <div class="card" >
-              <div class="card-body" (mouseenter) = "onMouseOver(i)" (mouseleave)="onMouseOff()">
-                <h2 class="card-title">{{'Ship title:   ' + aShip.name}}</h2>
-                <span *ngIf = "i == hoverIndex">
-                    <button class="btn btn-md btn-outline-primary" type="button" (click)="buttonService.select('Edit', aShip)">Edit</button>
-                    <button class="btn btn-md btn-outline-primary" type="button" (click)="buttonService.select('Delete', aShip)">Delete</button>
-                </span>
+            <div class="col-4" *ngFor="let aShip of vm.ships; let i = index">
+            <div class="card" [ngClass]="{
+            'flash-new': (newlyAddedShipId$ | async) === aShip.id, 'flash-edit': (newlyEditedShipId$ | async) === aShip.id}">
+              <div class="card-body position-relative" (mouseenter) = "onMouseOver(i)" (mouseleave)="onMouseOff()">
+                <h2 class="card-title">{{'Ship name:   ' + aShip.name}}</h2>
+
+                <!-- Tooltip info box -->
+                <div *ngIf="i === hoverIndex" class="card-tooltip card-tooltip-background">
+
+                 <div class="mb-3">
+                   <label for="id" class="form-label">Id</label>
+                   <div class="input-group">
+                      <span class="input-group-text"><i class="ti ti-id"></i></span>
+                      <input id= id type="text" class="form-control" [value] = "aShip.id" readonly/>
+                    </div>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="name-Ship" class="form-label">Ship Name</label>
+                    <div class="input-group">
+                      <span class="input-group-text"><i class="ti ti-ship"></i></span>
+                      <input id="name-Ship" type="text" class="form-control" [value]="aShip.name" readonly/>
+                    </div>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="host-Addr" class="form-label">Host Address</label>
+                    <div class="input-group">
+                      <span class="input-group-text">https://</span>
+                      <input id="host-Addr" type="text" class="form-control"
+                             [value]="aShip.hostAddr" readonly/>
+                    </div>
+                  </div>
+
+                  <div class="btn-position">
+                    <button class="btn btn-md btn-ghost-info" type="button" (click)="buttonService.select('Edit', aShip)"><i class="ti ti-edit"></i>Edit</button>
+                    <button class="btn btn-md btn-ghost-danger" type="button" (click)="buttonService.select('Delete', aShip)"><i class="ti ti-trash"></i>Delete</button>
+                  </div>
+
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+     </ng-container>
+     </ng-template>
+     </ng-container>
      </div>
-      <ng-template #noShips>
-       <p>No ships displayed</p>
+
+
+     <ng-template #noShips>
+       <h2>No ships available</h2>
      </ng-template>

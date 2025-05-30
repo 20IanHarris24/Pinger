@@ -1,10 +1,8 @@
-rearrange the card html for displaying the ship
-Button spacing when more than one button
 Admin: spacing on the card general format
-Admin: implement update modal
-Admin: remove view all ships button now auto rendering
-Update: format(if it works): new modal
-Delete: modal message that the delete is successful
-New button: style modal and form layout
-New Modal: remove close button and close X
-float Modal over the selected ship object on admin page
+Add Modal: allow multiple input without closing the window and re-opening(DONE, but Block-aria error?)
+pagination for showing ships on admin page(?)
+loading spinners(DONE)
+colour setting (Tabler.io)
+https:// for pointing to the backend(?)
+error management
+log-in page and auth?

@@ -1,9 +1,9 @@
-import { Component } from '@angular/core';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import {Component, Input} from '@angular/core';
+import {NgbActiveModal, NgbModal} from '@ng-bootstrap/ng-bootstrap';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import {ShipNewDto} from '../../services/api/pingapp-api.service';
 import {Store} from '@ngrx/store';
 import {registerShip} from '../../state/actions/ship.actions';
+import {AddAnotherShipModalComponent} from '../addanother-ship-modal/addanother.ship.modal.component';
 
 @Component({
   selector: 'app-newShipModal',
@@ -14,28 +14,56 @@ import {registerShip} from '../../state/actions/ship.actions';
 })
 export class NewShipModalComponent {
 
-  private _newShip = new ShipNewDto();
   protected newForm!: FormGroup;
+  @Input() result!: string;
 
   constructor(
-    protected activeModal: NgbActiveModal, protected store: Store)
-  {
+    protected activeModal: NgbActiveModal, protected modalService: NgbModal, protected store: Store) {
     this.newForm = new FormGroup({
-      name: new FormControl<string>('', { nonNullable: true }),
-      hostAddr: new FormControl<string>('', { nonNullable: true }),
+      name: new FormControl<string>('', {nonNullable: true}),
+      hostAddr: new FormControl<string>('', {nonNullable: true}),
     });
   }
 
+
   onAddShip(): void {
-    console.log('button pressed add ship');
 
-    if (this.newForm.valid) {
+    if (!this.newForm.valid) {
+       return;
+    }
 
-      this._newShip.name = this.newForm.controls['name'].value;
-      this._newShip.hostAddr = this.newForm.controls['hostAddr'].value;
-      console.log(this._newShip);
-      this.store.dispatch(registerShip({newShipDto: this._newShip}));
+    const newShip = {...this.newForm.value};
+
+      // console.log('dispatching a new ship', newShip);
+      this.store.dispatch(registerShip({newShipDto: newShip}));
+      this.newForm.reset();
+
+      const modalRef = this.modalService.open(AddAnotherShipModalComponent);
+
+      modalRef.result.then((result) => {
+        // console.log(result);
+          if (result.toLowerCase() === 'yes') {
+            // console.log('User wants to add another ship — keeping modal open');
+            this.newForm.reset();
+            this.newForm.markAsPristine();
+            this.newForm.markAsUntouched();
+            this.newForm.updateValueAndValidity();
+          } else {
+            // console.log('User said no — closing Add Ship modal');
+            this.activeModal.close();
+          }
+        },
+
+        () => {
+          this.activeModal.close();
+        }
+      );
+    }
+
+
+    onAddCancel(): void {
+      console.log('button pressed cancel input ship');
       this.newForm.reset();
     }
+
   }
-}

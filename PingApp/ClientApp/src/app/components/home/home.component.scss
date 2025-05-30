@@ -1,1 +1,28 @@
-//@import 'node_modules/@tabler/icons-webfont/dist/tabler-icons.scss';
+.spinner_pos{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+}
+
+
+.status-success {
+  //background-color: #d4edda; /* light green */
+  background-color: #88d4ab; /* light green */
+  color: #155724; /* dark green text */
+}
+
+.status-timeout {
+  //background-color: #fff3cd; /* light orange */
+  //background-color: #fed8b1; /* light orange */
+  background-color: #ffd580; /* light orange */
+  color: #856404; /* dark orange text */
+}
+
+.status-error {
+  background-color: #f8d7da; /* light red */
+  color: #721c24; /* dark red text */
+}
+
+

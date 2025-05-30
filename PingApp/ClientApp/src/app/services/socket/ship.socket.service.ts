@@ -30,9 +30,7 @@ export class ShipSocketService {
         this._displayScreenConnection.on(
           'DisplayShips',
           (ships: ShipResult[]) => {
-            // ships.forEach((ship) => console.log("Entity before upsert:", ship));
-
-            this._store.dispatch(
+             this._store.dispatch(
               upsertManyShips({
                 ships: ships,
               })

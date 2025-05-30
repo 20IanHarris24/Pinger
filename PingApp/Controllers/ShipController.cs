@@ -1,3 +1,4 @@
+
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PingApp.DataAndHelpers;
@@ -103,23 +104,19 @@ namespace PingApp.Controllers
        }
 
 
+        [HttpPut("{id}")]
+        [ProducesResponseType(typeof(ShipModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
 
-
-
-        [HttpPut("/{id}")]
-        public async Task<IActionResult> UpdateShipModel(Guid id, [FromBody] ShipUpdateDto shipModel)
+        public async Task<ActionResult<ShipModel>> UpdateShipModel(Guid id, [FromBody] ShipUpdateDto shipModel)
         {
-            // if (id != shipModel.)
-            // {
-            //     return BadRequest();
-            // }
-
+            
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var current = await _shipContext.ShipModel.FirstOrDefaultAsync(sm => sm.Id == id);
+            ShipModel? current = await _shipContext.ShipModel.FirstOrDefaultAsync(sm => sm.Id == id);
 
             if (current == null)
             {
@@ -131,15 +128,31 @@ namespace PingApp.Controllers
 
             _shipContext.Entry(current).State = EntityState.Modified;
 
-            await _shipContext.SaveChangesAsync();
-
-
-            return Ok(new
+            try
             {
-                Message = "Ship object updated successfully",
-                Data = current
+                
+                await _shipContext.SaveChangesAsync();
+                
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!await _shipContext.ShipModel.AnyAsync(sm => sm.Id == id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+            return Ok(current);
 
-            });
+            // return Ok( new
+            // {
+            //     Message = "Ship object updated successfully",
+            //     Data = current
+            //
+            // });
         }
 
 

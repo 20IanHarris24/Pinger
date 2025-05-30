@@ -101,7 +101,7 @@ namespace PingApp.BackgroundServices
             Id = ship.Id,
             Name = ship.Name,
             HostAddr = ship.HostAddr,
-            Result = $"Result: {result.Status.ToString()}. Time: {roundTrip} ms."
+            Result = $"{result.Status.ToString()}. Time: {roundTrip} ms."
         };
     }
     }

@@ -1,0 +1,23 @@
+.modal-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+
+
+.ti-alert-hexagon {
+  margin-left: 10px;
+  margin-right: 10px;
+  color: #006400;
+  font-size: 35px;
+}
+
+.message {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  font-size: 20px;
+
+}
