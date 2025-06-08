@@ -6,3 +6,4 @@ colour setting (Tabler.io)
 https:// for pointing to the backend(?)
 error management
 log-in page and auth?
+testsuite

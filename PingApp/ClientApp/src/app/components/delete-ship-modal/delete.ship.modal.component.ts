@@ -24,6 +24,8 @@ export class DeleteShipModalComponent {
   private _sub: Subscription;
   deleteStatus: DeleteStatus = 'idle';
   errorMessage: string = '';
+  isConfirmed: boolean = false;
+
 
   @Input() chosenShipToDelete!: string;
 
@@ -37,7 +39,7 @@ export class DeleteShipModalComponent {
         setTimeout(() => {
           this.activeModal.dismiss('Deleted');
           this._sub.unsubscribe();
-        }, 1500);
+        }, 1000);
       }
 
     });
@@ -52,7 +54,9 @@ export class DeleteShipModalComponent {
   }
 
   confirm(): void {
+    this.isConfirmed = true;
     this.store.dispatch(deleteShip({ id: this.chosenShipToDelete }));
+
   }
 
 

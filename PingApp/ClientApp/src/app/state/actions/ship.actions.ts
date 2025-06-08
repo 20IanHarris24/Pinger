@@ -1,8 +1,7 @@
 import { createAction, props } from '@ngrx/store';
 import {
-  IShipModel,
   IShipResult,
-  ShipNewDto,
+  ShipNewDto, ShipResult,
   ShipUpdateDto
 } from '../../services/api/pingapp-api.service';
 
@@ -13,7 +12,8 @@ export const deleteShip = createAction(
 );
 
 export const deleteShipSuccess = createAction(
-  '[Action] Delete Ship Success'
+  '[Action] Delete Ship Success',
+   props<{ id: string }>()
 );
 
 export const deleteShipFailure = createAction(
@@ -67,21 +67,6 @@ export const registerShipFailure = createAction(
 
 
 
-export const updateShip = createAction(
-  '[Action] Update Ship',
-  props<{id: string, updateDto: ShipUpdateDto }>()
-);
-
-export const updateShipSuccess = createAction(
-  '[Action] Update Ship Success',
-  props<{ editShip: IShipModel }>()
-);
-
-export const updateShipFailure = createAction(
-  '[Action] Update Ship Failure',
-  props<{ error: any }>()
-);
-
 export const setAddedShipId = createAction(
   '[Action] Set Newly Added Ship ID',
   props<{ idTrack: string | null }>()
@@ -91,6 +76,23 @@ export const setAddedShipId = createAction(
 export const setEditedShipId = createAction(
   '[Action] Set Newly Edited Ship ID',
   props<{ idEdit: string | null }>()
+);
+
+
+
+export const updateShip = createAction(
+  '[Action] Update Ship',
+  props<{id: string, updateDto: ShipUpdateDto }>()
+);
+
+export const updateShipSuccess = createAction(
+  '[Action] Update Ship Success',
+  props<{ editShip: ShipResult }>()
+);
+
+export const updateShipFailure = createAction(
+  '[Action] Update Ship Failure',
+  props<{ error: any }>()
 );
 
 

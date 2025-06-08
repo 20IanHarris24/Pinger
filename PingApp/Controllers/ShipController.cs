@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using PingApp.DataAndHelpers;
 using PingApp.Models.Dtos;
 using PingApp.Models.Entities;
+using PingApp.ServicesBackend;
 
 namespace PingApp.Controllers
 {
@@ -12,14 +13,18 @@ namespace PingApp.Controllers
     public class ShipController : ControllerBase
 
     {
-        private readonly PingAppDbContext _shipContext;
         private readonly ILogger<ShipController> _logger;
+        private readonly PingAppDbContext _shipContext;
+        private readonly NotifierService _notifyThat;
+        private readonly ShipStatusService _service;
 
 
-        public ShipController(PingAppDbContext shipContext,  ILogger<ShipController> logger)
+        public ShipController(ILogger<ShipController> logger, NotifierService notify, PingAppDbContext context, ShipStatusService shipStatusService)   
         {
-            _shipContext = shipContext;
             _logger = logger;
+            _notifyThat = notify;
+            _shipContext = context;
+            _service = shipStatusService;
         }
 
 
@@ -79,8 +84,10 @@ namespace PingApp.Controllers
             }
 
             _shipContext.ShipModel.Remove(selectedShip);
-
+            
             await  _shipContext.SaveChangesAsync();
+            _service.RemoveLatestPingResult(id);
+            await _notifyThat.ShipIsDeleted(id);
 
             return NoContent();
         }
@@ -91,6 +98,7 @@ namespace PingApp.Controllers
             var regShip = new ShipModel {Name = regShipModel.Name, HostAddr = regShipModel.HostAddr };
             _shipContext.ShipModel.Add(regShip);
             await _shipContext.SaveChangesAsync();
+            await _notifyThat.ShipIsCreated(regShip);
 
             return Ok(
             
@@ -105,10 +113,10 @@ namespace PingApp.Controllers
 
 
         [HttpPut("{id}")]
-        [ProducesResponseType(typeof(ShipModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ShipResult), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
 
-        public async Task<ActionResult<ShipModel>> UpdateShipModel(Guid id, [FromBody] ShipUpdateDto shipModel)
+        public async Task<ActionResult<ShipResult>> UpdateShipModel(Guid id, [FromBody] ShipUpdateDto updatedShip)
         {
             
             if (!ModelState.IsValid)
@@ -117,14 +125,15 @@ namespace PingApp.Controllers
             }
 
             ShipModel? current = await _shipContext.ShipModel.FirstOrDefaultAsync(sm => sm.Id == id);
+            
 
             if (current == null)
             {
                 return NotFound();
             }
 
-            current.Name = shipModel.Name;
-            current.HostAddr = shipModel.HostAddr;
+            current.Name = updatedShip.Name;
+            current.HostAddr = updatedShip.HostAddr;
 
             _shipContext.Entry(current).State = EntityState.Modified;
 
@@ -132,6 +141,10 @@ namespace PingApp.Controllers
             {
                 
                 await _shipContext.SaveChangesAsync();
+                
+                var currentShipResult = MapToShipResult(current);
+                
+                await _notifyThat.ShipIsUpdated(currentShipResult);
                 
             }
             catch (DbUpdateConcurrencyException)
@@ -154,11 +167,26 @@ namespace PingApp.Controllers
             //
             // });
         }
+        
+        
+        
+        
+        public ShipResult MapToShipResult(ShipModel ship)
+        {
+            return new ShipResult
+        
+            {
+                Id = ship.Id,
+                Name = ship.Name,
+                HostAddr = ship.HostAddr,
+                Result = _service.GetLatestPingResult(ship.Id)
+            };
+    
+        }
+        
+        
+        
 
-
-
-
-
-
+      
     }
 }

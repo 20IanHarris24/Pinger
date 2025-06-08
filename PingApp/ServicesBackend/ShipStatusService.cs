@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Net.NetworkInformation;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
@@ -5,34 +6,33 @@ using PingApp.DataAndHelpers;
 using PingApp.Hubs;
 using PingApp.Models.Entities;
 
-namespace PingApp.BackgroundServices
+namespace PingApp.ServicesBackend
 {
     public class ShipStatusService : BackgroundService
 
     {
 
-
-    private readonly IHubContext<DisplayHub> _displayHubContext;
+    private readonly ConcurrentDictionary<Guid, string> _latestPingResults = new();
+    private readonly IHubContext<DisplayHub> _hubContext;
     private readonly ILogger<ShipStatusService> _logger;
     private readonly IServiceScopeFactory _scopeFactory; //new code
 
 
 
-    public ShipStatusService(IHubContext<DisplayHub> displayHubContext, ILogger<ShipStatusService> logger, IServiceScopeFactory scopeFactory)
+    public ShipStatusService(IHubContext<DisplayHub> hubContext, ILogger<ShipStatusService> logger, IServiceScopeFactory scopeFactory)
     {
 
-        _displayHubContext = displayHubContext;
+        _hubContext = hubContext;
         _logger = logger;
-        _scopeFactory = scopeFactory; //new code
+        _scopeFactory = scopeFactory;
 
 
     }
-
-
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    
+   protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
             using var scope = _scopeFactory.CreateScope(); //new code
-            using var dbContext = scope.ServiceProvider.GetRequiredService<PingAppDbContext>(); //new code
+            await using var dbContext = scope.ServiceProvider.GetRequiredService<PingAppDbContext>(); //new code
 
 
         while (!stoppingToken.IsCancellationRequested)
@@ -51,8 +51,7 @@ namespace PingApp.BackgroundServices
             var tasks =  shipsDb.Select(async ship =>
 
             {
-                // ... but wait for each 5 tasks
-                // before running the next 5 tasks
+                // ... but wait for each 5 tasks, before running the next 5 tasks
                 await simultaneous.WaitAsync(stoppingToken);
                 try
                 {
@@ -62,7 +61,7 @@ namespace PingApp.BackgroundServices
                 catch (Exception exception)
                 {
                     // handle the exception if any ships are not reachable
-                    return new ShipResult()
+                    return new ShipResult
                     {
                         Id = ship.Id,
                         Name = ship.Name,
@@ -72,8 +71,7 @@ namespace PingApp.BackgroundServices
                 }
                 finally
                 {
-                    // Always release the semaphore
-                    // when done
+                    // Always release the semaphore when done
                     simultaneous.Release();
                 }
             });
@@ -82,7 +80,7 @@ namespace PingApp.BackgroundServices
             // Now we actually run the tasks
             var shipResults = await Task.WhenAll(tasks);
 
-            await _displayHubContext.Clients.All.SendAsync("DisplayShips", shipResults, cancellationToken: stoppingToken);
+            await _hubContext.Clients.All.SendAsync("DisplayShips", shipResults, cancellationToken: stoppingToken);
 
             await Task.Delay(2000, stoppingToken);
 
@@ -94,8 +92,13 @@ namespace PingApp.BackgroundServices
     {
         var timeout = 3000;
         var response = new Ping();
-        PingReply result = await response.SendPingAsync(ship.HostAddr, TimeSpan.FromMilliseconds(timeout),null, null,stoppingToken);
+        PingReply result = await response.SendPingAsync(ship.HostAddr!, TimeSpan.FromMilliseconds(timeout),null, null,stoppingToken);
         var roundTrip = result.Status == IPStatus.Success ? result.RoundtripTime : timeout;
+        var resultString = $"{result.Status}. Time: {roundTrip} ms.";
+        
+        _latestPingResults[ship.Id] = resultString;
+        
+        
         return new ShipResult()
         {
             Id = ship.Id,
@@ -104,5 +107,16 @@ namespace PingApp.BackgroundServices
             Result = $"{result.Status.ToString()}. Time: {roundTrip} ms."
         };
     }
+    
+    public string GetLatestPingResult(Guid shipId)
+    {
+        return _latestPingResults.TryGetValue(shipId, out var result) ? result : "Unknown";
+    }
+  
+    public bool RemoveLatestPingResult(Guid deletedShipId)
+    {
+        return _latestPingResults.TryRemove(deletedShipId, out _);
+    }
+    
     }
 }

@@ -16,5 +16,5 @@
 
 <div class="modal-footer" *ngIf="deleteStatus !== 'loading'">
   <button type="button" class="btn btn-outline-purple" (click) = "activeModal.dismiss('Cancel')">Cancel</button>
-  <button type="button" class="btn btn-outline-secondary" (click) = "confirm()">Confirm</button>
+  <button type="button" class="btn btn-outline-secondary" [class.fade-out]="isConfirmed" [disabled]="isConfirmed" (click) = "confirm()">Confirm</button>
 </div>

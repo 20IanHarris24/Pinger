@@ -243,14 +243,14 @@ export class ShipsClient {
         return _observableOf(null as any);
     }
 
-    updateShipModel(id: string, shipModel: ShipUpdateDto): Observable<ShipModel> {
+    updateShipModel(id: string, updatedShip: ShipUpdateDto): Observable<ShipResult> {
         let url_ = this.baseUrl + "/Ship/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id));
         url_ = url_.replace(/[?&]$/, "");
 
-        const content_ = JSON.stringify(shipModel);
+        const content_ = JSON.stringify(updatedShip);
 
         let options_ : any = {
             body: content_,
@@ -269,14 +269,14 @@ export class ShipsClient {
                 try {
                     return this.processUpdateShipModel(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ShipModel>;
+                    return _observableThrow(e) as any as Observable<ShipResult>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ShipModel>;
+                return _observableThrow(response_) as any as Observable<ShipResult>;
         }));
     }
 
-    protected processUpdateShipModel(response: HttpResponseBase): Observable<ShipModel> {
+    protected processUpdateShipModel(response: HttpResponseBase): Observable<ShipResult> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -287,7 +287,7 @@ export class ShipsClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ShipModel.fromJS(resultData200);
+            result200 = ShipResult.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 404) {
@@ -296,6 +296,58 @@ export class ShipsClient {
             let resultData404 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
             result404 = ProblemDetails.fromJS(resultData404);
             return throwException("A server side error occurred.", status, _responseText, _headers, result404);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
+    mapToShipResult(ship: ShipModel): Observable<ShipResult> {
+        let url_ = this.baseUrl + "/Ship";
+        url_ = url_.replace(/[?&]$/, "");
+
+        const content_ = JSON.stringify(ship);
+
+        let options_ : any = {
+            body: content_,
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processMapToShipResult(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processMapToShipResult(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<ShipResult>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<ShipResult>;
+        }));
+    }
+
+    protected processMapToShipResult(response: HttpResponseBase): Observable<ShipResult> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = ShipResult.fromJS(resultData200);
+            return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
@@ -456,6 +508,39 @@ export interface IShipNewDto {
     hostAddr: string;
 }
 
+export class ShipResult extends ShipModel implements IShipResult {
+    result!: string;
+
+    constructor(data?: IShipResult) {
+        super(data);
+    }
+
+    override init(_data?: any) {
+        super.init(_data);
+        if (_data) {
+            this.result = _data["result"];
+        }
+    }
+
+    static override fromJS(data: any): ShipResult {
+        data = typeof data === 'object' ? data : {};
+        let result = new ShipResult();
+        result.init(data);
+        return result;
+    }
+
+    override toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["result"] = this.result;
+        super.toJSON(data);
+        return data;
+    }
+}
+
+export interface IShipResult extends IShipModel {
+    result: string;
+}
+
 export class ProblemDetails implements IProblemDetails {
     type!: string | undefined;
     title!: string | undefined;
@@ -594,39 +679,6 @@ export class SocketExport implements ISocketExport {
 
 export interface ISocketExport {
     shipResult: ShipResult;
-}
-
-export class ShipResult extends ShipModel implements IShipResult {
-    result!: string;
-
-    constructor(data?: IShipResult) {
-        super(data);
-    }
-
-    override init(_data?: any) {
-        super.init(_data);
-        if (_data) {
-            this.result = _data["result"];
-        }
-    }
-
-    static override fromJS(data: any): ShipResult {
-        data = typeof data === 'object' ? data : {};
-        let result = new ShipResult();
-        result.init(data);
-        return result;
-    }
-
-    override toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["result"] = this.result;
-        super.toJSON(data);
-        return data;
-    }
-}
-
-export interface IShipResult extends IShipModel {
-    result: string;
 }
 
 export interface FileResponse {

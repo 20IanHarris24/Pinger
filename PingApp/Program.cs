@@ -1,8 +1,8 @@
 using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
-using PingApp.BackgroundServices;
 using PingApp.DataAndHelpers;
 using PingApp.Hubs;
+using PingApp.ServicesBackend;
 using Serilog;
 
 namespace PingApp
@@ -23,7 +23,9 @@ namespace PingApp
 
                 builder.Configuration.AddJsonFile("appsettings.Development.json", optional: false, reloadOnChange: true);
                 // builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+                builder.Services.AddScoped<NotifierService>();
                 builder.Services.AddSignalR();
+                builder.Services.AddSingleton<ShipStatusService>();
                 builder.Services.AddHostedService<ShipStatusService>();
                 // builder.Services.AddDbContext<PingAppDbContext>(options =>
                 // options.UseNpgsql(builder.Configuration.GetConnectionString("DatabaseConnection")));

@@ -1,19 +1,8 @@
-import {
-  createFeatureSelector,
-  createReducer,
-  createSelector,
-  on,
-} from '@ngrx/store';
-import { EntityState, EntityAdapter, createEntityAdapter } from '@ngrx/entity';
-import {IShipModel, IShipResult} from '../../services/api/pingapp-api.service';
-import {
-  deleteShip, loadAllShips, loadAllShipsFailure,
-  loadAllShipsSuccess,
-  loadShipSuccess,
-  registerShipSuccess,
-  setAddedShipId,
-  setEditedShipId, upsertManyShips
-} from '../actions/ship.actions';
+import {createFeatureSelector, createReducer, createSelector, on,} from '@ngrx/store';
+import {createEntityAdapter, EntityAdapter, EntityState} from '@ngrx/entity';
+import {IShipModel, IShipResult, ShipResult} from '../../services/api/pingapp-api.service';
+import * as ShipActions from '../actions/ship.actions';
+
 
 export interface ShipState extends EntityState<IShipResult> {
   aShipModel: IShipModel[];
@@ -36,64 +25,72 @@ export const initialState: ShipState = adapter.getInitialState({
   editedShipId: null,
   isLoading: false
 
-
 });
 
 export const shipReducer = createReducer(
   initialState,
 
-  on(deleteShip, (state, { id }) => {
-    return adapter.removeOne(id, state);
+  on(ShipActions.deleteShipSuccess, (state, { id }) => {
+    console.log('[Reducer] delete ship success',id);
+    return adapter.removeOne(id, {
+      ...state,
+      isLoading: false
+    });
   }),
 
-  on(loadShipSuccess, (state, { ship }) => {
-    console.log('[Reducer] load ship success:', ship);
-    return adapter.upsertOne(ship, state);
-  }),
-
-
-  on(loadAllShips, (state, ) => ({
+  on(ShipActions.loadAllShips, (state, ) => ({
     ...state,
     isLoading: true
 
   })),
 
-  // on(loadAllShipsSuccess, (state, { ships }) => {
-  //   console.log('[Reducer] load all ships success payload:', ships.map(s => s.id));
-  //   return adapter.setAll(ships, state);
-  // }),
 
-  on(loadAllShipsSuccess, (state, { ships }) => {
+  on(ShipActions.loadAllShipsSuccess, (state, { ships }) => {
     return adapter.setAll(ships, {
       ...state,
       isLoading: false
       });
   }),
 
-  on(loadAllShipsFailure, (state) => ({
+
+  on(ShipActions.loadAllShipsFailure, (state) => ({
     ...state,
     isLoading: false
   })),
 
 
-  on(registerShipSuccess, (state, { newShip }) => {
+
+  on(ShipActions.loadShipSuccess, (state, { ship }) => {
+    console.log('[Reducer] load ship success:', ship);
+    return adapter.upsertOne(ship, state);
+  }),
+
+
+
+  on(ShipActions.registerShipSuccess, (state, { newShip }) => {
     console.log('[Reducer] register ship success:', newShip);
     return adapter.upsertOne(newShip, state);
   }),
 
 
-  on(setAddedShipId, (state, { idTrack }) => ({
+  on(ShipActions.setAddedShipId, (state, { idTrack }) => ({
     ...state,
     newlyAddedShipId: idTrack
   })),
 
-  on(setEditedShipId, (state,{ idEdit }) => ({
+  on(ShipActions.setEditedShipId, (state,{ idEdit }) => ({
     ...state,
     editedShipId: idEdit
   })),
 
 
-  on(upsertManyShips, (state, { ships }) => {
+  on(ShipActions.updateShipSuccess, (state, {editShip}) =>{
+    console.log('[Reducer] update ship success:', editShip);
+    return adapter.upsertOne(editShip, state);
+  }),
+
+
+  on(ShipActions.upsertManyShips, (state, { ships }) => {
     return adapter.upsertMany(ships, state);
   }),
 
@@ -105,7 +102,6 @@ export const shipReducer = createReducer(
 // get the SELECTORS
 const { selectAll } = adapter.getSelectors();
 export const selectShipState = createFeatureSelector<ShipState>('ships');
-
 
 
 export const selectAllShips = createSelector(selectShipState, selectAll);
@@ -124,16 +120,18 @@ export const selectEditedShipId = createSelector(
 
 );
 
+export const selectByTest = (id: string) =>
+  createSelector(selectShipState, (state) => state.entities[id] as ShipResult | undefined);
+
 export const selectNewlyAddedShipId = createSelector(
   selectShipState,
   (state: ShipState) => state.newlyAddedShipId
 );
 
-export const selectShipsLoading = createSelector(
-  selectShipState,
-  (state: ShipState) => state.isLoading
-);
-
+// export const selectShipsLoading = createSelector(
+//   selectShipState,
+//   (state: ShipState) => state.isLoading
+// );
 
 // export const selectAllShipsSorted = () =>
 //   createSelector(selectAllShips, (ships) => {

@@ -1,15 +1,12 @@
 import { inject, Injectable } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
-import { ShipResult } from '../api/pingapp-api.service';
+import {ShipResult} from '../api/pingapp-api.service';
 import { Store } from '@ngrx/store';
-import { upsertManyShips } from '../../state/actions/ship.actions';
+import * as ShipActions from '../../state/actions/ship.actions';
 
 @Injectable({ providedIn: 'root' })
 export class ShipSocketService {
   private readonly _displayScreenConnection: signalR.HubConnection;
-  // private _ships$: BehaviorSubject<ShipResult[]>;
-  // ships$: Observable<ShipResult[]>;
-
   private readonly _store = inject(Store);
 
   constructor() {
@@ -17,26 +14,31 @@ export class ShipSocketService {
       .withUrl('http://127.0.0.1:34011/display')
       .withAutomaticReconnect()
       .build();
-    // this._ships$ = new BehaviorSubject<ShipResult[]>([]);
-    // this.ships$ = this._ships$.asObservable();
-  }
+   }
 
   public startUpConnection(): void {
     this._displayScreenConnection
       .start()
       .then(() => {
-        console.log(this._displayScreenConnection);
+        console.log('SignalR socket connected: ', this._displayScreenConnection.state);
 
-        this._displayScreenConnection.on(
-          'DisplayShips',
-          (ships: ShipResult[]) => {
-             this._store.dispatch(
-              upsertManyShips({
-                ships: ships,
-              })
-            );
-          }
-        );
+        this._displayScreenConnection.on('DisplayShips',(ships: ShipResult[]) => {
+             this._store.dispatch(ShipActions.upsertManyShips({ships: ships,}));
+        });
+
+        this._displayScreenConnection.on('ShipCreated', (newShip: any) => {
+          this._store.dispatch(ShipActions.registerShipSuccess({ newShip }));
+        });
+
+        this._displayScreenConnection.on('ShipUpdated', (editShip: ShipResult) => {
+          const editShipInstance = ShipResult.fromJS(editShip);
+          this._store.dispatch(ShipActions.updateShipSuccess({editShip: editShipInstance}));
+        });
+
+        this._displayScreenConnection.on('ShipDeleted', (deletedShipId: string) => {
+          this._store.dispatch(ShipActions.deleteShipSuccess({ id: deletedShipId }));
+        });
+
       })
 
       .catch((err) => console.error('SignalR error:', err));
@@ -46,7 +48,7 @@ export class ShipSocketService {
     if (this._displayScreenConnection) {
       this._displayScreenConnection
         .stop()
-        .then(() => console.log('🔌 SignalR disconnected'));
+        .then(() => console.log('SignalR socket disconnected'));
     }
   }
 }
