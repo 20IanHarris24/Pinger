@@ -1,7 +1,9 @@
+using System.Collections.Concurrent;
 using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
 using PingApp.DataAndHelpers;
 using PingApp.Hubs;
+using PingApp.Interfaces;
 using PingApp.ServicesBackend;
 using Serilog;
 
@@ -9,7 +11,7 @@ namespace PingApp
 {
     public class Program
     {
-        private const string SERVICE_NAME = "Pinger";
+        private const string ServiceName = "Pinger";
 
         public static async Task Main(string[] args)
         {
@@ -21,16 +23,17 @@ namespace PingApp
 
                 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-                builder.Configuration.AddJsonFile("appsettings.Development.json", optional: false, reloadOnChange: true);
-                // builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
-                builder.Services.AddScoped<NotifierService>();
-                builder.Services.AddSignalR();
-                builder.Services.AddSingleton<ShipStatusService>();
-                builder.Services.AddHostedService<ShipStatusService>();
-                // builder.Services.AddDbContext<PingAppDbContext>(options =>
-                // options.UseNpgsql(builder.Configuration.GetConnectionString("DatabaseConnection")));
                 builder.Services.AddDbContext<PingAppDbContext>(options =>
                 options.UseSqlite(builder.Configuration.GetConnectionString("DatabaseConnection")));
+                // builder.Services.AddDbContext<PingAppDbContext>(options =>
+                // options.UseNpgsql(builder.Configuration.GetConnectionString("DatabaseConnection")));
+                builder.Configuration.AddJsonFile("appsettings.Development.json", optional: false, reloadOnChange: true);
+                // builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+                builder.Services.AddHostedService<ShipBackgroundPingService>();
+                builder.Services.AddScoped<NotifierService>();
+                builder.Services.AddScoped<IShipStatusService, ShipStatusService>();
+                builder.Services.AddSingleton(new ConcurrentDictionary<Guid, string>());
+                builder.Services.AddSignalR();
 
 
                 Log.Logger = new LoggerConfiguration().WriteTo.Console().CreateLogger();
@@ -56,7 +59,7 @@ namespace PingApp
                         // Any settable logging options is controlled using device.config.json .ReadFrom.Configuration(context.Configuration.GetSection("Serilog"))
                         .Enrich.FromLogContext()
                         .Enrich.WithEnvironment(environment)
-                        .Enrich.WithProperty("ApplicationName", SERVICE_NAME);
+                        .Enrich.WithProperty("ApplicationName", ServiceName);
 
                     loggerConfiguration = loggerConfiguration.WriteTo.Console();
                 });

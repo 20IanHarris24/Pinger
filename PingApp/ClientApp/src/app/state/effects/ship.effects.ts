@@ -2,9 +2,9 @@ import {Actions, createEffect, ofType} from '@ngrx/effects';
 import {catchError, delay, map, mergeMap, of, switchMap, tap, withLatestFrom} from 'rxjs';
 import {inject, Injectable} from '@angular/core';
 import * as ShipActions from '../actions/ship.actions'
-import {IShipModel, IShipResult, ShipModel, ShipResult, ShipsClient} from '../../services/api/pingapp-api.service';
+import {IShipResult, ShipModel, ShipResult, ShipsClient} from '../../services/api/pingapp-api.service';
 import {ButtonFunctionService} from '../../services/button.function.service';
-import {selectByTest, selectDbShipById} from '../reducers/ship.reducers';
+import {selectByTest} from '../reducers/ship.reducers';
 import {Store} from '@ngrx/store';
 
 
@@ -13,7 +13,7 @@ import {Store} from '@ngrx/store';
 export class ShipEffects {
 
   private actions$ = inject(Actions);
-  private buttonService = inject(ButtonFunctionService);
+  private status = inject(ButtonFunctionService);
   private client = inject(ShipsClient)
   private store = inject(Store);
 
@@ -22,40 +22,45 @@ export class ShipEffects {
     this.actions$.pipe(
       ofType(ShipActions.deleteShip),
       tap(() => {
-        console.log('[Effect] deleteShip$ fired')
-        this.buttonService._deleteStatus$.next('loading');
-        this.buttonService._deleteErrorMessage$.next('');
+        console.log('[Effect] deleteShip$ fired');
+        this.status._deleteStatus$.next('deleting');
+        this.status._deleteErrorMessage$.next('');
       }),
       switchMap(({ id }) =>
         this.client.deleteShip(id).pipe(
-          tap(()=>{
-            this.buttonService._deleteStatus$.next('success');
+          tap(() => {
+            console.log('[Effect] deleteShip$ success');
+            this.status._deleteStatus$.next('success');
           }),
-          map(() => ShipActions.deleteShipSuccess({id})),
+          switchMap(() => [
+            ShipActions.deleteShipSuccess({ id }),
+            ShipActions.setRecentlyDeletedId({ idTrack: id }) // <-- New action
+          ]),
           catchError((error) => {
             console.error('[Effect] deleteShip error:', error);
-            this.buttonService._deleteStatus$.next('error');
-            this.buttonService._deleteErrorMessage$.next(
+            this.status._deleteStatus$.next('error');
+            this.status._deleteErrorMessage$.next(
               error?.message || 'Unexpected error.'
             );
-            return of(ShipActions.deleteShipFailure({error}));
+            return of(ShipActions.deleteShipFailure({ error }));
           })
         )
       )
     )
   );
 
+
   /* @Effect */
   // deleteShipSuccess$ = createEffect(() =>
-  //   this.actions$.pipe(
-  //     ofType(ShipActions.deleteShipSuccess),
-  //     tap(() => {
-  //       console.log('[Effect] deleteShipSuccess$ fired')
+  //  this.actions$.pipe(
+  //      ofType(ShipActions.deleteShipSuccess),
+  //      tap(() => {
+  //        console.log('[Effect] deleteShipSuccess$ fired')
   //
-  //     }),
-  //     map(() => loadAllShips())
+  //      }),
+  //      map(() => ShipActions.loadAllShips())
   //  )
-  // );
+  //  );
 
   /* @Effect */
   loadAllShips$ = createEffect(() =>
@@ -100,7 +105,7 @@ export class ShipEffects {
         console.log('[Effect] loadShip$ fired')
        }),
       switchMap(({ id }) =>
-        this.client.getShipByShipId(id).pipe(
+        this.client.getShipById(id).pipe(
           map((ship: ShipModel) => {
             const enrichedShip: IShipResult =
               {

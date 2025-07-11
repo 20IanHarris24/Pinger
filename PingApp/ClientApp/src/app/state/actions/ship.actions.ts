@@ -74,8 +74,14 @@ export const setAddedShipId = createAction(
 
 
 export const setEditedShipId = createAction(
-  '[Action] Set Newly Edited Ship ID',
+  '[Action] Set Newly Edited Ship Id',
   props<{ idEdit: string | null }>()
+);
+
+
+export const setRecentlyDeletedId = createAction(
+  '[Action] Set Recently Deleted Ship Id',
+  props<{ idTrack: string }>()
 );
 
 
@@ -94,12 +100,6 @@ export const updateShipFailure = createAction(
   '[Action] Update Ship Failure',
   props<{ error: any }>()
 );
-
-
-// export const upsertOneShip = createAction(
-//   '[ShipStatusService] Upsert Ship',
-//   props<{ ship: IShipResult }>()
-// );
 
 export const upsertManyShips = createAction(
   '[Action] Upsert Many Ships',

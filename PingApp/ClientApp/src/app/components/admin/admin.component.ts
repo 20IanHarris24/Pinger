@@ -8,7 +8,7 @@ import { ShowAllShipsComponent } from '../show-all-ships/show.all.ships.componen
 @Component({
   selector: 'app-admin',
   templateUrl: 'admin.component.html',
-  // styleUrl: "admin.component.scss",
+  styleUrl: "admin.component.scss",
   imports: [ReactiveFormsModule, ManageShipComponent, ShowAllShipsComponent],
 })
 export class AdminComponent {

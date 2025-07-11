@@ -6,9 +6,10 @@ import * as ShipActions from '../actions/ship.actions';
 
 export interface ShipState extends EntityState<IShipResult> {
   aShipModel: IShipModel[];
-  newlyAddedShipId: string | null;
   editedShipId: string | null;
   isLoading: boolean;
+  newlyAddedShipId: string | null;
+  recentlyDeletedId: string | null;
 
 }
 
@@ -21,9 +22,10 @@ export const adapter: EntityAdapter<IShipResult> =
 export const initialState: ShipState = adapter.getInitialState({
 
   aShipModel: [],
-  newlyAddedShipId: null,
   editedShipId: null,
-  isLoading: false
+  isLoading: false,
+  newlyAddedShipId: null,
+  recentlyDeletedId: null
 
 });
 
@@ -84,23 +86,37 @@ export const shipReducer = createReducer(
   })),
 
 
-  on(ShipActions.updateShipSuccess, (state, {editShip}) =>{
+  on(ShipActions.setRecentlyDeletedId, (state, { idTrack }) => ({
+    ...state,
+    newlyAddedShipId: null,
+    recentlyDeletedId: idTrack
+  })),
+
+
+
+on(ShipActions.updateShipSuccess, (state, {editShip}) =>{
     console.log('[Reducer] update ship success:', editShip);
     return adapter.upsertOne(editShip, state);
   }),
 
 
   on(ShipActions.upsertManyShips, (state, { ships }) => {
-    return adapter.upsertMany(ships, state);
+    // console.log('[Reducer] upserting ships:', ships.map(s => s.id));
+    const filtered = ships.filter(s => s.id !== state.recentlyDeletedId);
+    return adapter.upsertMany(filtered, state);
   }),
 
 );
 
 
 
-
 // get the SELECTORS
 const { selectAll } = adapter.getSelectors();
+
+
+export const selectDeletedId = (id:string) => createSelector(selectShipState, (state: ShipState) => state.recentlyDeletedId);
+
+
 export const selectShipState = createFeatureSelector<ShipState>('ships');
 
 
@@ -127,6 +143,8 @@ export const selectNewlyAddedShipId = createSelector(
   selectShipState,
   (state: ShipState) => state.newlyAddedShipId
 );
+
+
 
 // export const selectShipsLoading = createSelector(
 //   selectShipState,

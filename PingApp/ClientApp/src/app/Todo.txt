@@ -1,9 +1,8 @@
-Admin: spacing on the card general format
 Add Modal: allow multiple input without closing the window and re-opening(DONE, but Block-aria error?)
 pagination for showing ships on admin page(?)
-loading spinners(DONE)
 colour setting (Tabler.io)
 https:// for pointing to the backend(?)
 error management
 log-in page and auth?
 testsuite
+

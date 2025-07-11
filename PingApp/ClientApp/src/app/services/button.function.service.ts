@@ -1,5 +1,5 @@
 import { Injectable} from '@angular/core';
-import {IShipModel} from './api/pingapp-api.service';
+import {IShipModel, IShipResult} from './api/pingapp-api.service';
 import { BehaviorSubject} from 'rxjs';
 import {NewShipModalComponent} from '../components/new-ship-modal/new.ship.modal.component';
 import {UpdateShipModalComponent} from '../components/update-ship-modal/update.ship.modal.component';
@@ -10,7 +10,7 @@ import {NgbModal} from '@ng-bootstrap/ng-bootstrap';
 
 
 
-export type DeleteStatus = 'idle' | 'loading' | 'success' | 'error';
+export type DeleteStatus = 'idle' | 'deleting' | 'success' | 'error';
 
 @Injectable({ providedIn: 'root' })
 export class ButtonFunctionService {
@@ -31,8 +31,8 @@ export class ButtonFunctionService {
 
 
   select(action: 'New'): void;
-  select(action: 'Edit' | 'Delete', shipInFocus: IShipModel): void;
-  select(action: 'New' | 'Edit' | 'Delete', shipInFocus?: IShipModel): void {
+  select(action: 'Edit' | 'Delete', shipInFocus: IShipResult): void;
+  select(action: 'New' | 'Edit' | 'Delete', shipInFocus?: IShipResult): void {
     switch (action) {
       case 'New':
         this.openModalNew();
@@ -72,7 +72,7 @@ export class ButtonFunctionService {
 
   openModalDelete(id: string) {
     this._deleteStatus$.next('idle');
-    // console.log('Opening modal to delete a ship');
+    console.log('Opening modal to delete a ship');
     const modalRef = this.modalService.open(DeleteShipModalComponent);
     modalRef.componentInstance.chosenShipToDelete = id;
 

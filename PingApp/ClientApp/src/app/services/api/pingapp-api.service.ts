@@ -31,7 +31,7 @@ export class ShipsClient {
     }
 
     getAllShips(): Observable<ShipModel[]> {
-        let url_ = this.baseUrl + "/all_ships";
+        let url_ = this.baseUrl + "/api/ship/get/all";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -85,8 +85,8 @@ export class ShipsClient {
         return _observableOf(null as any);
     }
 
-    getShipByShipId(id: string): Observable<ShipModel> {
-        let url_ = this.baseUrl + "/shipid/{id}";
+    getShipById(id: string): Observable<ShipModel> {
+        let url_ = this.baseUrl + "/api/ship/get/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id));
@@ -101,11 +101,11 @@ export class ShipsClient {
         };
 
         return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processGetShipByShipId(response_);
+            return this.processGetShipById(response_);
         })).pipe(_observableCatch((response_: any) => {
             if (response_ instanceof HttpResponseBase) {
                 try {
-                    return this.processGetShipByShipId(response_ as any);
+                    return this.processGetShipById(response_ as any);
                 } catch (e) {
                     return _observableThrow(e) as any as Observable<ShipModel>;
                 }
@@ -114,7 +114,7 @@ export class ShipsClient {
         }));
     }
 
-    protected processGetShipByShipId(response: HttpResponseBase): Observable<ShipModel> {
+    protected processGetShipById(response: HttpResponseBase): Observable<ShipModel> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -136,8 +136,66 @@ export class ShipsClient {
         return _observableOf(null as any);
     }
 
+    getPaginationResult(page: number | undefined, size: number | undefined, search: string | null | undefined): Observable<PaginatedDisplayOfShipDto> {
+        let url_ = this.baseUrl + "/api/ship/get/paginated?";
+        if (page === null)
+            throw new Error("The parameter 'page' cannot be null.");
+        else if (page !== undefined)
+            url_ += "page=" + encodeURIComponent("" + page) + "&";
+        if (size === null)
+            throw new Error("The parameter 'size' cannot be null.");
+        else if (size !== undefined)
+            url_ += "size=" + encodeURIComponent("" + size) + "&";
+        if (search !== undefined && search !== null)
+            url_ += "search=" + encodeURIComponent("" + search) + "&";
+        url_ = url_.replace(/[?&]$/, "");
+
+        let options_ : any = {
+            observe: "response",
+            responseType: "blob",
+            headers: new HttpHeaders({
+                "Accept": "application/json"
+            })
+        };
+
+        return this.http.request("get", url_, options_).pipe(_observableMergeMap((response_ : any) => {
+            return this.processGetPaginationResult(response_);
+        })).pipe(_observableCatch((response_: any) => {
+            if (response_ instanceof HttpResponseBase) {
+                try {
+                    return this.processGetPaginationResult(response_ as any);
+                } catch (e) {
+                    return _observableThrow(e) as any as Observable<PaginatedDisplayOfShipDto>;
+                }
+            } else
+                return _observableThrow(response_) as any as Observable<PaginatedDisplayOfShipDto>;
+        }));
+    }
+
+    protected processGetPaginationResult(response: HttpResponseBase): Observable<PaginatedDisplayOfShipDto> {
+        const status = response.status;
+        const responseBlob =
+            response instanceof HttpResponse ? response.body :
+            (response as any).error instanceof Blob ? (response as any).error : undefined;
+
+        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
+        if (status === 200) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            let result200: any = null;
+            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
+            result200 = PaginatedDisplayOfShipDto.fromJS(resultData200);
+            return _observableOf(result200);
+            }));
+        } else if (status !== 200 && status !== 204) {
+            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
+            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
+            }));
+        }
+        return _observableOf(null as any);
+    }
+
     deleteShip(id: string): Observable<FileResponse> {
-        let url_ = this.baseUrl + "/{id}";
+        let url_ = this.baseUrl + "/api/ship/delete/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id));
@@ -192,7 +250,7 @@ export class ShipsClient {
     }
 
     registerShip(regShipModel: ShipNewDto): Observable<ShipNewDto> {
-        let url_ = this.baseUrl + "/register";
+        let url_ = this.baseUrl + "/api/ship/register";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(regShipModel);
@@ -244,7 +302,7 @@ export class ShipsClient {
     }
 
     updateShipModel(id: string, updatedShip: ShipUpdateDto): Observable<ShipResult> {
-        let url_ = this.baseUrl + "/Ship/{id}";
+        let url_ = this.baseUrl + "/api/ship/update/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
         url_ = url_.replace("{id}", encodeURIComponent("" + id));
@@ -306,7 +364,7 @@ export class ShipsClient {
     }
 
     mapToShipResult(ship: ShipModel): Observable<ShipResult> {
-        let url_ = this.baseUrl + "/Ship";
+        let url_ = this.baseUrl + "/api/ship";
         url_ = url_.replace(/[?&]$/, "");
 
         const content_ = JSON.stringify(ship);
@@ -459,6 +517,110 @@ export class ShipModel implements IShipModel {
 }
 
 export interface IShipModel {
+    id: string;
+    name: string;
+    hostAddr: string;
+}
+
+export class PaginatedDisplayOfShipDto implements IPaginatedDisplayOfShipDto {
+    data!: ShipDto[];
+    pageNumber!: number;
+    pageSize!: number;
+    totalCount!: number;
+    totalPages!: number;
+
+    constructor(data?: IPaginatedDisplayOfShipDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            if (Array.isArray(_data["data"])) {
+                this.data = [] as any;
+                for (let item of _data["data"])
+                    this.data!.push(ShipDto.fromJS(item));
+            }
+            this.pageNumber = _data["pageNumber"];
+            this.pageSize = _data["pageSize"];
+            this.totalCount = _data["totalCount"];
+            this.totalPages = _data["totalPages"];
+        }
+    }
+
+    static fromJS(data: any): PaginatedDisplayOfShipDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new PaginatedDisplayOfShipDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        if (Array.isArray(this.data)) {
+            data["data"] = [];
+            for (let item of this.data)
+                data["data"].push(item ? item.toJSON() : <any>undefined);
+        }
+        data["pageNumber"] = this.pageNumber;
+        data["pageSize"] = this.pageSize;
+        data["totalCount"] = this.totalCount;
+        data["totalPages"] = this.totalPages;
+        return data;
+    }
+}
+
+export interface IPaginatedDisplayOfShipDto {
+    data: ShipDto[];
+    pageNumber: number;
+    pageSize: number;
+    totalCount: number;
+    totalPages: number;
+}
+
+export class ShipDto implements IShipDto {
+    id!: string;
+    name!: string;
+    hostAddr!: string;
+
+    constructor(data?: IShipDto) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.hostAddr = _data["hostAddr"];
+        }
+    }
+
+    static fromJS(data: any): ShipDto {
+        data = typeof data === 'object' ? data : {};
+        let result = new ShipDto();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["hostAddr"] = this.hostAddr;
+        return data;
+    }
+}
+
+export interface IShipDto {
     id: string;
     name: string;
     hostAddr: string;

@@ -1,5 +1,5 @@
 
-     <h2> Current Ship Database</h2>
+     <h2> Current Database Content</h2>
 
      <div class="spinner_pos">
 
@@ -17,8 +17,8 @@
             <div class="col-4" *ngFor="let aShip of vm.ships; let i = index">
             <div class="card" [ngClass]="{
             'flash-new': (newlyAddedShipId$ | async) === aShip.id, 'flash-edit': (newlyEditedShipId$ | async) === aShip.id}">
-              <div class="card-body position-relative" (mouseenter) = "onMouseOver(i)" (mouseleave)="onMouseOff()">
-                <h2 class="card-title">{{'Ship name:   ' + aShip.name}}</h2>
+              <div class="card-body position-relative" (mouseenter) = "onMouseOver(i)" (mouseleave) = "onMouseOff()" [ngClass]="{ 'border-highlight': hoverIndex === i}">
+                <h2 class="card-title">{{'Name:   ' + aShip.name}}</h2>
 
                 <!-- Tooltip info box -->
                 <div *ngIf="i === hoverIndex" class="card-tooltip card-tooltip-background">
@@ -32,7 +32,7 @@
                   </div>
 
                   <div class="mb-3">
-                    <label for="name-Ship" class="form-label">Ship Name</label>
+                    <label for="name-Ship" class="form-label">Name</label>
                     <div class="input-group">
                       <span class="input-group-text"><i class="ti ti-ship"></i></span>
                       <input id="name-Ship" type="text" class="form-control" [value]="aShip.name" readonly/>

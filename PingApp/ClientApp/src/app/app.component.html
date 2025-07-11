@@ -6,23 +6,23 @@
         aria-controls="navbar-menu" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
-      <div class="navbar-brand navbar-brand-autodark d-none-navbar-horizontal pe-0 pe-md-3">
-        <a [routerLink]="['']">
-          <img height="34"
-           src="">
-        </a>
-      </div>
+<!--      <div class="navbar-brand navbar-brand-autodark d-none-navbar-horizontal pe-0 pe-md-3">-->
+<!--        <a [routerLink]="['']">-->
+<!--          <img height="34"-->
+<!--           src="">-->
+<!--        </a>-->
+<!--      </div>-->
       <div class="collapse navbar-collapse" id="navbar-menu">
         <div class="d-flex flex-column flex-md-row flex-fill align-items-stretch align-items-md-center">
           <ul class="ms-auto navbar-nav">
-            <li class="nav-item">
+            <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" aria-current="page">
               <a class="nav-link" [routerLink]="['/home']">
                 <span class="nav-link-title">
                   Home
                 </span>
               </a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item" routerLinkActive="active" aria-current="page">
               <a class="nav-link" [routerLink]="['/admin']">
                 <span class="nav-link-title">
                   Admin
@@ -44,7 +44,7 @@
             <ul class="list-inline list-inline-dots mb-0">
               <li class="list-inline-item">
                 Copyright © 2025
-                <a href="" class="link-secondary">Portello & Ferraris</a>.
+                <a href="" class="link-secondary">68-TRES-19</a>.
                 All rights reserved.
               </li>
             </ul>

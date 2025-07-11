@@ -37,7 +37,7 @@ export class DeleteShipModalComponent {
 
       if (status === 'success') {
         setTimeout(() => {
-          this.activeModal.dismiss('Deleted');
+          this.activeModal.dismiss('deleted');
           this._sub.unsubscribe();
         }, 1000);
       }
@@ -55,6 +55,7 @@ export class DeleteShipModalComponent {
 
   confirm(): void {
     this.isConfirmed = true;
+    //console.log('id to be deleted: ', this.chosenShipToDelete)
     this.store.dispatch(deleteShip({ id: this.chosenShipToDelete }));
 
   }

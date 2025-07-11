@@ -1,0 +1,12 @@
+.page-body{
+  display: flex;
+  flex-direction: row;
+}
+
+.page-header{
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  align-items: center;
+}
