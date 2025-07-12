@@ -1,11 +1,11 @@
 import {Component, Input} from '@angular/core';
 import {ReactiveFormsModule} from '@angular/forms';
-import {ButtonFunctionService, DeleteStatus} from '../../services/button.function.service';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {NgIf, NgSwitch, NgSwitchCase} from '@angular/common';
 import {Subscription} from 'rxjs';
 import {Store} from '@ngrx/store';
 import {deleteShip} from '../../state/actions/ship.actions';
+import {ShipDeleteService} from '../../services/ship.delete.service';
 
 
 @Component({
@@ -22,7 +22,7 @@ import {deleteShip} from '../../state/actions/ship.actions';
 export class DeleteShipModalComponent {
 
   private _sub: Subscription;
-  deleteStatus: DeleteStatus = 'idle';
+  deleteStatus: string = 'idle';
   errorMessage: string = '';
   isConfirmed: boolean = false;
 
@@ -31,8 +31,8 @@ export class DeleteShipModalComponent {
 
 
 
-  constructor(protected buttonServices: ButtonFunctionService, protected activeModal: NgbActiveModal, private store: Store) {
-    this._sub = this.buttonServices._deleteStatus$.subscribe((status) => {
+  constructor(public deleteState: ShipDeleteService, protected activeModal: NgbActiveModal, private store: Store) {
+    this._sub = this.deleteState.deleteStatus$.subscribe((status) => {
       this.deleteStatus = status;
 
       if (status === 'success') {
@@ -47,7 +47,7 @@ export class DeleteShipModalComponent {
 
 
 
-    this.buttonServices._deleteErrorMessage$.subscribe((deleteError) => {
+    this.deleteState.deleteErrorMessage$.subscribe((deleteError) => {
       this.errorMessage = deleteError;
     });
 
@@ -55,9 +55,7 @@ export class DeleteShipModalComponent {
 
   confirm(): void {
     this.isConfirmed = true;
-    //console.log('id to be deleted: ', this.chosenShipToDelete)
     this.store.dispatch(deleteShip({ id: this.chosenShipToDelete }));
-
   }
 
 

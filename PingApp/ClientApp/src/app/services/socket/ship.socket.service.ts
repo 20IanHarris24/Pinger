@@ -20,7 +20,7 @@ export class ShipSocketService {
     this._displayScreenConnection
       .start()
       .then(() => {
-        console.log('SignalR socket connected: ', this._displayScreenConnection.state);
+        console.log('SignalR socket status: ', this._displayScreenConnection.state);
 
         this._displayScreenConnection.on('DisplayShips',(ships: ShipResult[]) => {
              this._store.dispatch(ShipActions.upsertManyShips({ships: ships,}));

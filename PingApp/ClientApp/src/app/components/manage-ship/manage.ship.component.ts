@@ -1,6 +1,6 @@
 import { Component} from '@angular/core';
 import { ButtonComponent } from '../button/button.component';
-import {ButtonFunctionService} from '../../services/button.function.service';
+import {ActionService} from '../../services/action.service';
 
 
 @Component({
@@ -11,10 +11,12 @@ import {ButtonFunctionService} from '../../services/button.function.service';
 })
 export class ManageShipComponent {
 
-   constructor(protected buttonServices: ButtonFunctionService) {}
+   constructor(protected actionService: ActionService) {}
+
 
   handleActionSelection(action: 'New') {
     // console.log(`Action selected: ${action}`);
-    this.buttonServices.select(action);
+    this.actionService.select(action);
   }
+
 }

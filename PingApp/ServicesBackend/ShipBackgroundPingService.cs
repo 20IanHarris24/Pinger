@@ -44,6 +44,8 @@ namespace PingApp.ServicesBackend
             var simultaneousNoOfPings = new SemaphoreSlim(5); // Limit the concurrent number of threads to 5
 
             var shipsDb = await dbContext.ShipModel.AsNoTracking().ToListAsync(stoppingToken); // Create a list of tasks to run
+            
+            // shipsDb = shipsDb.Where(ship => !deletedShipIds.Contains(ship.Id)).ToList();
 
             var tasks =  shipsDb.Select(async ship =>
 
@@ -73,7 +75,7 @@ namespace PingApp.ServicesBackend
 
             // Now we actually run the tasks
             var shipResults = await Task.WhenAll(tasks);
-            // _logging.LogInformation("Broadcasting ping results for ships: {ShipIds}", string.Join(", ", shipResults.Select(s => s.Id)));
+            _logging.LogInformation("Broadcasting ping results for ships:\n{ShipIds}", string.Join(Environment.NewLine, shipResults.Select(s => "\t\t\t\t" + s.Id)));
             await _hubContext.Clients.All.SendAsync("DisplayShips", shipResults, cancellationToken: stoppingToken);
             await Task.Delay(2000, stoppingToken);
 
@@ -90,7 +92,7 @@ namespace PingApp.ServicesBackend
         var resultString = $"{result.Status}. Time: {roundTrip} ms.";
         
         _latestPing[ship.Id] = resultString;
-        _logging.LogInformation("Ping updated for ship {ShipId}: {Result}", ship.Id, resultString);
+        //_logging.LogInformation("Ping updated for id {ShipId}: {Result}", ship.Id, resultString);
         
 
         

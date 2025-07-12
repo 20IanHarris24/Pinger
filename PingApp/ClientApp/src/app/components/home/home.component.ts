@@ -5,7 +5,7 @@ import { IShipResult } from '../../services/api/pingapp-api.service';
 import {combineLatest, distinctUntilChanged, map, Observable} from 'rxjs';
 import {selectAllShips} from '../../state/reducers/ship.reducers';
 import { Store } from '@ngrx/store';
-import {UtilityMethodsService} from '../../services/utility.methods.service';
+import {UtilityService} from '../../services/utility.service';
 import {SpinnerComponent} from '../spinner/spinner.component';
 
 
@@ -23,7 +23,7 @@ export class HomeComponent {
   viewModel$: Observable<any>;
 
 
-  constructor(protected utility: UtilityMethodsService, private store: Store) {
+  constructor(protected utility: UtilityService, private store: Store) {
     this.ships$ = this.store.select(selectAllShips);
     this.loading$ = this.ships$.pipe(
       map(ships => ships.length === 0),

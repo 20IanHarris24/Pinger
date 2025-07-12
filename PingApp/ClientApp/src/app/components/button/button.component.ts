@@ -7,8 +7,6 @@ import { Component, EventEmitter, Output } from "@angular/core";
   styleUrl: "./button.component.scss",
 })
 export class ButtonComponent {
-  // allShips$ = new BehaviorSubject<IShipModel[]>([]);
-
   @Output() actionSelection = new EventEmitter<"New">();
 
   constructor() {}

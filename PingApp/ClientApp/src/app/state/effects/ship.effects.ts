@@ -3,9 +3,9 @@ import {catchError, delay, map, mergeMap, of, switchMap, tap, withLatestFrom} fr
 import {inject, Injectable} from '@angular/core';
 import * as ShipActions from '../actions/ship.actions'
 import {IShipResult, ShipModel, ShipResult, ShipsClient} from '../../services/api/pingapp-api.service';
-import {ButtonFunctionService} from '../../services/button.function.service';
 import {selectByTest} from '../reducers/ship.reducers';
 import {Store} from '@ngrx/store';
+import {ShipDeleteService} from '../../services/ship.delete.service';
 
 
 
@@ -13,8 +13,9 @@ import {Store} from '@ngrx/store';
 export class ShipEffects {
 
   private actions$ = inject(Actions);
-  private status = inject(ButtonFunctionService);
-  private client = inject(ShipsClient)
+  private client = inject(ShipsClient);
+  private deleteState = inject(ShipDeleteService);
+  // private status = inject(ActionService);
   private store = inject(Store);
 
   /* @Effect */
@@ -23,14 +24,14 @@ export class ShipEffects {
       ofType(ShipActions.deleteShip),
       tap(() => {
         console.log('[Effect] deleteShip$ fired');
-        this.status._deleteStatus$.next('deleting');
-        this.status._deleteErrorMessage$.next('');
+        this.deleteState.markDeleting();
+        this.deleteState.setError('');
       }),
       switchMap(({ id }) =>
         this.client.deleteShip(id).pipe(
           tap(() => {
             console.log('[Effect] deleteShip$ success');
-            this.status._deleteStatus$.next('success');
+            this.deleteState.markSuccess();
           }),
           switchMap(() => [
             ShipActions.deleteShipSuccess({ id }),
@@ -38,10 +39,8 @@ export class ShipEffects {
           ]),
           catchError((error) => {
             console.error('[Effect] deleteShip error:', error);
-            this.status._deleteStatus$.next('error');
-            this.status._deleteErrorMessage$.next(
-              error?.message || 'Unexpected error.'
-            );
+            this.deleteState.setError('');
+            this.deleteState.setError(error?.message || 'Unexpected error.');
             return of(ShipActions.deleteShipFailure({ error }));
           })
         )

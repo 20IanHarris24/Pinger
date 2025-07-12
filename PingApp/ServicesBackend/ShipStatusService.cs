@@ -25,8 +25,6 @@ public class ShipStatusService : IShipStatusService
        
 
     }
-    
-    
    
     public string GetLatestPingResult(Guid shipId)
     {

@@ -3,7 +3,7 @@ import {Injectable} from '@angular/core';
 
 
 @Injectable({providedIn: 'root'})
-export class UtilityMethodsService {
+export class UtilityService {
 
 
   constructor() {}
@@ -28,6 +28,15 @@ export class UtilityMethodsService {
     }
     return 'status-error';
   }
+
+ blurActiveElement(): void {
+    const active = document.activeElement as HTMLElement | null;
+    if (active?.blur) active.blur();
+  }
+
+
+
+
 
 
 }

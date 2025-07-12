@@ -29,7 +29,7 @@
 
 <div class="modal-footer">
 
-    <button type="submit" [disabled]= "!newForm.dirty || newForm.invalid" class="btn btn-ghost-success" (click) = "onAddShip()"><i class="ti ti-circle-arrow-up"></i>Submit</button>
-    <button type="button" class="btn btn-ghost-secondary" (click) = "onAddCancel()"><i class="ti ti-cancel"></i>Cancel</button>
+    <button type="submit" [disabled] = "!newForm.dirty || newForm.invalid" class="btn btn-ghost-success" (click) = "onAddShip()"><i class="ti ti-circle-arrow-up"></i>Submit</button>
+    <button type="button" [disabled] = "!newForm.dirty || newForm.invalid" class="btn btn-ghost-secondary" (click) = "onAddCancel()"><i class="ti ti-cancel"></i>Cancel</button>
 
 </div>

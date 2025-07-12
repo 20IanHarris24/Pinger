@@ -1,6 +1,6 @@
-Add Modal: allow multiple input without closing the window and re-opening(DONE, but Block-aria error?)
+Add Modal: allow multiple input without closing the window and re-opening(DONE, but Block-aria error?) (DONE)
 pagination for showing ships on admin page(?)
-colour setting (Tabler.io)
+
 https:// for pointing to the backend(?)
 error management
 log-in page and auth?

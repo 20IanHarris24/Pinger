@@ -1,7 +1,7 @@
 import { Component, OnDestroy, OnInit } from "@angular/core";
-import { Title } from "@angular/platform-browser";
-import {RouterLink, RouterLinkActive, RouterOutlet} from "@angular/router";
+import { RouterLink, RouterLinkActive, RouterOutlet} from "@angular/router";
 import { ShipSocketService } from "./services/socket/ship.socket.service";
+import { Title } from "@angular/platform-browser";
 
 @Component({
   selector: "app-root",

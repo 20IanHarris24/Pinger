@@ -4,6 +4,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ManageShipComponent } from '../manage-ship/manage.ship.component';
 import { ShowAllShipsComponent } from '../show-all-ships/show.all.ships.component';
 
+
 @UntilDestroy()
 @Component({
   selector: 'app-admin',
@@ -12,6 +13,10 @@ import { ShowAllShipsComponent } from '../show-all-ships/show.all.ships.componen
   imports: [ReactiveFormsModule, ManageShipComponent, ShowAllShipsComponent],
 })
 export class AdminComponent {
+
+  constructor() {}
+
+
 
 
 }

@@ -9,7 +9,7 @@ import {
 } from '../../state/reducers/ship.reducers';
 import {combineLatest, distinctUntilChanged, map, Observable} from 'rxjs';
 import {Store} from '@ngrx/store';
-import {ButtonFunctionService} from '../../services/button.function.service';
+import {ActionService} from '../../services/action.service';
 import {ReactiveFormsModule} from '@angular/forms';
 import {SpinnerComponent} from '../spinner/spinner.component';
 
@@ -33,7 +33,7 @@ export class ShowAllShipsComponent {
   @Output() openModal = new EventEmitter<void>();
 
 
-  constructor(protected buttonService: ButtonFunctionService, private store: Store) {
+  constructor(protected actionService: ActionService, private store: Store) {
 
     // this.ships$ = this.store.select(selectAllDbShips);
     this.ships$ = this.store.select(selectAllShips).pipe(

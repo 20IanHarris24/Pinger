@@ -10,9 +10,8 @@
        </ng-container>
 
 
-
       <ng-template #showShips>
-       <ng-container *ngIf="vm.ships.length >0; else noShips">
+        <ng-container *ngIf="vm.ships.length >0; else noShips">
           <div class="row row-deck row-cards" style="min-height: 10rem">
             <div class="col-4" *ngFor="let aShip of vm.ships; let i = index">
             <div class="card" [ngClass]="{
@@ -49,8 +48,8 @@
                   </div>
 
                   <div class="btn-position">
-                    <button class="btn btn-md btn-ghost-info" type="button" (click)="buttonService.select('Edit', aShip)"><i class="ti ti-edit"></i>Edit</button>
-                    <button class="btn btn-md btn-ghost-danger" type="button" (click)="buttonService.select('Delete', aShip)"><i class="ti ti-trash"></i>Delete</button>
+                    <button class="btn btn-md btn-ghost-info" type="button" (click)="actionService.select('Edit', aShip)"><i class="ti ti-edit"></i>Edit</button>
+                    <button class="btn btn-md btn-ghost-danger" type="button" (click)="actionService.select('Delete', aShip)"><i class="ti ti-trash"></i>Delete</button>
                   </div>
 
                 </div>
