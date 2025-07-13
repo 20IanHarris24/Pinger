@@ -1,0 +1,35 @@
+<div *ngIf="isHovered" class="card-tooltip card-tooltip-background">
+  <div class="mb-3">
+    <label for="id" class="form-label">Id</label>
+    <div class="input-group">
+      <span class="input-group-text"><i class="ti ti-id"></i></span>
+      <input id="id" type="text" class="form-control" [value]="ship.id" readonly />
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <label for="name-Ship" class="form-label">Name</label>
+    <div class="input-group">
+      <span class="input-group-text"><i class="ti ti-ship"></i></span>
+      <input id="name-Ship" type="text" class="form-control" [value]="ship.name" readonly />
+    </div>
+  </div>
+
+  <div class="mb-3">
+    <label for="host-Addr" class="form-label">Host Address</label>
+    <div class="input-group">
+      <span class="input-group-text">https://</span>
+      <input id="host-Addr" type="text" class="form-control" [value]="ship.hostAddr" readonly />
+    </div>
+  </div>
+
+  <div class="btn-position">
+    <button class="btn btn-md btn-ghost-info" type="button" (click)="onEdit()">
+      <i class="ti ti-edit"></i>Edit
+    </button>
+    <button class="btn btn-md btn-ghost-danger" type="button" (click)="onDelete()">
+      <i class="ti ti-trash"></i>Delete
+    </button>
+  </div>
+</div>
+

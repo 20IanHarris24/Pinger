@@ -1,4 +1,3 @@
-
      <h2> Current Database Content</h2>
 
      <div class="spinner_pos">
@@ -7,58 +6,48 @@
      <ng-container  *ngIf="viewModel$ | async as vm">
        <ng-container *ngIf="vm.loading; else showShips">
          <app-spinner></app-spinner>
-       </ng-container>
+     </ng-container>
 
 
       <ng-template #showShips>
         <ng-container *ngIf="vm.ships.length >0; else noShips">
           <div class="row row-deck row-cards" style="min-height: 10rem">
             <div class="col-4" *ngFor="let aShip of vm.ships; let i = index">
-            <div class="card" [ngClass]="{
-            'flash-new': (newlyAddedShipId$ | async) === aShip.id, 'flash-edit': (newlyEditedShipId$ | async) === aShip.id}">
-              <div class="card-body position-relative" (mouseenter) = "onMouseOver(i)" (mouseleave) = "onMouseOff()" [ngClass]="{ 'border-highlight': hoverIndex === i}">
-                <h2 class="card-title">{{'Name:   ' + aShip.name}}</h2>
+              <div class="card"
+                   [ngClass]="{
+                      'flash-new': (newlyAddedShipId$ | async) === aShip.id,
+                      'flash-edit': (newlyEditedShipId$ | async) === aShip.id
+                   }">
+                <div class="card-body position-relative"
+                     (mouseenter) = "onMouseOver(i)"
+                     (mouseleave) = "onMouseOff()"
+                     [ngClass]="{ 'border-highlight': hoverIndex === i}">
 
-                <!-- Tooltip info box -->
-                <div *ngIf="i === hoverIndex" class="card-tooltip card-tooltip-background">
+                  <h2 class="card-title">{{'Name:   ' + aShip.name}}</h2>
 
-                 <div class="mb-3">
-                   <label for="id" class="form-label">Id</label>
-                   <div class="input-group">
-                      <span class="input-group-text"><i class="ti ti-id"></i></span>
-                      <input id= id type="text" class="form-control" [value] = "aShip.id" readonly/>
-                    </div>
-                  </div>
+                <app-tooltip
+                  [ship]="aShip"
+                  [isHovered]="i === hoverIndex"
+                  (edit)="actionService.select('Edit', $event)"
+                  (delete)="actionService.select('Delete', $event)">
+                </app-tooltip>
 
-                  <div class="mb-3">
-                    <label for="name-Ship" class="form-label">Name</label>
-                    <div class="input-group">
-                      <span class="input-group-text"><i class="ti ti-ship"></i></span>
-                      <input id="name-Ship" type="text" class="form-control" [value]="aShip.name" readonly/>
-                    </div>
-                  </div>
-
-                  <div class="mb-3">
-                    <label for="host-Addr" class="form-label">Host Address</label>
-                    <div class="input-group">
-                      <span class="input-group-text">https://</span>
-                      <input id="host-Addr" type="text" class="form-control"
-                             [value]="aShip.hostAddr" readonly/>
-                    </div>
-                  </div>
-
-                  <div class="btn-position">
-                    <button class="btn btn-md btn-ghost-info" type="button" (click)="actionService.select('Edit', aShip)"><i class="ti ti-edit"></i>Edit</button>
-                    <button class="btn btn-md btn-ghost-danger" type="button" (click)="actionService.select('Delete', aShip)"><i class="ti ti-trash"></i>Delete</button>
-                  </div>
 
                 </div>
               </div>
             </div>
           </div>
-        </div>
-     </ng-container>
-     </ng-template>
+
+
+        </ng-container>
+        </ng-template>
+
+          <div class="pagination" *ngIf="vm.totalPages > 1">
+            <button (click)="onPageChange(vm.page - 1)" [disabled]="vm.page === 1">Previous</button>
+            <span>Page {{ vm.page }} / {{ vm.totalPages }}</span>
+            <button (click)="onPageChange(vm.page + 1)" [disabled]="vm.page >= vm.totalPages">Next</button>
+          </div>
+
      </ng-container>
      </div>
 
@@ -66,3 +55,4 @@
      <ng-template #noShips>
        <h2>No ships available</h2>
      </ng-template>
+

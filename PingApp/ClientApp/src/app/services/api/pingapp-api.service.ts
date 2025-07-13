@@ -30,7 +30,7 @@ export class ShipsClient {
         this.baseUrl = baseUrl ?? "https://127.0.0.1:34011";
     }
 
-    getAllShips(): Observable<ShipModel[]> {
+    getAllShips(): Observable<ShipDto[]> {
         let url_ = this.baseUrl + "/api/ship/get/all";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -49,14 +49,14 @@ export class ShipsClient {
                 try {
                     return this.processGetAllShips(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ShipModel[]>;
+                    return _observableThrow(e) as any as Observable<ShipDto[]>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ShipModel[]>;
+                return _observableThrow(response_) as any as Observable<ShipDto[]>;
         }));
     }
 
-    protected processGetAllShips(response: HttpResponseBase): Observable<ShipModel[]> {
+    protected processGetAllShips(response: HttpResponseBase): Observable<ShipDto[]> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -70,7 +70,7 @@ export class ShipsClient {
             if (Array.isArray(resultData200)) {
                 result200 = [] as any;
                 for (let item of resultData200)
-                    result200!.push(ShipModel.fromJS(item));
+                    result200!.push(ShipDto.fromJS(item));
             }
             else {
                 result200 = <any>null;
@@ -85,7 +85,7 @@ export class ShipsClient {
         return _observableOf(null as any);
     }
 
-    getShipById(id: string): Observable<ShipModel> {
+    getShipById(id: string): Observable<ShipDto> {
         let url_ = this.baseUrl + "/api/ship/get/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -107,14 +107,14 @@ export class ShipsClient {
                 try {
                     return this.processGetShipById(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ShipModel>;
+                    return _observableThrow(e) as any as Observable<ShipDto>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ShipModel>;
+                return _observableThrow(response_) as any as Observable<ShipDto>;
         }));
     }
 
-    protected processGetShipById(response: HttpResponseBase): Observable<ShipModel> {
+    protected processGetShipById(response: HttpResponseBase): Observable<ShipDto> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -125,7 +125,7 @@ export class ShipsClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ShipModel.fromJS(resultData200);
+            result200 = ShipDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -136,7 +136,7 @@ export class ShipsClient {
         return _observableOf(null as any);
     }
 
-    getPaginationResult(page: number | undefined, size: number | undefined, search: string | null | undefined): Observable<PaginatedDisplayOfShipDto> {
+    getPaginationResult(page: number | undefined, size: number | undefined, search: string | null | undefined, sort: string | undefined, direction: string | undefined): Observable<PaginatedDisplayOfShipDto> {
         let url_ = this.baseUrl + "/api/ship/get/paginated?";
         if (page === null)
             throw new Error("The parameter 'page' cannot be null.");
@@ -148,6 +148,14 @@ export class ShipsClient {
             url_ += "size=" + encodeURIComponent("" + size) + "&";
         if (search !== undefined && search !== null)
             url_ += "search=" + encodeURIComponent("" + search) + "&";
+        if (sort === null)
+            throw new Error("The parameter 'sort' cannot be null.");
+        else if (sort !== undefined)
+            url_ += "sort=" + encodeURIComponent("" + sort) + "&";
+        if (direction === null)
+            throw new Error("The parameter 'direction' cannot be null.");
+        else if (direction !== undefined)
+            url_ += "direction=" + encodeURIComponent("" + direction) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -478,12 +486,12 @@ export class SocketExportsClient {
     }
 }
 
-export class ShipModel implements IShipModel {
+export class ShipDto implements IShipDto {
     id!: string;
     name!: string;
     hostAddr!: string;
 
-    constructor(data?: IShipModel) {
+    constructor(data?: IShipDto) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -500,9 +508,9 @@ export class ShipModel implements IShipModel {
         }
     }
 
-    static fromJS(data: any): ShipModel {
+    static fromJS(data: any): ShipDto {
         data = typeof data === 'object' ? data : {};
-        let result = new ShipModel();
+        let result = new ShipDto();
         result.init(data);
         return result;
     }
@@ -516,7 +524,7 @@ export class ShipModel implements IShipModel {
     }
 }
 
-export interface IShipModel {
+export interface IShipDto {
     id: string;
     name: string;
     hostAddr: string;
@@ -582,50 +590,6 @@ export interface IPaginatedDisplayOfShipDto {
     totalPages: number;
 }
 
-export class ShipDto implements IShipDto {
-    id!: string;
-    name!: string;
-    hostAddr!: string;
-
-    constructor(data?: IShipDto) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.name = _data["name"];
-            this.hostAddr = _data["hostAddr"];
-        }
-    }
-
-    static fromJS(data: any): ShipDto {
-        data = typeof data === 'object' ? data : {};
-        let result = new ShipDto();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["name"] = this.name;
-        data["hostAddr"] = this.hostAddr;
-        return data;
-    }
-}
-
-export interface IShipDto {
-    id: string;
-    name: string;
-    hostAddr: string;
-}
-
 export class ShipNewDto implements IShipNewDto {
     id!: string;
     name!: string;
@@ -665,6 +629,50 @@ export class ShipNewDto implements IShipNewDto {
 }
 
 export interface IShipNewDto {
+    id: string;
+    name: string;
+    hostAddr: string;
+}
+
+export class ShipModel implements IShipModel {
+    id!: string;
+    name!: string;
+    hostAddr!: string;
+
+    constructor(data?: IShipModel) {
+        if (data) {
+            for (var property in data) {
+                if (data.hasOwnProperty(property))
+                    (<any>this)[property] = (<any>data)[property];
+            }
+        }
+    }
+
+    init(_data?: any) {
+        if (_data) {
+            this.id = _data["id"];
+            this.name = _data["name"];
+            this.hostAddr = _data["hostAddr"];
+        }
+    }
+
+    static fromJS(data: any): ShipModel {
+        data = typeof data === 'object' ? data : {};
+        let result = new ShipModel();
+        result.init(data);
+        return result;
+    }
+
+    toJSON(data?: any) {
+        data = typeof data === 'object' ? data : {};
+        data["id"] = this.id;
+        data["name"] = this.name;
+        data["hostAddr"] = this.hostAddr;
+        return data;
+    }
+}
+
+export interface IShipModel {
     id: string;
     name: string;
     hostAddr: string;

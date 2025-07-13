@@ -95,6 +95,22 @@ export class ShipEffects {
     { dispatch: false }
   );
 
+  loadPaginatedShips$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(ShipActions.loadPaginatedShips),
+      switchMap(({ page, size, search, sort = 'name', direction = 'asc' }) =>
+        this.client.getPaginationResult(page, size, search, sort, direction).pipe(
+          map(res => ShipActions.loadPaginatedShipsSuccess({
+            ships: res.data ?? [],
+            page: res.pageNumber ?? 1,
+            totalPages: res.totalPages ?? 1,
+            totalItems: res.totalCount ?? 0
+            })),
+          catchError(error => of(ShipActions.loadPaginatedShipsFailure({ error })))
+        )
+      )
+    )
+  );
 
 
   loadShip$ = createEffect(() =>

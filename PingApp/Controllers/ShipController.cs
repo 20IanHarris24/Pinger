@@ -17,30 +17,46 @@ namespace PingApp.Controllers
         private readonly ILogger<ShipController> _logging;
         private readonly PingAppDbContext _dbContext;
         private readonly NotifierService _notifyThat;
+        private readonly IShipQueryService _query;
         private readonly IShipStatusService _status;
 
 
-        public ShipController(ILogger<ShipController> logger, NotifierService notify, PingAppDbContext context, IShipStatusService shipStatusService)   
+        public ShipController(ILogger<ShipController> logger, NotifierService notify, PingAppDbContext context, IShipQueryService query, IShipStatusService status)   
         {
             _logging = logger;
             _notifyThat = notify;
             _dbContext = context;
-            _status = shipStatusService;
+            _query = query;
+            _status = status;
         }
 
 
         [HttpGet]
         [Route("get/all")]
-        public async Task <ActionResult<IEnumerable<ShipModel>>> GetAllShips()
+        public async Task <ActionResult<IEnumerable<ShipDto>>> GetAllShips()
         {
             var allShips = await _dbContext.ShipModel.ToListAsync();
-
+            List <ShipDto> shipDtos = new List<ShipDto>();
+                
             if (allShips.Count == 0)
             {
                 return NotFound("No ships found");
             }
 
-            return Ok(allShips);
+            foreach (var ship in allShips)
+            {
+                var shipDtoConvert = new ShipDto
+                {
+                    Id = ship.Id,
+                    Name = ship.Name!,
+                    HostAddr = ship.HostAddr!
+                };
+                    
+
+                shipDtos.Add(shipDtoConvert);
+            }
+
+            return Ok(shipDtos);
 
         }
 
@@ -49,11 +65,11 @@ namespace PingApp.Controllers
         [HttpGet]
         [Route("get/{id:guid}")]
         
-        public async Task<ActionResult<ShipModel>> GetShipById(Guid id)
+        public async Task<ActionResult<ShipDto>> GetShipById(Guid id)
         {
             try
             {
-                // Fetch ship with the specified name
+                // Fetch ship with the specified id
                 var ship = await _dbContext.ShipModel
                     .Where(ship => ship.Id == id)
                     .AsNoTracking()
@@ -66,7 +82,8 @@ namespace PingApp.Controllers
                 }
                 
                
-                return Ok(ship);
+                // return Ok(ship);
+                return Ok(new ShipDto  { Id = ship.Id, Name = ship.Name!, HostAddr = ship.HostAddr! });
             }
             catch (Exception ex)
             {
@@ -81,10 +98,11 @@ namespace PingApp.Controllers
         
         [HttpGet]
         [Route("get/paginated")]
-        public async Task<ActionResult<PaginatedDisplay<ShipDto>>> GetPaginationResult(int page = 1, int size = 21, string? search = null)
+        public async Task<ActionResult<PaginatedDisplay<ShipDto>>> GetPaginationResult(int page = 1, int size = 21, string? search = null, string sort = "name",
+            string direction = "asc")
         {
-            var result = await _status.GetPaginatedShips(page, size, search);
-            return Ok(result);
+            var paginatedDisplayResult = await _query.GetPaginatedShips(page, size, search, sort, direction);
+            return Ok(paginatedDisplayResult);
         }
 
        

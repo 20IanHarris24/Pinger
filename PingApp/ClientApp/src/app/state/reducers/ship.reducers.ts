@@ -1,6 +1,6 @@
 import {createFeatureSelector, createReducer, createSelector, on,} from '@ngrx/store';
 import {createEntityAdapter, EntityAdapter, EntityState} from '@ngrx/entity';
-import {IShipModel, IShipResult, ShipResult} from '../../services/api/pingapp-api.service';
+import {IShipModel, IShipResult, ShipDto, ShipResult} from '../../services/api/pingapp-api.service';
 import * as ShipActions from '../actions/ship.actions';
 
 
@@ -10,6 +10,12 @@ export interface ShipState extends EntityState<IShipResult> {
   isLoading: boolean;
   newlyAddedShipId: string | null;
   recentlyDeletedId: string | null;
+  ships: ShipDto[];
+  loading: boolean;
+  page: number;
+  totalPages: number;
+  totalItems: number;
+  error?: any;
 
 }
 
@@ -25,7 +31,12 @@ export const initialState: ShipState = adapter.getInitialState({
   editedShipId: null,
   isLoading: false,
   newlyAddedShipId: null,
-  recentlyDeletedId: null
+  recentlyDeletedId: null,
+  ships: [],
+  loading: false,
+  page: 1,
+  totalPages: 1,
+  totalItems: 0,
 
 });
 
@@ -58,6 +69,25 @@ export const shipReducer = createReducer(
   on(ShipActions.loadAllShipsFailure, (state) => ({
     ...state,
     isLoading: false
+  })),
+
+
+  on(ShipActions.loadPaginatedShips, (state) => ({
+    ...state,
+    loading: true
+  })),
+  on(ShipActions.loadPaginatedShipsSuccess, (state, { ships, page, totalPages, totalItems }) => ({
+    ...state,
+    ships,
+    page,
+    totalPages,
+    totalItems,
+    loading: false
+  })),
+  on(ShipActions.loadPaginatedShipsFailure, (state, { error }) => ({
+    ...state,
+    error,
+    loading: false
   })),
 
 
@@ -114,16 +144,11 @@ on(ShipActions.updateShipSuccess, (state, {editShip}) =>{
 const { selectAll } = adapter.getSelectors();
 
 
-export const selectDeletedId = (id:string) => createSelector(selectShipState, (state: ShipState) => state.recentlyDeletedId);
-
-
 export const selectShipState = createFeatureSelector<ShipState>('ships');
 
 
 export const selectAllShips = createSelector(selectShipState, selectAll);
 
-// export const selectAllDbShips = createSelector(
-//   selectAllShips, (ships): IShipModel[] => ships.map(({ id, name, hostAddr }) => ({ id, name, hostAddr })));
 export const selectDbShipById = (id:string) => createSelector(selectShipState, (state) => {const ship = state.entities[id];
   if (!ship) return null;
   const { name, hostAddr } = ship;
@@ -144,14 +169,24 @@ export const selectNewlyAddedShipId = createSelector(
   (state: ShipState) => state.newlyAddedShipId
 );
 
+export const selectShips = createSelector(selectShipState, s => s.ships);
+export const selectPage = createSelector(selectShipState, s => s.page);
+export const selectTotalPages = createSelector(selectShipState, s => s.totalPages);
+export const selectTotalItems = createSelector(selectShipState, s => s.totalItems);
+export const selectLoading = createSelector(selectShipState, s => s.loading);
 
+export const selectPaginatedShipViewModel = createSelector(
+  selectShips,
+  selectPage,
+  selectTotalPages,
+  selectTotalItems,
+  selectLoading,
+  (ships, page, totalPages,totalItems, loading) => ({
+    ships,
+    page,
+    totalPages,
+    totalItems,
+    loading
+  })
+);
 
-// export const selectShipsLoading = createSelector(
-//   selectShipState,
-//   (state: ShipState) => state.isLoading
-// );
-
-// export const selectAllShipsSorted = () =>
-//   createSelector(selectAllShips, (ships) => {
-//     return ships.sort((a, b) => a.id - b.id);
-//   });

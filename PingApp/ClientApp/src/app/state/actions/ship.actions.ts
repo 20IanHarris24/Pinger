@@ -1,6 +1,6 @@
 import { createAction, props } from '@ngrx/store';
 import {
-  IShipResult,
+  IShipResult, ShipDto,
   ShipNewDto, ShipResult,
   ShipUpdateDto
 } from '../../services/api/pingapp-api.service';
@@ -32,6 +32,22 @@ export const loadAllShipsFailure = createAction(
   '[Action] Load All Ships Failure',
   props<{ error: any }>()
 );
+
+export const loadPaginatedShips = createAction(
+  '[Ship] Load Paginated Ships',
+  props<{ page: number; size: number; search?: string; sort?: string; direction?: string }>()
+);
+
+export const loadPaginatedShipsSuccess = createAction(
+  '[Ship] Load Paginated Ships Success',
+  props<{ ships: ShipDto[]; page: number; totalPages: number; totalItems: number }>()
+);
+
+export const loadPaginatedShipsFailure = createAction(
+  '[Ship] Load Paginated Ships Failure',
+  props<{ error: any }>()
+);
+
 
 export const loadShip = createAction(
   '[Action] Load Ship',

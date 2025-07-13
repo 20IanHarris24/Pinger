@@ -31,6 +31,7 @@ namespace PingApp
                 // builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
                 builder.Services.AddHostedService<ShipBackgroundPingService>();
                 builder.Services.AddScoped<NotifierService>();
+                builder.Services.AddScoped<IShipQueryService, ShipQueryService>();
                 builder.Services.AddScoped<IShipStatusService, ShipStatusService>();
                 builder.Services.AddSingleton(new ConcurrentDictionary<Guid, string>());
                 builder.Services.AddSignalR();
