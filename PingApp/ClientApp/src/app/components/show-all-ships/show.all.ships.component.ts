@@ -4,8 +4,8 @@ import { AsyncPipe, NgClass, NgForOf, NgIf } from '@angular/common';
 import {
   selectEditedShipId,
   selectNewlyAddedShipId, selectPaginatedShipViewModel
-} from '../../state/reducers/ship.reducers';
-import {Observable, tap} from 'rxjs';
+} from '../../state/selectors/ship.selectors';
+import {map, Observable, shareReplay, tap} from 'rxjs';
 import { Store } from '@ngrx/store';
 import { ActionService } from '../../services/action.service';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -29,10 +29,12 @@ export class ShowAllShipsComponent {
   hoverIndex: number = -1;
   newlyAddedShipId$: Observable<string | null>;
   newlyEditedShipId$: Observable<string | null>;
+  paginationArray$: Observable<number[]>;
   pageSize = 21;
   ships: ShipDto[] = [];
   sortBy = 'name';
   sortDirection = 'asc';
+  trackByPage = (_: number, page: number) => page;
   viewModel$: Observable<{
     ships: ShipDto[];
     page: number;
@@ -40,7 +42,11 @@ export class ShowAllShipsComponent {
     totalItems: number;
     loading: boolean;
   }>;
+
+
+
   @Output() openModal = new EventEmitter<void>();
+
 
 
   constructor(protected actionService: ActionService, private store: Store) {
@@ -51,12 +57,22 @@ export class ShowAllShipsComponent {
     );
     this.newlyAddedShipId$ = this.store.select(selectNewlyAddedShipId);
     this.newlyEditedShipId$ = this.store.select(selectEditedShipId);
+    this.paginationArray$ = this.viewModel$.pipe(
+      map(vm => Array.from({ length: vm.totalPages }, (_, i) => i + 1)),
+      shareReplay({ refCount: true, bufferSize: 1 })   // avoid recompute
+    );
 
   }
+
+
+
 
   ngOnInit(): void {
     this.store.dispatch(loadPaginatedShips({ page: this.currentPage, size: this.pageSize }));
+
   }
+  // );
+  // }
 
 
   onMouseOver(i: number)

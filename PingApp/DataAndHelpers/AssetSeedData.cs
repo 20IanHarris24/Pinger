@@ -6,7 +6,7 @@ namespace PingApp.DataAndHelpers
     public class AssetSeedData
     {
 
-            internal async Task InitAsync(PingAppDbContext db,  IConfiguration configuration)
+            internal async Task InitAsync(IConfiguration configuration, PingAppDbContext db)
             {
 
                 if (await db.ShipModel.AnyAsync()) return; //This ia a check to see if data exists in the DB. If false ships will be seeded into the dB.
@@ -18,6 +18,7 @@ namespace PingApp.DataAndHelpers
 
 
                 await db.SaveChangesAsync();
+                //logging.LogInformation("Ships seeded and saved to database");
                 Console.WriteLine("Saving changes to the database.....");
             }
 

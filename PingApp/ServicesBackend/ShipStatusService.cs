@@ -23,6 +23,7 @@ public class ShipStatusService : IShipStatusService
    
     public string GetLatestPingResult(Guid shipId)
     {
+        _logging.LogInformation("Current keys in _latestPingResults: \n{Keys}", string.Join(Environment.NewLine, _latestPing.Select(lp => "\t\t\t\t" + lp.Key)));
         return _latestPing.TryGetValue(shipId, out var result) ? result : "Unknown";
     }
   

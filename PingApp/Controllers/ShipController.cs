@@ -122,14 +122,11 @@ namespace PingApp.Controllers
             await  _dbContext.SaveChangesAsync();
             
             var removed = _status.RemoveLatestPingResult(id);
-            _logging.LogInformation("Attempted to remove ping cache for ship {ShipId}, success: {Removed}", id, removed);
+
+            string removedP = removed ? "cached ping removal SUCCESS" : "cached ping removal FAILED";
             
-            if (!removed) 
-            {
-                _logging.LogInformation("Cached Ping Result remove successful: {Removed}", removed); 
-              
-            }
-           
+            _logging.LogInformation("Attempted to remove ping cache for ship {ShipId}, success: {Removed}", id, removedP);
+            
             await _notifyThat.ShipIsDeleted(id);
             
             return NoContent();

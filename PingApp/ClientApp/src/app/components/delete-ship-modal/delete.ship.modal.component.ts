@@ -55,6 +55,7 @@ export class DeleteShipModalComponent {
 
   confirm(): void {
     this.isConfirmed = true;
+    console.log('id to be deleted: ', this.chosenShipToDelete)
     this.store.dispatch(deleteShip({ id: this.chosenShipToDelete }));
   }
 

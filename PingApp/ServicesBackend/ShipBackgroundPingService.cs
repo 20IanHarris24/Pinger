@@ -39,7 +39,7 @@ namespace PingApp.ServicesBackend
             using var scope = _scopeFactory.CreateScope(); //new code
             await using var dbContext = scope.ServiceProvider.GetRequiredService<PingAppDbContext>();
             
-            _logging.LogInformation("ShipStatusService running in the background at: {time}", DateTimeOffset.Now);
+            _logging.LogInformation("ShipBackgroundPingService running in the background at: {time}", DateTimeOffset.Now);
             
             var simultaneousNoOfPings = new SemaphoreSlim(5); // Limit the concurrent number of threads to 5
 
@@ -75,7 +75,7 @@ namespace PingApp.ServicesBackend
 
             // Now we actually run the tasks
             var shipResults = await Task.WhenAll(tasks);
-            _logging.LogInformation("Broadcasting ping results for ships:\n{ShipIds}", string.Join(Environment.NewLine, shipResults.Select(s => "\t\t\t\t" + s.Id)));
+            _logging.LogInformation("Broadcasting ping results for ships:\n{ShipIds}", string.Join(Environment.NewLine, shipResults.Select(s => "\t\t" + s.Id)));
             await _hubContext.Clients.All.SendAsync("DisplayShips", shipResults, cancellationToken: stoppingToken);
             await Task.Delay(2000, stoppingToken);
 

@@ -6,7 +6,7 @@
      <ng-container  *ngIf="viewModel$ | async as vm">
        <ng-container *ngIf="vm.loading; else showShips">
          <app-spinner></app-spinner>
-     </ng-container>
+       </ng-container>
 
 
       <ng-template #showShips>
@@ -38,15 +38,42 @@
             </div>
           </div>
 
-
         </ng-container>
         </ng-template>
 
-          <div class="pagination" *ngIf="vm.totalPages > 1">
-            <button (click)="onPageChange(vm.page - 1)" [disabled]="vm.page === 1">Previous</button>
-            <span>Page {{ vm.page }} / {{ vm.totalPages }}</span>
-            <button (click)="onPageChange(vm.page + 1)" [disabled]="vm.page >= vm.totalPages">Next</button>
-          </div>
+
+
+       <ul class="pagination" *ngIf="vm.totalPages > 1">
+         <li class="page-item" [class.disabled]="vm.page === 1">
+           <button class="page-link page-text"
+                   (click)="onPageChange(vm.page - 1)"
+                   [disabled]="vm.page === 1">
+             Previous
+           </button>
+         </li>
+
+         <li class="page-item active"
+             *ngFor="let page of (paginationArray$ | async); trackBy: trackByPage"
+             [class.active]="page === vm.page">
+           <button class="page-link"
+                   (click)="onPageChange(page)">
+             {{ page }}
+           </button>
+         </li>
+
+         <li class="page-item"
+             [class.disabled]="vm.page === vm.totalPages">
+           <button class="page-link page-text"
+                   (click)="onPageChange(vm.page + 1)">
+             Next
+           </button>
+         </li>
+       </ul>
+
+
+
+
+
 
      </ng-container>
      </div>

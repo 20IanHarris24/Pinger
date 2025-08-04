@@ -4,7 +4,7 @@ import {IShipModel, ShipUpdateDto} from '../../services/api/pingapp-api.service'
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
 import {Store} from '@ngrx/store';
 import {updateShip} from '../../state/actions/ship.actions';
-import {selectDbShipById} from '../../state/reducers/ship.reducers';
+import {selectDbShipById} from '../../state/selectors/ship.selectors';
 import {take} from 'rxjs';
 
 

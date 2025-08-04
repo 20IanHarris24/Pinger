@@ -82,6 +82,7 @@ namespace PingApp
                 var services = scope.ServiceProvider; //new code
                 var dbContext = services.GetRequiredService<PingAppDbContext>(); //new code
                 var initShipConfig = services.GetRequiredService<IConfiguration>();
+                //var logging = services.GetRequiredService<ILogger<Program>>();
                 // await dbContext.Database.EnsureDeletedAsync(); //commented out this line after first run when empty database created) //new code
                 // await dbContext.Database.MigrateAsync(); //commented out after the first dataSeed run (when empty database created) //new code
 
@@ -89,7 +90,7 @@ namespace PingApp
 
                 try
                 {
-                    await seedShips.InitAsync(dbContext, initShipConfig);  //Seed initial ship information properties
+                    await seedShips.InitAsync(initShipConfig, dbContext);  //Seed initial ship information properties
                     // var shipService = services.GetRequiredService<ShipStatusService>();
                     // await shipService.ExecuteAsync(dbContext);
                 }

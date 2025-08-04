@@ -30,13 +30,22 @@ export class ShipSocketService {
           this._store.dispatch(ShipActions.registerShipSuccess({ newShip }));
         });
 
-        this._displayScreenConnection.on('ShipUpdated', (editShip: ShipResult) => {
-          const editShipInstance = ShipResult.fromJS(editShip);
-          this._store.dispatch(ShipActions.updateShipSuccess({editShip: editShipInstance}));
+        // this._displayScreenConnection.on('ShipUpdated', (editShip: ShipResult) => {
+        //   const editShipInstance = ShipResult.fromJS(editShip);
+        //   this._store.dispatch(ShipActions.updateShipSuccess({editShip: editShipInstance}));
+        // });
+
+        this._displayScreenConnection.on('ShipUpdated', () => {
+          this._store.dispatch(ShipActions.reloadCurrentPage());
         });
 
-        this._displayScreenConnection.on('ShipDeleted', (deletedShipId: string) => {
-          this._store.dispatch(ShipActions.deleteShipSuccess({ id: deletedShipId }));
+
+        // this._displayScreenConnection.on('ShipDeleted', (deletedShipId: string) => {
+        //   this._store.dispatch(ShipActions.deleteShipSuccess({ id: deletedShipId }));
+        // });
+
+        this._displayScreenConnection.on('ShipDeleted', () => {
+          this._store.dispatch(ShipActions.reloadCurrentPage());
         });
 
       })

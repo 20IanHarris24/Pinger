@@ -6,9 +6,6 @@ namespace PingApp.DataAndHelpers
 {
     public class ShipResult : ShipModel
     {
-        public string Result {
-            get;
-            set;
-        }
+        public string Result { get; init; } = string.Empty;
     }
 }

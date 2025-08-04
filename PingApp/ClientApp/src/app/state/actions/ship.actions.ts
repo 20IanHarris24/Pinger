@@ -40,7 +40,7 @@ export const loadPaginatedShips = createAction(
 
 export const loadPaginatedShipsSuccess = createAction(
   '[Ship] Load Paginated Ships Success',
-  props<{ ships: ShipDto[]; page: number; totalPages: number; totalItems: number }>()
+  props<{ ships: ShipDto[]; page: number; size: number; totalPages: number; totalItems: number;  sort: string; direction: string; }>()
 );
 
 export const loadPaginatedShipsFailure = createAction(
@@ -79,6 +79,12 @@ export const registerShipSuccess = createAction(
 export const registerShipFailure = createAction(
   '[Action] Register Ship Failure',
    props<{ error: any }>()
+);
+
+
+// ship.actions.ts
+export const reloadCurrentPage = createAction(
+  '[Ship] Reload Current Page'
 );
 
 
