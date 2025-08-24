@@ -1,3 +1,7 @@
+.row-height{
+  min-height: 10rem;
+}
+
 .spinner_pos{
   display: flex;
   flex-direction: column;
@@ -5,7 +9,6 @@
   align-items: center;
 
 }
-
 
 .status-success {
   //background-color: #d4edda; /* light green */
@@ -24,5 +27,4 @@
   background-color: #f8d7da; /* light red */
   color: #721c24; /* dark red text */
 }
-
 

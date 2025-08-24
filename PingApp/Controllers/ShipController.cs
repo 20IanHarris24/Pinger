@@ -19,7 +19,7 @@ namespace PingApp.Controllers
         private readonly NotifierService _notifyThat;
         private readonly IShipQueryService _query;
         private readonly IShipStatusService _status;
-
+        
 
         public ShipController(ILogger<ShipController> logger, NotifierService notify, PingAppDbContext context, IShipQueryService query, IShipStatusService status)   
         {
@@ -28,6 +28,7 @@ namespace PingApp.Controllers
             _dbContext = context;
             _query = query;
             _status = status;
+            
         }
 
 
@@ -98,7 +99,7 @@ namespace PingApp.Controllers
         
         [HttpGet]
         [Route("get/paginated")]
-        public async Task<ActionResult<PaginatedDisplay<ShipDto>>> GetPaginationResult(int page = 1, int size = 21, string? search = null, string sort = "name",
+        public async Task<ActionResult<PaginatedDisplay<ShipDto>>> GetPaginationResult(int page = 1, int size = 18, string? search = null, string sort = "name",
             string direction = "asc")
         {
             var paginatedDisplayResult = await _query.GetPaginatedShips(page, size, search, sort, direction);
