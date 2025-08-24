@@ -1,23 +1,26 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { ShipDto } from '../../services/api/pingapp-api.service';
-import { AsyncPipe, NgClass, NgForOf, NgIf } from '@angular/common';
+import { AsyncPipe, NgForOf, NgIf } from '@angular/common';
 import {
   selectEditedShipId,
   selectNewlyAddedShipId, selectPaginatedShipViewModel
 } from '../../state/selectors/ship.selectors';
-import {map, Observable, shareReplay, tap} from 'rxjs';
+import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import { ActionService } from '../../services/action.service';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SpinnerComponent } from '../spinner/spinner.component';
 import { loadPaginatedShips } from '../../state/actions/ship.actions';
 import { TooltipComponent } from '../tooltip/tooltip.component';
+import { UtilityService} from '../../services/utility.service';
+
+
 
 
 
 @Component({
   selector: 'app-showAllShips',
-  imports: [NgForOf, NgIf, AsyncPipe, NgClass, ReactiveFormsModule, SpinnerComponent, TooltipComponent],
+  imports: [NgForOf, NgIf, AsyncPipe, ReactiveFormsModule, SpinnerComponent, TooltipComponent],
   templateUrl: 'show.all.ships.component.html',
   styleUrl: 'show.all.ships.component.scss',
 })
@@ -29,17 +32,12 @@ export class ShowAllShipsComponent {
   hoverIndex: number = -1;
   newlyAddedShipId$: Observable<string | null>;
   newlyEditedShipId$: Observable<string | null>;
-  paginationArray$: Observable<number[]>;
-  pageSize = 21;
+  mouseAction: boolean = false;
+  pageSize = 18;
+  selectIndex: number = -1;
   ships: ShipDto[] = [];
-  sortBy = 'name';
-  sortDirection = 'asc';
-  trackByPage = (_: number, page: number) => page;
   viewModel$: Observable<{
     ships: ShipDto[];
-    page: number;
-    totalPages: number;
-    totalItems: number;
     loading: boolean;
   }>;
 
@@ -49,18 +47,14 @@ export class ShowAllShipsComponent {
 
 
 
-  constructor(protected actionService: ActionService, private store: Store) {
+
+  constructor(protected actionService: ActionService, private store: Store, protected utility: UtilityService) {
 
 
-    this.viewModel$ = this.store.select(selectPaginatedShipViewModel).pipe(
-      tap(vm => console.log('📦 ViewModel update:', vm))
-    );
+    this.viewModel$ = this.store.select(selectPaginatedShipViewModel);
     this.newlyAddedShipId$ = this.store.select(selectNewlyAddedShipId);
     this.newlyEditedShipId$ = this.store.select(selectEditedShipId);
-    this.paginationArray$ = this.viewModel$.pipe(
-      map(vm => Array.from({ length: vm.totalPages }, (_, i) => i + 1)),
-      shareReplay({ refCount: true, bufferSize: 1 })   // avoid recompute
-    );
+
 
   }
 
@@ -71,27 +65,24 @@ export class ShowAllShipsComponent {
     this.store.dispatch(loadPaginatedShips({ page: this.currentPage, size: this.pageSize }));
 
   }
-  // );
-  // }
 
+  onMouseClick(i: number)
+  {
+    this.selectIndex = i;
+    this.mouseAction = true;
+    this.openModal.emit();
+  }
 
   onMouseOver(i: number)
     {
        this.hoverIndex = i;
-       // console.log(this.hoverIndex);
-       this.openModal.emit();
-
+       this.mouseAction = true;
     }
 
     onMouseOff(){
         this.hoverIndex = -1;
-
+        this.mouseAction = false;
+        this.selectIndex = -1;
     }
-
-  onPageChange(newPage: number): void {
-    this.currentPage = newPage;
-    this.store.dispatch(loadPaginatedShips({ page: newPage, size: this.pageSize, sort: this.sortBy,
-      direction: this.sortDirection }));
-  }
 
 }

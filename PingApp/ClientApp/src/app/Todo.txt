@@ -1,17 +1,9 @@
-pagination for showing ships on admin page(?) (DONE)
-pagination display sorting (DONE)
-pagination buttons (Implement Tabler buttons for pagination)(DONE)
-refactor so selectors are in a separate class (Done)
-Delete ship not disappearing in the pagination view (need to fix again) (DONE)
-edit not showing directly check that the onEdit() & onDelete() functions are wired up correctly (DONE)
-
-
-refactor homeComponent.html - implement shipcard component
-refactor tooltips component - make components of edit and delete?
-performance reduce the re-rendering on pagination page change
+refactor tooltips component - make components of edit and delete (NOT NEEDED?)
+performance reduce the re-rendering on pagination page change (WORK IN PROGRESS)
+Refactor to use the json file for default configuration settings of a pagination object
 
 https:// (Production) for pointing to the backend(?)
 error management
-log-in page and auth (page access etc)?
+log-in page and auth (page access etc.)?
 testsuite
 

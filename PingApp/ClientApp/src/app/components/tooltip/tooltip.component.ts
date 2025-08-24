@@ -17,7 +17,7 @@ export class TooltipComponent {
 
 
   @Input() ship!: ShipDto;
-  @Input() isHovered: boolean = false;
+  @Input() isSelected: boolean = false;
 
   @Output() edit = new EventEmitter<IShipResult>();
   @Output() delete = new EventEmitter<IShipResult>();

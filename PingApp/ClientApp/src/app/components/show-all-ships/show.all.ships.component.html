@@ -1,85 +1,55 @@
-     <h2> Current Database Content</h2>
+<h2> Current Database Content</h2>
 
-     <div class="spinner_pos">
-
-
-     <ng-container  *ngIf="viewModel$ | async as vm">
-       <ng-container *ngIf="vm.loading; else showShips">
-         <app-spinner></app-spinner>
-       </ng-container>
+<div class="spinner_pos paginate_format">
 
 
-      <ng-template #showShips>
-        <ng-container *ngIf="vm.ships.length >0; else noShips">
-          <div class="row row-deck row-cards" style="min-height: 10rem">
-            <div class="col-4" *ngFor="let aShip of vm.ships; let i = index">
+  <ng-container *ngIf="viewModel$ | async as vm">
+    <ng-container *ngIf="vm.loading; else showShips">
+      <app-spinner></app-spinner>
+    </ng-container>
+
+
+    @let newlyAddedShipId = (newlyAddedShipId$ | async);
+    @let newlyEditedShipId = (newlyEditedShipId$ | async);
+
+    <ng-template #showShips>
+      <ng-container *ngIf="vm.ships.length >0; else noShips">
+        <div class="row row-deck row-cards row-height">
+          <ng-container *ngFor="let a_Ship of vm.ships; let i = index; trackBy: utility.trackByShipDtoId">
+            <div class="col-4">
               <div class="card"
-                   [ngClass]="{
-                      'flash-new': (newlyAddedShipId$ | async) === aShip.id,
-                      'flash-edit': (newlyEditedShipId$ | async) === aShip.id
-                   }">
+                   [class.flash-new]="newlyAddedShipId === a_Ship.id"
+                   [class.flash-edit]="newlyEditedShipId === a_Ship.id">
                 <div class="card-body position-relative"
-                     (mouseenter) = "onMouseOver(i)"
-                     (mouseleave) = "onMouseOff()"
-                     [ngClass]="{ 'border-highlight': hoverIndex === i}">
+                     (mouseenter)="onMouseOver(i)"
+                     (click)="onMouseClick(i)"
+                     (mouseleave)="onMouseOff()"
+                     [class.border-highlight]="hoverIndex === i && mouseAction"
+                     [class.border-highlight-selected]="selectIndex === i && mouseAction">
 
-                  <h2 class="card-title">{{'Name:   ' + aShip.name}}</h2>
+                  <h2 class="card-title">{{ 'Name:   ' + a_Ship.name }}</h2>
 
-                <app-tooltip
-                  [ship]="aShip"
-                  [isHovered]="i === hoverIndex"
-                  (edit)="actionService.select('Edit', $event)"
-                  (delete)="actionService.select('Delete', $event)">
-                </app-tooltip>
+                  <app-tooltip
+                    [ship]="a_Ship"
+                    [isSelected]="i === selectIndex"
+                    (edit)="actionService.select('Edit', $event)"
+                    (delete)="actionService.select('Delete', $event)">
+                  </app-tooltip>
 
 
                 </div>
               </div>
             </div>
-          </div>
+          </ng-container>
+        </div>
 
-        </ng-container>
-        </ng-template>
-
-
-
-       <ul class="pagination" *ngIf="vm.totalPages > 1">
-         <li class="page-item" [class.disabled]="vm.page === 1">
-           <button class="page-link page-text"
-                   (click)="onPageChange(vm.page - 1)"
-                   [disabled]="vm.page === 1">
-             Previous
-           </button>
-         </li>
-
-         <li class="page-item active"
-             *ngFor="let page of (paginationArray$ | async); trackBy: trackByPage"
-             [class.active]="page === vm.page">
-           <button class="page-link"
-                   (click)="onPageChange(page)">
-             {{ page }}
-           </button>
-         </li>
-
-         <li class="page-item"
-             [class.disabled]="vm.page === vm.totalPages">
-           <button class="page-link page-text"
-                   (click)="onPageChange(vm.page + 1)">
-             Next
-           </button>
-         </li>
-       </ul>
+      </ng-container>
+    </ng-template>
+  </ng-container>
+</div>
 
 
-
-
-
-
-     </ng-container>
-     </div>
-
-
-     <ng-template #noShips>
-       <h2>No ships available</h2>
-     </ng-template>
+<ng-template #noShips>
+  <h2>No ships available</h2>
+</ng-template>
 

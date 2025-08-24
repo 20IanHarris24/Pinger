@@ -9,12 +9,13 @@ import {UtilityService} from '../../services/utility.service';
 import {SpinnerComponent} from '../spinner/spinner.component';
 
 
+
 @UntilDestroy()
 @Component({
   selector: 'app-home',
   templateUrl: 'home.component.html',
   styleUrls: ['home.component.scss'],
-  imports: [AsyncPipe, NgFor, NgClass, SpinnerComponent, NgIf],
+  imports: [AsyncPipe, NgFor, SpinnerComponent, NgIf, NgClass],
 })
 export class HomeComponent {
 
@@ -33,13 +34,6 @@ export class HomeComponent {
     this.viewModel$ = combineLatest([this.loading$, this.ships$]).pipe(
       map(([loading, ships]) => ({ loading, ships }))
     );
-
-    // this.viewModel$.subscribe(vm => {
-    //   console.log('Loading:', vm.loading);
-    //   console.log('Ships count:', vm.ships.length);
-    // });
-
-
 
   }
 

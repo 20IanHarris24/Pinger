@@ -13,6 +13,7 @@
   <div class="container">
     <h3>List</h3>
     <div class="spinner_pos">
+
       <ng-container  *ngIf="viewModel$ | async as vm">
           <ng-container *ngIf="vm.loading; else showShips">
               <app-spinner></app-spinner>
@@ -22,20 +23,22 @@
 
       <ng-template  #showShips>
         <ng-container *ngIf="vm.ships.length > 0; else noShips">
-            <div class="row row-deck row-cards" style="min-height: 10rem">
-               <div class="col-3" *ngFor="let ship of vm.ships; trackBy: utility.getId">
-                  <div class="card" [ngClass]="utility.getStatusClass(ship.result)">
-                    <div class="card-body">
-                        <h2 class="card-title">{{'Name:   ' + ship.name}}</h2>
-                        <p class="card-text">{{'Status:   ' + ship.result}}</p>
-                        <p class="card-text">{{'Host addr:   ' + ship.hostAddr}}</p>
-                    </div>
+            <div class="row row-deck row-cards row-height">
+              <div class="col-3"  *ngFor="let a_Ship of vm.ships; trackBy: utility.trackByShipResultId">
+                <div class="card" [ngClass]="utility.getStatusClass(a_Ship.result)">
+                  <div class="card-body">
+                    <h2 class="card-title">{{'Name:   ' + a_Ship.name}}</h2>
+                    <p class="card-text">{{'Status:   ' + a_Ship.result}}</p>
+                    <p class="card-text">{{'Host addr:   ' + a_Ship.hostAddr}}</p>
                   </div>
                 </div>
               </div>
-        </ng-container>
+            </div>
+          </ng-container>
       </ng-template>
-      </ng-container>
+
+
+     </ng-container>
 
 
       <ng-template #noShips>
