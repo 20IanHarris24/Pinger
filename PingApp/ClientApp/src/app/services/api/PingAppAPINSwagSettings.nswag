@@ -62,6 +62,7 @@
       "enumNameGeneratorType": null,
       "serviceHost": null,
       "serviceSchemes": [
+        "http",
         "https"
       ],
       "output": "pingapp-api.service.ts"

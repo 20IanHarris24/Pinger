@@ -35,17 +35,17 @@ export const loadAllShipsFailure = createAction(
 
 export const loadPaginatedShips = createAction(
   '[Ship] Load Paginated Ships',
-  props<{ page: number; size: number; search?: string; sort?: string; direction?: string }>()
+  props<{ page?: number }>()
 );
 
 export const loadPaginatedShipsSuccess = createAction(
   '[Ship] Load Paginated Ships Success',
-  props<{ ships: ShipDto[]; page: number; size: number; totalPages: number; totalItems: number;  sort: string; direction: string; }>()
+  props<{ ships: ShipDto[]; page: number; pageSize: number; totalPages: number; totalItems: number;  sort: string; direction: string; }>()
 );
 
 export const loadPaginatedShipsFailure = createAction(
   '[Ship] Load Paginated Ships Failure',
-  props<{ error: any }>()
+  props<{ error: unknown }>()
 );
 
 

@@ -27,7 +27,7 @@ export class ShipsClient {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ?? "https://127.0.0.1:34011";
+        this.baseUrl = baseUrl ?? "http://127.0.0.1:34011";
     }
 
     getAllShips(): Observable<ShipDto[]> {
@@ -136,26 +136,10 @@ export class ShipsClient {
         return _observableOf(null as any);
     }
 
-    getPaginationResult(page: number | undefined, size: number | undefined, search: string | null | undefined, sort: string | undefined, direction: string | undefined): Observable<PaginatedDisplayOfShipDto> {
+    getPaginationResult(page: number | null | undefined): Observable<PaginatedDisplayOfShipDto> {
         let url_ = this.baseUrl + "/api/ship/get/paginated?";
-        if (page === null)
-            throw new Error("The parameter 'page' cannot be null.");
-        else if (page !== undefined)
+        if (page !== undefined && page !== null)
             url_ += "page=" + encodeURIComponent("" + page) + "&";
-        if (size === null)
-            throw new Error("The parameter 'size' cannot be null.");
-        else if (size !== undefined)
-            url_ += "size=" + encodeURIComponent("" + size) + "&";
-        if (search !== undefined && search !== null)
-            url_ += "search=" + encodeURIComponent("" + search) + "&";
-        if (sort === null)
-            throw new Error("The parameter 'sort' cannot be null.");
-        else if (sort !== undefined)
-            url_ += "sort=" + encodeURIComponent("" + sort) + "&";
-        if (direction === null)
-            throw new Error("The parameter 'direction' cannot be null.");
-        else if (direction !== undefined)
-            url_ += "direction=" + encodeURIComponent("" + direction) + "&";
         url_ = url_.replace(/[?&]$/, "");
 
         let options_ : any = {
@@ -370,58 +354,6 @@ export class ShipsClient {
         }
         return _observableOf(null as any);
     }
-
-    mapToShipResult(ship: ShipModel): Observable<ShipResult> {
-        let url_ = this.baseUrl + "/api/ship";
-        url_ = url_.replace(/[?&]$/, "");
-
-        const content_ = JSON.stringify(ship);
-
-        let options_ : any = {
-            body: content_,
-            observe: "response",
-            responseType: "blob",
-            headers: new HttpHeaders({
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            })
-        };
-
-        return this.http.request("post", url_, options_).pipe(_observableMergeMap((response_ : any) => {
-            return this.processMapToShipResult(response_);
-        })).pipe(_observableCatch((response_: any) => {
-            if (response_ instanceof HttpResponseBase) {
-                try {
-                    return this.processMapToShipResult(response_ as any);
-                } catch (e) {
-                    return _observableThrow(e) as any as Observable<ShipResult>;
-                }
-            } else
-                return _observableThrow(response_) as any as Observable<ShipResult>;
-        }));
-    }
-
-    protected processMapToShipResult(response: HttpResponseBase): Observable<ShipResult> {
-        const status = response.status;
-        const responseBlob =
-            response instanceof HttpResponse ? response.body :
-            (response as any).error instanceof Blob ? (response as any).error : undefined;
-
-        let _headers: any = {}; if (response.headers) { for (let key of response.headers.keys()) { _headers[key] = response.headers.get(key); }}
-        if (status === 200) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            let result200: any = null;
-            let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ShipResult.fromJS(resultData200);
-            return _observableOf(result200);
-            }));
-        } else if (status !== 200 && status !== 204) {
-            return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
-            return throwException("An unexpected server error occurred.", status, _responseText, _headers);
-            }));
-        }
-        return _observableOf(null as any);
-    }
 }
 
 @Injectable({
@@ -434,7 +366,7 @@ export class SocketExportsClient {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ?? "https://127.0.0.1:34011";
+        this.baseUrl = baseUrl ?? "http://127.0.0.1:34011";
     }
 
     getSocketExport(): Observable<SocketExport> {
@@ -536,6 +468,8 @@ export class PaginatedDisplayOfShipDto implements IPaginatedDisplayOfShipDto {
     pageSize!: number;
     totalCount!: number;
     totalPages!: number;
+    sort!: string;
+    direction!: string;
 
     constructor(data?: IPaginatedDisplayOfShipDto) {
         if (data) {
@@ -557,6 +491,8 @@ export class PaginatedDisplayOfShipDto implements IPaginatedDisplayOfShipDto {
             this.pageSize = _data["pageSize"];
             this.totalCount = _data["totalCount"];
             this.totalPages = _data["totalPages"];
+            this.sort = _data["sort"];
+            this.direction = _data["direction"];
         }
     }
 
@@ -578,6 +514,8 @@ export class PaginatedDisplayOfShipDto implements IPaginatedDisplayOfShipDto {
         data["pageSize"] = this.pageSize;
         data["totalCount"] = this.totalCount;
         data["totalPages"] = this.totalPages;
+        data["sort"] = this.sort;
+        data["direction"] = this.direction;
         return data;
     }
 }
@@ -588,6 +526,8 @@ export interface IPaginatedDisplayOfShipDto {
     pageSize: number;
     totalCount: number;
     totalPages: number;
+    sort: string;
+    direction: string;
 }
 
 export class ShipNewDto implements IShipNewDto {
@@ -816,7 +756,6 @@ export interface IShipUpdateDto {
 }
 
 export class SocketExport implements ISocketExport {
-    shipResult!: ShipResult;
 
     constructor(data?: ISocketExport) {
         if (data) {
@@ -828,9 +767,6 @@ export class SocketExport implements ISocketExport {
     }
 
     init(_data?: any) {
-        if (_data) {
-            this.shipResult = _data["shipResult"] ? ShipResult.fromJS(_data["shipResult"]) : <any>undefined;
-        }
     }
 
     static fromJS(data: any): SocketExport {
@@ -842,13 +778,11 @@ export class SocketExport implements ISocketExport {
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["shipResult"] = this.shipResult ? this.shipResult.toJSON() : <any>undefined;
         return data;
     }
 }
 
 export interface ISocketExport {
-    shipResult: ShipResult;
 }
 
 export interface FileResponse {

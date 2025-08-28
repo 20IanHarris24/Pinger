@@ -1,6 +1,8 @@
 using System.Collections.Concurrent;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using PingApp.DataAndHelpers;
 using PingApp.Hubs;
 using PingApp.Interfaces;
@@ -12,6 +14,9 @@ namespace PingApp
     public class Program
     {
         private const string ServiceName = "Pinger";
+        // static string NormalizeDirection(string? dir) =>
+        //     string.Equals(dir, "desc", StringComparison.OrdinalIgnoreCase) ? "desc" : "asc";
+       
 
         public static async Task Main(string[] args)
         {
@@ -30,6 +35,13 @@ namespace PingApp
                 builder.Configuration.AddJsonFile("appsettings.Development.json", optional: false, reloadOnChange: true);
                 // builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
                 builder.Services.AddHostedService<ShipBackgroundPingService>();
+                builder.Services.AddOptions<PaginationSettings>()
+                    .Bind(builder.Configuration.GetSection("PaginationSettings"))
+                    .ValidateDataAnnotations()
+                    .Validate(ps => ps.PageSize <= ps.MaxPageSize, "PageSize must be less than or equal to MaxPagesSize")
+                    .ValidateOnStart();
+                    
+                 
                 builder.Services.AddScoped<NotifierService>();
                 builder.Services.AddScoped<IShipQueryService, ShipQueryService>();
                 builder.Services.AddScoped<IShipStatusService, ShipStatusService>();
@@ -140,6 +152,27 @@ namespace PingApp
             {
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
+                app.MapGet("/debugpagination", (IOptionsSnapshot<PaginationSettings> opts) =>
+                {
+                    var s = opts.Value; // reflects config changes on next request
+                    var checkPayload = new
+                    {
+                        s.Page,
+                        s.PageSize,
+                        s.MaxPageSize,
+                        s.Sort,
+                        s.Direction
+                    };
+                    return Results.Json(checkPayload, new JsonSerializerOptions(JsonSerializerDefaults.Web)
+                    {
+                        Converters = { new JsonStringEnumConverter() }
+                       
+                    });
+                });
+                
+                
+                
+                
             }
 
             app.UseRouting();

@@ -27,10 +27,7 @@ export class PaginationComponent {
 
   currentPage = 1;
   paginationArray$: Observable<Array<number>>;
-  pageSize = 18;
   ships: ShipDto[] = [];
-  sortBy = 'name';
-  sortDirection = 'asc';
   paginationModel$: Observable<PaginationModel>;
 
 
@@ -42,17 +39,11 @@ export class PaginationComponent {
     );  // avoid recompute
   }
 
-  ngOnInit(): void {
-    this.store.dispatch(loadPaginatedShips({page: this.currentPage, size: this.pageSize}));
-
-  }
-
 
   onPageChange(newPage: number): void {
     this.currentPage = newPage;
     this.store.dispatch(loadPaginatedShips({
-      page: newPage, size: this.pageSize, sort: this.sortBy,
-      direction: this.sortDirection
+      page: newPage,
     }));
   }
 

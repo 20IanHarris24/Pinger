@@ -1,9 +1,13 @@
 refactor tooltips component - make components of edit and delete (NOT NEEDED?)
-performance reduce the re-rendering on pagination page change (WORK IN PROGRESS)
-Refactor to use the json file for default configuration settings of a pagination object
+performance reduce the re-rendering on pagination page change (DONE)
+Refactor to remove hardwired pagination parameters (DONE)
+Refactor to use the json file for default configuration settings of a pagination object (DONE)
+refactor the controller and move logic to ShipQuery service (DONE)
+fix the margin spacing RHS Admin page 'Current DataBase Content'
+tidy up program.cs
 
 https:// (Production) for pointing to the backend(?)
 error management
-log-in page and auth (page access etc.)?
+log-in page and auth (page access etc.)
 testsuite
 
