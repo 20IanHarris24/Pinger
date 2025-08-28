@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
-import {ShipResult} from '../api/pingapp-api.service';
+import {ShipResult} from '../../services/api/pingapp-api.service';
 import { Store } from '@ngrx/store';
 import * as ShipActions from '../../state/actions/ship.actions';
 

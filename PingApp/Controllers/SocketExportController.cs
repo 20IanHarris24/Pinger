@@ -1,15 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
-using PingApp.DataAndHelpers;
+
 
 namespace PingApp.Controllers
 {
     public class SocketExport
     {
-        public ShipResult ShipResult
-        {
-            get;
-            set;
-        }
+        // public ShipResult ShipResult { get; set; }
     }
 
     [ApiController]

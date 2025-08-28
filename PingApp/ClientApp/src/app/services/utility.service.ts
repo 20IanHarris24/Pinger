@@ -1,4 +1,4 @@
-import {IShipResult, ShipDto} from './api/pingapp-api.service';
+import {IShipResult, ShipDto} from '../../app/services/api/pingapp-api.service';
 import {Injectable} from '@angular/core';
 
 
@@ -6,16 +6,13 @@ import {Injectable} from '@angular/core';
 export class UtilityService {
 
 
-  constructor() {}
+  constructor() {
+  }
 
 
-  trackByShipResultId = (_: number, ship: IShipResult)=> ship.id;
-
-
-  trackByShipDtoId =(_: number, ship: ShipDto) => ship.id;
-
+  trackByShipResultId = (_: number, ship: IShipResult) => ship.id;
+  trackByShipDtoId = (_: number, ship: ShipDto) => ship.id;
   trackByPage = (_: number, page: number) => page;
-
 
 
   getStatusClass(result: string): string {
@@ -33,14 +30,10 @@ export class UtilityService {
     return 'status-error';
   }
 
- blurActiveElement(): void {
+  blurActiveElement(): void {
     const active = document.activeElement as HTMLElement | null;
     if (active?.blur) active.blur();
   }
-
-
-
-
 
 
 }

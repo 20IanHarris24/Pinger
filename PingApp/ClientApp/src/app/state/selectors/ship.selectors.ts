@@ -1,6 +1,7 @@
 import {createFeatureSelector, createSelector} from '@ngrx/store';
 import {IShipModel, ShipDto, ShipResult} from '../../services/api/pingapp-api.service';
 import {adapter, ShipState} from '../reducers/ship.reducers';
+import {IPaginatedViewModel} from '../../ts_models/pagination.model';
 
 const {selectAll} = adapter.getSelectors();
 
@@ -30,45 +31,41 @@ export const selectNewlyAddedShipId = createSelector(
   (state: ShipState) => state.newlyAddedShipId
 );
 
-export const selectShips = createSelector(selectShipState, s => s.ships);
+export const selectDirection = createSelector(selectShipState, s => s.direction);
+// export const selectError     = createSelector(selectShipState, s => s.error);
+export const selectLoading = createSelector(selectShipState, s => s.loading);
 export const selectPage = createSelector(selectShipState, s => s.page);
+export const selectShips = createSelector(selectShipState, s => s.ships);
 //export const selectCurrentPage = createSelector(selectShipState, s => s.currentPage);
-
 export const selectPageSize = createSelector(selectShipState, s => s.pageSize);
-
-export const selectSortBy = createSelector(selectShipState, s => s.sortBy)
-
-export const selectSortDirection = createSelector(selectShipState, s => s.sortDir);
-
+export const selectSort = createSelector(selectShipState, s => s.sort)
 export const selectTotalPages = createSelector(selectShipState, s => s.totalPages);
 export const selectTotalItems = createSelector(selectShipState, s => s.totalItems);
-export const selectLoading = createSelector(selectShipState, s => s.loading);
 
-export interface PaginatedViewModel {
-  ships: ShipDto[];
-  page: number;
-  totalPages: number;
-  totalItems: number;
-  loading: boolean;
-}
 
 export const selectPaginatedShipViewModel = createSelector(
   selectShips,
+  selectLoading,
   selectPage,
+  selectPageSize,
   selectTotalPages,
   selectTotalItems,
-  selectLoading,
-  (ships, page, totalPages, totalItems, loading): PaginatedViewModel => ({
+  selectSort,
+  selectDirection,
+  (ships, loading, page, pageSize, totalPages, totalItems, sort, direction): IPaginatedViewModel => ({
     ships,
+    loading,
     page,
+    pageSize,
     totalPages,
     totalItems,
-    loading
+    sort,
+    direction,
   })
 );
 
 
-export type PaginationModel = Pick<PaginatedViewModel, 'page' | 'totalPages' | 'totalItems'>;
+export type PaginationModel = Pick<IPaginatedViewModel, 'page' | 'totalPages' | 'totalItems'>;
 
 export const selectPaginationModel = createSelector(
   selectPaginatedShipViewModel,

@@ -11,6 +11,7 @@ import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { shipReducer } from './state/reducers/ship.reducers';
 import { ShipEffects } from './state/effects/ship.effects';
+import {environment} from './services/environments/environment';
 
 
 export const appConfig: ApplicationConfig = {
@@ -31,5 +32,6 @@ export const appConfig: ApplicationConfig = {
       provide: API_BASE_URL,
       useFactory: () => 'http://' + window.location.hostname + ':34011',
     },
+    { provide: API_BASE_URL, useValue: environment.apiBaseUrl }
   ],
 };
