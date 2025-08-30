@@ -130,7 +130,7 @@ public class ShipQueryService : IShipQueryService
         var newHostAddr = updatedShip.HostAddr?.Trim();
 
         var current = await _dbContext.ShipModel.FirstOrDefaultAsync(c => c.Id == id, ct);
-        if (current == null) return null;
+        if (current == null) throw new KeyNotFoundException($"Ship with ID {id} was not found.");
 
         // Early‑out if nothing changed (avoid DB round‑trip + SignalR)
         bool nameUnchanged = string.Equals(current.Name, newName, StringComparison.Ordinal);

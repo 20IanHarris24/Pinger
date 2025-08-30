@@ -26,7 +26,7 @@
             <div class="row row-deck row-cards row-height">
               <div class="col-3"  *ngFor="let a_Ship of vm.ships; trackBy: utility.trackByShipResultId">
                 <div class="card" [ngClass]="utility.getStatusClass(a_Ship.result)">
-                  <div class="card-body">
+                  <div class="card-body border-shadow">
                     <h2 class="card-title">{{'Name:   ' + a_Ship.name}}</h2>
                     <p class="card-text">{{'Status:   ' + a_Ship.result}}</p>
                     <p class="card-text">{{'Host addr:   ' + a_Ship.hostAddr}}</p>

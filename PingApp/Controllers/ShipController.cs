@@ -90,9 +90,17 @@ namespace PingApp.Controllers
         public async Task<ActionResult<ShipResult>> UpdateShipModel(Guid id, [FromBody] ShipUpdateDto updatedShip,
             CancellationToken ct)
         {
-            var updated = await _query.UpdateShipModelAsync(id, updatedShip, ct);
-            if (updated is null) return NotFound();
-            return Ok(updated);
+            try
+            {
+                var updated = await _query.UpdateShipModelAsync(id, updatedShip, ct);
+                return Ok(updated);
+            }
+            catch (KeyNotFoundException ex)
+            {
+                return NotFound(ex.Message);
+              
+            }
+
         }
     }
 }
