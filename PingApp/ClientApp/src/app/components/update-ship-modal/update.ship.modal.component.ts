@@ -57,6 +57,7 @@ export class UpdateShipModalComponent {
       console.log('Information submitted: ', updateDto);
       this.store.dispatch(updateShip({id: this.editShipId, updateDto}));
       this.updateForm.reset();
+      this.activeModal.close();
     }
   }
 
