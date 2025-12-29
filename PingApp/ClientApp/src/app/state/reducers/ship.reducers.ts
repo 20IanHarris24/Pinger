@@ -6,7 +6,6 @@ import * as ShipActions from '../actions/ship.actions';
 
 export interface ShipState extends EntityState<IShipResult> {
   aShipModel: IShipModel[];
-  //currentPage: number;
   editedShipId: string | null;
   error: unknown | null;
   isLoading: boolean;
@@ -16,7 +15,7 @@ export interface ShipState extends EntityState<IShipResult> {
   page: number;
   recentlyDeletedId: string | null;
   ships: ShipDto[];
-  sort?: string;
+  sort: string;
   direction: string;
   totalPages: number;
   totalItems: number;
@@ -43,7 +42,7 @@ export const initialState: ShipState = adapter.getInitialState({
   recentlyDeletedId: null,
   ships: [],
   sort: 'name',
-  direction: 'asc',
+  direction: 'desc',
   totalPages: 1,
   totalItems: 0,
 

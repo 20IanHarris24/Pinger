@@ -1,7 +1,7 @@
-import {createFeatureSelector, createSelector} from '@ngrx/store';
-import {IShipModel, ShipDto, ShipResult} from '../../services/api/pingapp-api.service';
-import {adapter, ShipState} from '../reducers/ship.reducers';
-import {IPaginatedViewModel} from '../../ts_models/pagination.model';
+import { createFeatureSelector, createSelector } from '@ngrx/store';
+import { IShipModel, ShipResult } from '../../services/api/pingapp-api.service';
+import { adapter, ShipState } from '../reducers/ship.reducers';
+import { IPaginatedViewModel } from '../../ts_models/pagination.model';
 
 const {selectAll} = adapter.getSelectors();
 

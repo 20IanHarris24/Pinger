@@ -1,5 +1,7 @@
 using System.Collections.Concurrent;
+using System.Net;
 using System.Net.NetworkInformation;
+using System.Net.Sockets;
 using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using PingApp.DataAndHelpers;
@@ -46,7 +48,7 @@ namespace PingApp.ServicesBackend
             var shipsDb = await dbContext.ShipModel.AsNoTracking().ToListAsync(stoppingToken); // Create a list of tasks to run
             
             // shipsDb = shipsDb.Where(ship => !deletedShipIds.Contains(ship.Id)).ToList();
-
+            
             var tasks =  shipsDb.Select(async ship =>
 
             {
@@ -85,24 +87,117 @@ namespace PingApp.ServicesBackend
 
     private async Task<ShipResult> PingShipAsync(ShipModel ship, CancellationToken stoppingToken)
     {
+        _logging.LogDebug("Pinging ship {Name} ({Id}) at {Host}", ship.Name, ship.Id, ship.HostAddr);
+
         var timeout = 3000;
-        var response = new Ping();
-        PingReply result = await response.SendPingAsync(ship.HostAddr!, TimeSpan.FromMilliseconds(timeout),null, null,stoppingToken);
-        var roundTrip = result.Status == IPStatus.Success ? result.RoundtripTime : timeout;
-        var resultString = $"{result.Status}. Time: {roundTrip} ms.";
         
-        _latestPing[ship.Id] = resultString;
-        //_logging.LogInformation("Ping updated for id {ShipId}: {Result}", ship.Id, resultString);
+        if (string.IsNullOrWhiteSpace(ship.HostAddr))
+        {
+            var msg = "No host configured";
+
+            _latestPing[ship.Id] = msg;
+
+            return new ShipResult
+            {
+                Id       = ship.Id,
+                Name     = ship.Name,
+                HostAddr = ship.HostAddr,
+                Result   = msg
+            };
+        }
+        
+        if (!Uri.CheckHostName(ship.HostAddr).HasFlag(UriHostNameType.Dns) &&
+            !IPAddress.TryParse(ship.HostAddr, out _))
+        {
+            var msg = $"Invalid host: {ship.HostAddr}";
+
+            _latestPing[ship.Id] = msg;
+
+            return new ShipResult
+            {
+                Id       = ship.Id,
+                Name     = ship.Name,
+                HostAddr = ship.HostAddr,
+                Result   = msg
+            };
+        }
+
+
+        try
+        {
+            var response = new Ping();
+            PingReply result = await response.SendPingAsync(ship.HostAddr, TimeSpan.FromMilliseconds(timeout),null, null,stoppingToken);
+            var roundTrip = result.Status == IPStatus.Success ? result.RoundtripTime : timeout;
+            var resultString = $"{result.Status}. Time: {roundTrip} ms.";
+        
+            _latestPing[ship.Id] = resultString;
+            //_logging.LogInformation("Ping updated for id {ShipId}: {Result}", ship.Id, resultString);
         
 
         
-        return new ShipResult()
+            return new ShipResult
+            {
+                Id = ship.Id,
+                Name = ship.Name,
+                HostAddr = ship.HostAddr,
+                Result = $"{result.Status.ToString()}. Time: {roundTrip} ms."
+            };
+
+        }
+        catch (PingException ex) when (ex.InnerException is SocketException se)
         {
-            Id = ship.Id,
-            Name = ship.Name,
-            HostAddr = ship.HostAddr,
-            Result = $"{result.Status.ToString()}. Time: {roundTrip} ms."
-        };
+            var msg = $"Ping failed: {se.Message}";
+
+            _latestPing[ship.Id] = msg;
+
+            _logging.LogWarning(
+                ex,
+                "Ping failed for ship {ShipName} ({ShipId}) host '{HostAddr}'. Socket error {Code}: {SocketMessage}",
+                ship.Name, ship.Id, ship.HostAddr, se.ErrorCode, se.Message);
+
+            return new ShipResult
+            {
+                Id       = ship.Id,
+                Name     = ship.Name,
+                HostAddr = ship.HostAddr,
+                Result   = msg
+            };
+        }
+        catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested)
+        {
+            var msg = "Ping cancelled";
+
+            _latestPing[ship.Id] = msg;
+
+            return new ShipResult
+            {
+                Id       = ship.Id,
+                Name     = ship.Name,
+                HostAddr = ship.HostAddr,
+                Result   = msg
+            };
+        }
+        catch (Exception ex)
+        {
+            var msg = $"Unexpected ping error: {ex.Message}";
+
+            _latestPing[ship.Id] = msg;
+
+            _logging.LogError(
+                ex,
+                "Unexpected error pinging ship {ShipName} ({ShipId}) host '{HostAddr}'.",
+                ship.Name, ship.Id, ship.HostAddr);
+
+            return new ShipResult
+            {
+                Id       = ship.Id,
+                Name     = ship.Name,
+                HostAddr = ship.HostAddr,
+                Result   = msg
+            };
+        }
+    
+        
         
     }
     

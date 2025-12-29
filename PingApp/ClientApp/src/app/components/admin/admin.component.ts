@@ -3,7 +3,7 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ManageShipComponent } from '../manage-ship/manage.ship.component';
 import { ShowAllShipsComponent } from '../show-all-ships/show.all.ships.component';
-import {PaginationComponent} from '../pagination/pagination.component';
+import { PaginationComponent } from '../pagination/pagination.component';
 
 
 @UntilDestroy()

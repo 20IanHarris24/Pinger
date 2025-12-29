@@ -16,6 +16,6 @@ export interface IPaginatedViewModel {
   pageSize: number;
   totalPages: number;
   totalItems: number;
-  sort: string | undefined;
-  direction: string | undefined;
+  sort: string;
+  direction: string;
 }

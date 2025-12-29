@@ -18,14 +18,13 @@
 }
 
 .status-success {
-  //background-color: #d4edda; /* light green */
-  background-color: #88d4ab; /* light green */
-  color: #155724; /* dark green text */
+  //background-color: #88d4ab; /* light green */
+  //color: #155724; /* dark green text */
+  background-color: #88b8d4; /* light blue */
+  color: #0f3d5c;            /* dark blue text */
 }
 
 .status-timeout {
-  //background-color: #fff3cd; /* light orange */
-  //background-color: #fed8b1; /* light orange */
   background-color: #ffd580; /* light orange */
   color: #856404; /* dark orange text */
 }

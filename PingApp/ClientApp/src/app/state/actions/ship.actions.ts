@@ -35,7 +35,7 @@ export const loadAllShipsFailure = createAction(
 
 export const loadPaginatedShips = createAction(
   '[Ship] Load Paginated Ships',
-  props<{ page?: number }>()
+  props<{ page: number }>()
 );
 
 export const loadPaginatedShipsSuccess = createAction(

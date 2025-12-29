@@ -1,11 +1,11 @@
-import {Actions, createEffect, ofType} from '@ngrx/effects';
-import {catchError, delay, from, map, mergeMap, of, switchMap, tap, withLatestFrom} from 'rxjs';
-import {inject, Injectable} from '@angular/core';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { catchError, delay, from, map, mergeMap, of, switchMap, tap, withLatestFrom } from 'rxjs';
+import { inject, Injectable} from '@angular/core';
 import * as ShipActions from '../actions/ship.actions'
 import * as ShipSelectors from '../selectors/ship.selectors';
-import {IShipResult, ShipModel, ShipResult, ShipsClient} from '../../services/api/pingapp-api.service';
-import {Store} from '@ngrx/store';
-import {ShipDeleteService} from '../../services/ship.delete.service';
+import { IShipResult, ShipModel, ShipResult, ShipsClient } from '../../services/api/pingapp-api.service';
+import { Store } from '@ngrx/store';
+import { ShipDeleteService } from '../../services/ship.delete.service';
 
 
 @Injectable()

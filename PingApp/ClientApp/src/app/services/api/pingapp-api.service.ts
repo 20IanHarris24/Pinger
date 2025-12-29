@@ -716,8 +716,8 @@ export interface IProblemDetails {
 }
 
 export class ShipUpdateDto implements IShipUpdateDto {
-    name!: string | undefined;
-    hostAddr!: string | undefined;
+    name!: string;
+    hostAddr!: string;
 
     constructor(data?: IShipUpdateDto) {
         if (data) {
@@ -751,8 +751,8 @@ export class ShipUpdateDto implements IShipUpdateDto {
 }
 
 export interface IShipUpdateDto {
-    name: string | undefined;
-    hostAddr: string | undefined;
+    name: string;
+    hostAddr: string;
 }
 
 export class SocketExport implements ISocketExport {

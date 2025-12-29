@@ -11,7 +11,6 @@ namespace PingApp.DataAndHelpers
             var config = new ConfigurationBuilder()
                 .SetBasePath(Directory.GetCurrentDirectory())
                 .AddJsonFile("appsettings.Development.json")
-                // .AddEnvironmentVariables()
                 .Build();
 
             var dbConnectionString = config.GetConnectionString("DataBaseConnection");

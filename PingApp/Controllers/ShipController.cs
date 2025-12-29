@@ -62,7 +62,7 @@ namespace PingApp.Controllers
             var pageSelected = page ?? defaultParam.Page;
 
             var paginatedDisplayResult = await _query.GetPaginatedShips(
-                pageSelected, defaultParam.PageSize, defaultParam.Search, defaultParam.Sort, defaultParam.Direction);
+                pageSelected, defaultParam.PageSize, defaultParam.Sort, defaultParam.Direction);
 
             return Ok(paginatedDisplayResult);
         }

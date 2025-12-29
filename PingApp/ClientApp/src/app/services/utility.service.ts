@@ -1,4 +1,4 @@
-import {IShipResult, ShipDto} from '../../app/services/api/pingapp-api.service';
+import {IShipResult, ShipDto} from './api/pingapp-api.service';
 import {Injectable} from '@angular/core';
 
 

@@ -9,10 +9,13 @@ using PingApp.Interfaces;
 using PingApp.ServicesBackend;
 using Serilog;
 
+
+
 namespace PingApp
 {
     public class Program
     {
+        
         private const string ServiceName = "Pinger";
 
         public static async Task Main(string[] args)
@@ -25,9 +28,9 @@ namespace PingApp
                 Directory.CreateDirectory(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot"));
 
                 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
-
-
-
+                
+                
+                
                 //--- Logging ---
 
                 Log.Logger = new LoggerConfiguration().WriteTo.Console().CreateLogger();
@@ -40,31 +43,34 @@ namespace PingApp
                 });
 
 
-                // --- URLs / Kestrel bindings ---
-                List<string> urls = new();
-                urls.Add("http://*:34011");
-                builder.WebHost.UseUrls(urls.ToArray());
-
-
-                var service = builder.Services;
-                var config = builder.Configuration;
+                
+                var serv = builder.Services;
+                var conf = builder.Configuration;
                 var env = builder.Environment;
 
 
                 // --- DbContext ---
-                service.AddDbContext<PingAppDbContext>(options =>
-                    options.UseSqlite(config.GetConnectionString("DatabaseConnection")));
+                serv.AddDbContext<PingAppDbContext>(options =>
+                {
+                    var cs = conf.GetConnectionString("DatabaseConnection");
+                    options.UseSqlite(cs);
+
+                });
+                    
+                    
+                    
+                    
                 // service.AddDbContext<PingAppDbContext>(options =>
                 // options.UseNpgsql(config.GetConnectionString("DatabaseConnection")));
 
 
                 // --- Background Services ---
-                service.AddHostedService<ShipBackgroundPingService>();
+                serv.AddHostedService<ShipBackgroundPingService>();
 
                 // --- Options & Validation
 
 
-                service.AddOptions<PaginationSettings>()
+                serv.AddOptions<PaginationSettings>()
                     .Bind(builder.Configuration.GetSection("PaginationSettings"))
                     .ValidateDataAnnotations()
                     .Validate(ps => ps.PageSize <= ps.MaxPageSize,
@@ -76,23 +82,23 @@ namespace PingApp
                 // --- App Services ___
 
 
-                service.AddScoped<NotifierService>();
-                service.AddScoped<IShipQueryService, ShipQueryService>();
-                service.AddScoped<IShipStatusService, ShipStatusService>();
-                service.AddSingleton(new ConcurrentDictionary<Guid, string>());
+                serv.AddScoped<NotifierService>();
+                serv.AddScoped<IShipQueryService, ShipQueryService>();
+                serv.AddScoped<IShipStatusService, ShipStatusService>();
+                serv.AddSingleton(new ConcurrentDictionary<Guid, string>());
 
 
 
                 // ---Controllers and JSON Converters
 
-                service.AddControllers().AddJsonOptions(options =>
+                serv.AddControllers().AddJsonOptions(options =>
                 {
                     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                 });
 
 
                 // --- Cors ---
-                service.AddCors(options =>
+                serv.AddCors(options =>
                 {
                     options.AddPolicy("CorsPolicy",
                         policy =>
@@ -107,14 +113,14 @@ namespace PingApp
 
                 // --- Signal R ---
 
-                service.AddSignalR();
+                serv.AddSignalR();
 
               
                 // --- OpenAPI only in dev
 
                 if (env.IsDevelopment())
                 {
-                    service.AddOpenApiDocument();
+                    serv.AddOpenApiDocument();
                 }
 
                 WebApplication app = builder.Build();
@@ -125,7 +131,8 @@ namespace PingApp
                 {
                     app.UseHsts();
                 }
-
+                
+                app.UseHttpsRedirection();
                 app.UseRouting();
                 app.UseCors("CorsPolicy");
 
@@ -157,7 +164,7 @@ namespace PingApp
 
                 app.MapHub<DisplayHub>("/display");
                 app.MapControllers();
-                app.MapDefaultControllerRoute();
+                //app.MapDefaultControllerRoute();
 
 
                 // --- Scope Seed dB Database ---
@@ -167,22 +174,23 @@ namespace PingApp
                     var sp = scope.ServiceProvider; //new code
                     var db = sp.GetRequiredService<PingAppDbContext>(); //new code
                     var initCfg = sp.GetRequiredService<IConfiguration>();
-                    //var logging = sp.GetRequiredService<ILogger<Program>>();
+                    var logging = sp.GetRequiredService<ILogger<Program>>();
 
 
 
                     try
                     {
-                        // await dbContext.Database.EnsureDeletedAsync(); //commented out this line after first run when empty database created) //new code
-                        // await dbContext.Database.MigrateAsync(); //commented out after the first dataSeed run (when empty database created) //new code
+                        //await db.Database.EnsureDeletedAsync(); //after the database has been seeded comment out this line.
+                        //await db.Database.MigrateAsync(); //after first run when the empty database is created comment out this line.
                         await seedShips.InitAsync(initCfg, db); //Seed initial ship information properties
-                        // var shipService = services.GetRequiredService<ShipStatusService>();
-                        // await shipService.ExecuteAsync(db);
+                        //var shipBackgroundService = sp.GetRequiredService<ShipBackgroundPingService>();
+                        //await shipBackgroundService.ExecuteAsync(db);
+                        logging.LogInformation("Database seeded and ready.");
                     }
                     catch (Exception ex)
                     {
-                        var logger = sp.GetRequiredService<ILogger<Program>>();
-                        logger.LogError(ex, "An error occurred seeding the DB.");
+                        
+                        logging.LogError(ex, "An error occurred seeding the DB.");
                     }
 
                 }
