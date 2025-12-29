@@ -1,13 +1,29 @@
-refactor tooltips component - make components of edit and delete (NOT NEEDED?)
-fix the margin spacing RHS Admin page 'Current DataBase Content'(DONE)
-tidy up program.cs(DONE)
-Refactor to automatically close edit modal after confirm button press (DONE)
-look into why sort works with capital letters but not with lowercase?
-refactor and remove consolelogs?
+Push to GITHub
+https://?
+test?
+
+refactor the runtime files (remove basically)
+refactor and remove console logs?to
+applicationUrl": "https://localhost:4200",
 
 
-https:// (Production) for pointing to the backend(?)
-error management
-log-in page and auth (page access etc.)
-testsuite
 
+https://localhost:34011/swagger (automatically opens)
+https://localhost:4200
+
+Implemented https://
+IDE is Rider
+
+installed mkcert from homebrew
+updated angular.json with path for certs & cert keys
+
+working in macOS means have to update the pem to a pfx
+
+openssl pkcs12 -export openssl pkcs12 -export \
+  -out BEcerts/localhost.pfx \
+  -inkey BEcerts/localhost-key.pem \
+  -in BEcerts/localhost.pem \
+  -passout pass:
+
+
+browser chrome so can't answer if safari or MS are affected

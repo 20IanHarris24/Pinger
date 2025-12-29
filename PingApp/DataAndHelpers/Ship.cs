@@ -1,15 +1,18 @@
+
+
 namespace PingApp.DataAndHelpers
 {
     public class Ship()
     {
-        public Guid? ShipId { get; set; }
+        public Guid ShipId { get; set; }
 
-        public string? ShipName { get; set; }
+        
+       public string ShipName { get; set; }  = String.Empty;
 
-        public string? ShipHost { get; set; }
+        public string ShipHost { get; set; }  = String.Empty;
 
 
-        public Ship(Guid? id, string? name, string? host) : this()
+        public Ship(Guid id, string name, string host) : this()
         {
             ShipId = id;
             ShipName = name;
@@ -17,7 +20,7 @@ namespace PingApp.DataAndHelpers
         }
 
 
-        public Ship(string? name, string? host) : this()
+        public Ship(string name, string host) : this()
         {
             ShipName = name;
             ShipHost = host;

@@ -6,8 +6,8 @@ import {combineLatest, distinctUntilChanged, map, Observable} from 'rxjs';
 import {selectAllShips} from '../../state/selectors/ship.selectors';
 import { Store } from '@ngrx/store';
 import {UtilityService} from '../../services/utility.service';
-import {SpinnerComponent} from '../spinner/spinner.component';
-
+//import {SpinnerComponent} from '../spinner/spinner.component';
+import {Spinner2Component} from '../spinner-2/spinner-2.component';
 
 
 @UntilDestroy()
@@ -15,7 +15,7 @@ import {SpinnerComponent} from '../spinner/spinner.component';
   selector: 'app-home',
   templateUrl: 'home.component.html',
   styleUrls: ['home.component.scss'],
-  imports: [AsyncPipe, NgFor, SpinnerComponent, NgIf, NgClass],
+  imports: [AsyncPipe, NgFor, Spinner2Component, NgIf, NgClass],
 })
 export class HomeComponent {
 

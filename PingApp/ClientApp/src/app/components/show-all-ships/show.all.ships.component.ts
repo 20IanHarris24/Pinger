@@ -1,23 +1,24 @@
-import {Component, EventEmitter, Output} from '@angular/core';
-import {ShipDto} from '../../services/api/pingapp-api.service';
-import {AsyncPipe, NgForOf, NgIf} from '@angular/common';
+import { Component, EventEmitter, Output } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import { AsyncPipe, NgForOf, NgIf } from '@angular/common';
+import { ShipDto } from '../../services/api/pingapp-api.service';
+import { loadPaginatedShips } from '../../state/actions/ship.actions';
 import {
   selectEditedShipId,
   selectNewlyAddedShipId, selectPaginatedShipViewModel
 } from '../../state/selectors/ship.selectors';
-import {Observable} from 'rxjs';
-import {Store} from '@ngrx/store';
-import {ActionService} from '../../services/action.service';
-import {ReactiveFormsModule} from '@angular/forms';
-import {SpinnerComponent} from '../spinner/spinner.component';
-import {loadPaginatedShips} from '../../state/actions/ship.actions';
-import {TooltipComponent} from '../tooltip/tooltip.component';
-import {UtilityService} from '../../services/utility.service';
+import { Observable } from 'rxjs';
+import { Store } from '@ngrx/store';
+//import { SpinnerComponent } from '../spinner/spinner.component';
+import { Spinner2Component } from '../spinner-2/spinner-2.component';
+import { TooltipComponent } from '../tooltip/tooltip.component';
+import { ActionService } from '../../services/action.service';
+import { UtilityService } from '../../services/utility.service';
 
 
 @Component({
   selector: 'app-showAllShips',
-  imports: [NgForOf, NgIf, AsyncPipe, ReactiveFormsModule, SpinnerComponent, TooltipComponent],
+  imports: [NgForOf, NgIf, AsyncPipe, ReactiveFormsModule, Spinner2Component, TooltipComponent],
   templateUrl: 'show.all.ships.component.html',
   styleUrl: 'show.all.ships.component.scss',
 })

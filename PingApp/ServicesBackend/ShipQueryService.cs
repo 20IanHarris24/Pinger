@@ -24,37 +24,52 @@ public class ShipQueryService : IShipQueryService
     }
 
 
-    public async Task<PaginatedDisplay<ShipDto>> GetPaginatedShips(int page, int size, string? search = null,
-        string? sort = null, string? direction = null)
+    public async Task<PaginatedDisplay<ShipDto>> GetPaginatedShips(int page, int size,
+        string sort, string direction)
     {
         var pageNumber = page < 1 ? 1 : page;
         var pageSize = size > 100 ? 100 : size;
 
         var dataQuery = _dbContext.ShipModel.AsQueryable();
 
-        if (!string.IsNullOrWhiteSpace(search))
+        // if (!string.IsNullOrWhiteSpace(search))
+        // {
+        //     dataQuery = dataQuery.Where(s => s.Name.Contains(search));
+        // }
+        
+        bool sortByName       = string.Equals(sort, "name", StringComparison.OrdinalIgnoreCase);
+        bool sortByDirection = string.Equals(direction, "desc", StringComparison.OrdinalIgnoreCase);
+        
+        dataQuery = (sortByName, sortByDirection) switch
         {
-            dataQuery = dataQuery.Where(s => s.Name!.Contains(search));
-        }
-
-        dataQuery = (sort!.ToLower(), direction!.ToLower()) switch
-        {
-            ("name", "desc") => dataQuery.OrderByDescending(s => s.Name),
-            ("name", _) => dataQuery.OrderBy(s => s.Name),
-            _ => dataQuery.OrderBy(s => s.Name) // default
+            (true, true)  => dataQuery.OrderByDescending(s => EF.Functions.Collate (s.Name, "NOCASE"))
+                .ThenByDescending(s => s.Id),
+            (true, false) => dataQuery.OrderBy(s => EF.Functions.Collate(s.Name, "NOCASE"))
+            .ThenBy(s => s.Id),
+            _                            => dataQuery.OrderBy(s => EF.Functions.Collate(s.Name, "NOCASE"))
+                .ThenBy(s => s.Id)// default
         };
+        
+        
+
+        // dataQuery = (sortIsName, desc) switch
+        // {
+        //     (true, true)  => dataQuery.OrderByDescending(s => EF.Functions.Collate(s.Name, "sv_se")),
+        //     (true, false) => dataQuery.OrderBy(s => EF.Functions.Collate(s.Name,  "sv_se")),
+        //     _                            => dataQuery.OrderBy(s => EF.Functions.Collate(s.Name, "sv_se")) // default
+        // };
 
 
         var totalCount = await dataQuery.CountAsync();
 
         var data = await dataQuery
-            .Skip((page - 1) * size)
+            .Skip((pageNumber - 1) * size)
             .Take(size)
             .Select(s => new ShipDto
             {
                 Id = s.Id,
-                Name = s.Name!,
-                HostAddr = s.HostAddr!
+                Name = s.Name,
+                HostAddr = s.HostAddr
             })
             .ToListAsync();
 
@@ -70,8 +85,8 @@ public class ShipQueryService : IShipQueryService
             .Select(s => new ShipDto
             {
                 Id = s.Id,
-                Name = s.Name!,
-                HostAddr = s.HostAddr!
+                Name = s.Name,
+                HostAddr = s.HostAddr
             })
             .ToListAsync(ct);
     }
@@ -81,7 +96,7 @@ public class ShipQueryService : IShipQueryService
         _dbContext.ShipModel
             .AsNoTracking()
             .Where(s => s.Id == id)
-            .Select(s => new ShipDto { Id = s.Id, Name = s.Name!, HostAddr = s.HostAddr! })
+            .Select(s => new ShipDto { Id = s.Id, Name = s.Name, HostAddr = s.HostAddr })
             .SingleOrDefaultAsync(ct);
 
 
@@ -126,8 +141,8 @@ public class ShipQueryService : IShipQueryService
         CancellationToken ct = default)
     {
         //Normalize inputs
-        var newName = updatedShip.Name?.Trim();
-        var newHostAddr = updatedShip.HostAddr?.Trim();
+        var newName = updatedShip.Name.Trim();
+        var newHostAddr = updatedShip.HostAddr.Trim();
 
         var current = await _dbContext.ShipModel.FirstOrDefaultAsync(c => c.Id == id, ct);
         if (current == null) throw new KeyNotFoundException($"Ship with ID {id} was not found.");
@@ -141,10 +156,19 @@ public class ShipQueryService : IShipQueryService
         }
 
         //Apply updates
-        current.Name = newName ?? current.Name;
-        current.HostAddr = newHostAddr ?? current.HostAddr;
-
-
+        if (!String.IsNullOrWhiteSpace(updatedShip.Name))
+        {
+            current.Name = updatedShip.Name.Trim();
+            
+        }
+        
+        if (!String.IsNullOrWhiteSpace(updatedShip.HostAddr))
+        {
+            current.HostAddr = updatedShip.HostAddr.Trim();
+            
+        }
+    
+     
         await _dbContext.SaveChangesAsync(ct);
         var currentShipResult = MapToShipResult(current);
         await _notifyThat.ShipIsUpdated(currentShipResult);

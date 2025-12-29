@@ -1,7 +1,7 @@
-import {Component} from '@angular/core';
-import {AsyncPipe, NgForOf, NgIf} from '@angular/common';
-import {map, Observable, shareReplay} from 'rxjs';
-import {ShipDto} from '../../services/api/pingapp-api.service';
+import { Component } from '@angular/core';
+import { AsyncPipe, NgForOf, NgIf } from '@angular/common';
+import { map, Observable, shareReplay } from 'rxjs';
+import { ShipDto } from '../../services/api/pingapp-api.service';
 import {Store} from '@ngrx/store';
 import {
   PaginationModel,
@@ -29,6 +29,7 @@ export class PaginationComponent {
   paginationArray$: Observable<Array<number>>;
   ships: ShipDto[] = [];
   paginationModel$: Observable<PaginationModel>;
+
 
 
   constructor(private store: Store, protected utility: UtilityService) {

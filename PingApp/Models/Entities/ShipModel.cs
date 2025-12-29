@@ -7,9 +7,9 @@ namespace PingApp.Models.Entities
 
         public Guid Id { get; init; }
         [Required]
-        public string? Name { get; set; } = String.Empty;
+        public string Name { get; set; } = String.Empty;
         [Required]
-        public string? HostAddr { get; set; } = String.Empty;
+        public string HostAddr { get; set; } = String.Empty;
 
     }
 

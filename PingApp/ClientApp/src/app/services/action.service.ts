@@ -1,5 +1,5 @@
 import { Injectable} from '@angular/core';
-import { IShipResult } from '../services/api/pingapp-api.service';
+import { IShipResult } from './api/pingapp-api.service';
 import { ModalActionService } from './modal.action.service';
 import { ShipDeleteService } from './ship.delete.service';
 import { ShipModalFlowService } from './ship.modal.service';
