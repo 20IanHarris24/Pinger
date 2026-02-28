@@ -1,4 +1,4 @@
-import {IShipResult, ShipDto} from './api/pingapp-api.service';
+import { IShipStatusDto } from './api/pingapp-api.service';
 import {Injectable} from '@angular/core';
 
 
@@ -10,8 +10,8 @@ export class UtilityService {
   }
 
 
-  trackByShipResultId = (_: number, ship: IShipResult) => ship.id;
-  trackByShipDtoId = (_: number, ship: ShipDto) => ship.id;
+  trackByShipResultId = (_: number, ship: IShipStatusDto) => ship.id;
+
   trackByPage = (_: number, page: number) => page;
 
 

@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import * as signalR from '@microsoft/signalr';
-import { ShipResult } from '../api/pingapp-api.service';
+import { IShipStatusDto } from '../api/pingapp-api.service';
 import { Store } from '@ngrx/store';
 import * as ShipActions from '../../state/actions/ship.actions';
 
@@ -8,6 +8,7 @@ import * as ShipActions from '../../state/actions/ship.actions';
 export class ShipSocketService {
   private readonly _displayScreenConnection: signalR.HubConnection;
   private readonly _store = inject(Store);
+  private started = false;
 
   constructor() {
     this._displayScreenConnection = new signalR.HubConnectionBuilder()
@@ -19,44 +20,48 @@ export class ShipSocketService {
   }
 
   private registerHandlers(): void {
-    this._displayScreenConnection.on('DisplayShips', (ships: ShipResult[]) => {
-      this._store.dispatch(ShipActions.upsertManyShips({ ships }));
+
+    this._displayScreenConnection.off('DisplayShips');
+    this._displayScreenConnection.on('DisplayShips', (extShipsUpsertDto: IShipStatusDto[]) => {
+      this._store.dispatch(ShipActions.externalShipsUpsert({ extShipsUpsertDto }));
     });
 
-    this._displayScreenConnection.on('ShipCreated', (newShip: any) => {
-      this._store.dispatch(ShipActions.registerShipSuccess({ newShip }));
+    this._displayScreenConnection.off('ShipCreated');
+    this._displayScreenConnection.on('ShipCreated', (extShipCreateDto: IShipStatusDto) => {
+      this._store.dispatch(ShipActions.externalShipCreate({extShipCreateDto}));
     });
 
-  // this._displayScreenConnection.on('ShipUpdated', (editShip: ShipResult) => {
-  //   const editShipInstance = ShipResult.fromJS(editShip);
-  //   this._store.dispatch(ShipActions.updateShipSuccess({editShip: editShipInstance}));
-  // });
-
-    this._displayScreenConnection.on('ShipUpdated', () => {
-      this._store.dispatch(ShipActions.reloadCurrentPage());
+    this._displayScreenConnection.off('ShipUpdated');
+    this._displayScreenConnection.on('ShipUpdated', (extShipUpdateDto: IShipStatusDto) => {
+      this._store.dispatch(ShipActions.externalShipUpdate({extShipUpdateDto}));
     });
 
-    this._displayScreenConnection.on('ShipDeleted', () => {
-      this._store.dispatch(ShipActions.reloadCurrentPage());
+    this._displayScreenConnection.off('ShipDeleted');
+    this._displayScreenConnection.on('ShipDeleted', (id: string) => {
+      console.log('[ShipSocket]: ShipDeleted', id);
+      this._store.dispatch(ShipActions.externalShipDelete({id: id as any}));
     });
 
-
-  // this._displayScreenConnection.on('ShipDeleted', (deletedShipId: string) => {
-  //   this._store.dispatch(ShipActions.deleteShipSuccess({ id: deletedShipId }));
-  // });
   }
 
 
 
   public startUpConnection(): void {
+
+    if (this.started) {
+      return;
+    }
+
+    this.started = true;
+
     const start = () => {
       this._displayScreenConnection
         .start()
         .then(() => {
-          console.log('SignalR connected. State:', this._displayScreenConnection.state);
+          console.log('SignalR state:', this._displayScreenConnection.state);
         })
-        .catch(err => {
-          console.error('SignalR initial start failed, retrying in 3s...', err);
+        .catch(error => {
+          console.error('SignalR initial start failed, retrying in 3s...', error);
           setTimeout(start, 3000);
         });
     };
@@ -68,13 +73,9 @@ export class ShipSocketService {
     if (this._displayScreenConnection) {
       this._displayScreenConnection
         .stop()
-        .then(() => console.log('SignalR socket disconnected'));
+        .then(() => console.log('SignalR state:', this._displayScreenConnection.state));
     }
   }
-
-
-
-
 
 
 }

@@ -1,6 +1,6 @@
-import { Component} from '@angular/core';
+import { Component } from '@angular/core';
 import { ButtonComponent } from '../button/button.component';
-import {ActionService} from '../../services/action.service';
+import { ActionService } from '../../services/action.service';
 
 
 @Component({
@@ -16,7 +16,7 @@ export class ManageShipComponent {
 
   handleActionSelection(action: 'New') {
     // console.log(`Action selected: ${action}`);
-    this.actionService.select(action);
+    this.actionService.select(action).then();
   }
 
 }

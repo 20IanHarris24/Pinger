@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Output } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { AsyncPipe, NgForOf, NgIf } from '@angular/common';
-import { ShipDto } from '../../services/api/pingapp-api.service';
+import {AsyncPipe, NgForOf, NgIf} from '@angular/common';
+import {IShipStatusDto, ShipDto} from '../../services/api/pingapp-api.service';
 import { loadPaginatedShips } from '../../state/actions/ship.actions';
 import {
   selectEditedShipId,
@@ -9,11 +9,11 @@ import {
 } from '../../state/selectors/ship.selectors';
 import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
-//import { SpinnerComponent } from '../spinner/spinner.component';
 import { Spinner2Component } from '../spinner-2/spinner-2.component';
 import { TooltipComponent } from '../tooltip/tooltip.component';
 import { ActionService } from '../../services/action.service';
 import { UtilityService } from '../../services/utility.service';
+import {ShipDeleteService} from '../../services/ship.delete.service';
 
 
 @Component({
@@ -34,15 +34,15 @@ export class ShowAllShipsComponent {
   selectIndex: number = -1;
   ships: ShipDto[] = [];
   viewModel$: Observable<{
-    ships: ShipDto[];
-    loading: boolean;
+    ships: IShipStatusDto[];
+    isLoading: boolean;
   }>;
 
 
-  @Output() openModal = new EventEmitter<void>();
+  @Output() deleteRequested = new EventEmitter<void>();
 
-
-  constructor(protected actionService: ActionService, private store: Store, protected utility: UtilityService) {
+  constructor(public deleteState: ShipDeleteService, protected actionService: ActionService, private store: Store, protected utility: UtilityService)
+  {
 
 
     this.viewModel$ = this.store.select(selectPaginatedShipViewModel);
@@ -61,7 +61,7 @@ export class ShowAllShipsComponent {
   onMouseClick(i: number) {
     this.selectIndex = i;
     this.mouseAction = true;
-    this.openModal.emit();
+    this.deleteRequested.emit();
   }
 
   onMouseOver(i: number) {

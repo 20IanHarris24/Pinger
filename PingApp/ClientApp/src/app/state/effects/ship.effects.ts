@@ -1,9 +1,9 @@
 import { Actions, createEffect, ofType } from '@ngrx/effects';
-import { catchError, delay, from, map, mergeMap, of, switchMap, tap, withLatestFrom } from 'rxjs';
+import {catchError, concatMap, delay, from, map, mergeMap, of, switchMap, tap, withLatestFrom} from 'rxjs';
 import { inject, Injectable} from '@angular/core';
 import * as ShipActions from '../actions/ship.actions'
 import * as ShipSelectors from '../selectors/ship.selectors';
-import { IShipResult, ShipModel, ShipResult, ShipsClient } from '../../services/api/pingapp-api.service';
+import {IShipStatusDto, ShipDto, ShipsClient, ShipStatusDto} from '../../services/api/pingapp-api.service';
 import { Store } from '@ngrx/store';
 import { ShipDeleteService } from '../../services/ship.delete.service';
 
@@ -17,6 +17,58 @@ export class ShipEffects {
   private store = inject(Store);
 
   /* @Effect */
+
+  clearAddedShipId$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(ShipActions.setAddedShipId),
+      delay(3000),
+      map(() => ShipActions.setAddedShipId({idTrack: null}))
+    )
+  );
+
+  createShip$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(ShipActions.createShip),
+      tap(() => console.log('[Effect] createShip$ fired')),
+      concatMap(({ createNewShipDto }) =>
+        this.client.registerShip(createNewShipDto).pipe(
+          map((response) => {
+            const enrichedShip = {
+              id: response.id,
+              name: response.name,
+              hostAddr: response.hostAddr,
+              result: 'Unknown',
+            } satisfies IShipStatusDto;
+
+            return ShipActions.createShipSuccess({ createNewShipSuccess: enrichedShip });
+          }),
+          catchError((error) => of(ShipActions.createShipFailure({ error })))
+        )
+      )
+    )
+  );
+
+  clearEditedShipId$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(ShipActions.setUpdatedShipId),
+      delay(3000),
+      map(() => ShipActions.setUpdatedShipId({editedShipId: null}))
+    )
+  );
+
+
+  createShipSuccess$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(ShipActions.createShipSuccess),
+      mergeMap(({createNewShipSuccess}) => [
+        ShipActions.setAddedShipId({idTrack: createNewShipSuccess.id}),
+        ShipActions.reloadCurrentPage(),
+      ])
+    )
+  );
+
+
+
   deleteShip$ = createEffect(() =>
     this.actions$.pipe(
       ofType(ShipActions.deleteShip),
@@ -30,15 +82,16 @@ export class ShipEffects {
           tap(() => {
             console.log('[Effect] deleteShip$ success');
             this.deleteState.markSuccess();
+            setTimeout(() => this.deleteState.reset(), 1500);
           }),
           switchMap(() => [
             ShipActions.deleteShipSuccess({id}),
-            ShipActions.setRecentlyDeletedId({idTrack: id}),
-            ShipActions.reloadCurrentPage()
+            ShipActions.setDeletedId({idTrack: id}),
+            ShipActions.reloadCurrentPage(),
           ]),
           catchError((error) => {
             console.error('[Effect] deleteShip error:', error);
-            this.deleteState.setError('');
+            //this.deleteState.setError('');
             this.deleteState.setError(error?.message || 'Unexpected error.');
             return of(ShipActions.deleteShipFailure({error}));
           })
@@ -48,7 +101,7 @@ export class ShipEffects {
   );
 
 
-  /* @Effect */
+
   loadAllShips$ = createEffect(() =>
     this.actions$.pipe(
       ofType(ShipActions.loadAllShips),
@@ -59,7 +112,7 @@ export class ShipEffects {
       switchMap(() =>
         this.client.getAllShips().pipe(
           map((ships) => {
-            const enrichedShips: IShipResult[] = ships.map((ship) => ({
+            const enrichedShips: IShipStatusDto[] = ships.map((ship) => ({
               ...ship,
               result: ''
             }));
@@ -86,16 +139,18 @@ export class ShipEffects {
   loadPaginatedShips$ = createEffect(() =>
     this.actions$.pipe(
       ofType(ShipActions.loadPaginatedShips),
+      tap(({ page }) => console.log('[Effect] loadPaginatedShips page=', page)),
       switchMap(({page}) =>
         this.client.getPaginationResult(page).pipe(
-          map(res => ShipActions.loadPaginatedShipsSuccess({
-            ships: res.data,
-            page: res.pageNumber,
-            pageSize: res.pageSize,
-            totalPages: res.totalPages,
-            totalItems: res.totalCount,
-            sort: res.sort,
-            direction: res.direction,
+          tap(res => console.log('[Effect] API response:', res)),
+          map(response => ShipActions.loadPaginatedShipsSuccess({
+            ships: response.data,
+            page: response.pageNumber,
+            pageSize: response.pageSize,
+            totalPages: response.totalPages,
+            totalItems: response.totalCount,
+            sort: response.sort,
+            direction: response.direction,
 
           })),
           catchError(error => of(ShipActions.loadPaginatedShipsFailure({error})))
@@ -113,10 +168,10 @@ export class ShipEffects {
       }),
       switchMap(({id}) =>
         this.client.getShipById(id).pipe(
-          map((ship: ShipModel) => {
-            const enrichedShip: IShipResult =
+          map((ship: ShipDto) => {
+            const enrichedShip: IShipStatusDto =
               {
-                ...ship.toJSON(),
+                ...ship,
                 result: ''
               };
             console.log('[Effect] Enriched ship:', enrichedShip);
@@ -142,62 +197,20 @@ export class ShipEffects {
   );
 
 
-  registerShip$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(ShipActions.registerShip),
-      tap(() => {
-        console.log('[Effect] registerShip$ fired');
-      }),
-      switchMap(({newShipDto}) =>
-        this.client.registerShip(newShipDto).pipe(
-          map((response) => ShipActions.registerShipSuccess({newShip: response})),
-          tap(() => {
-            console.log('[Error] No ship registered')
-          }),
 
 
-          catchError((error) => of(ShipActions.registerShipFailure({error})))
-        )
-      )
-    )
-  );
-
-  registerShipSuccess$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(ShipActions.registerShipSuccess),
-      mergeMap(({newShip}) => [
-        // ShipActions.loadAllShips(),
-        ShipActions.setAddedShipId({idTrack: newShip.id}),
-        ShipActions.reloadCurrentPage()
-      ])
-    )
-  );
 
 
-  // ship.effects.ts
   reloadCurrentPage$ = createEffect(() =>
     this.actions$.pipe(
       ofType(ShipActions.reloadCurrentPage),
-      withLatestFrom(
-        this.store.select(ShipSelectors.selectPage),
-        // this.store.select(ShipSelectors.selectPageSize),
-        // this.store.select(ShipSelectors.selectSort),
-        // this.store.select(ShipSelectors.selectDirection),
-      ),
-      map(([_, page]) =>
-        ShipActions.loadPaginatedShips({page})
-      )
+      withLatestFrom(this.store.select(ShipSelectors.selectPage)),
+      map(([_, page]) => ShipActions.loadPaginatedShips({ page }))
     )
   );
 
 
-  clearAddedShipId$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(ShipActions.setAddedShipId),
-      delay(3000),
-      map(() => ShipActions.setAddedShipId({idTrack: null}))
-    )
-  );
+
 
   updateShip$ = createEffect(() =>
     this.actions$.pipe(
@@ -207,17 +220,20 @@ export class ShipEffects {
         this.client.updateShipModel(id, updateDto).pipe(
           withLatestFrom(this.store.select(ShipSelectors.selectByTest(id))),
           mergeMap(([response, existingShip]) => {
-            const shipResultInstance = ShipResult.fromJS(response);
+            const shipResultInstance = ShipStatusDto.fromJS(response);
             shipResultInstance.result = existingShip?.result ?? 'Unknown';
 
 
             return from([
-              ShipActions.updateShipSuccess({editShip: shipResultInstance}),
-              ShipActions.reloadCurrentPage()
+              ShipActions.updateShipSuccess({updatedShip: shipResultInstance}),
+              ShipActions.reloadCurrentPage(),
             ]);
           }),
           catchError(error =>
-            of(ShipActions.updateShipFailure({error}))
+            from([
+              ShipActions.updateShipFailure({error}),
+              ShipActions.reloadCurrentPage(),
+           ])
           )
         )
       )
@@ -231,19 +247,9 @@ export class ShipEffects {
       tap(() => {
         console.log('[Effect] updateShipSuccess$ fired');
       }),
-      mergeMap(({editShip}) => [
-        ShipActions.loadAllShips(),
-        ShipActions.setEditedShipId({idEdit: editShip.id}),
+      mergeMap(({updatedShip}) => [
+        ShipActions.setUpdatedShipId({editedShipId: updatedShip.id}),
       ])
-    )
-  );
-
-
-  clearEditedShipId$ = createEffect(() =>
-    this.actions$.pipe(
-      ofType(ShipActions.setEditedShipId),
-      delay(3000),
-      map(() => ShipActions.setEditedShipId({idEdit: null}))
     )
   );
 

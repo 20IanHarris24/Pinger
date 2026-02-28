@@ -1,6 +1,6 @@
 .border-highlight{
  border: 1.5px solid lightcoral;
-  box-shadow: rgb(38, 57, 77) 0px 20px 30px -10px;
+  box-shadow: rgb(38, 57, 77) 0 20 30 -10;
  transition: border 0.3s ease;
 }
 
@@ -14,31 +14,22 @@
   will-change: border-color;
 }
 
-
-.h2{
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  align-content: flex-start;
-  align-items: center;
-}
-
-.paginate_format{
-  display: flex;
-  flex-direction: column;
-  min-height: 60vh;
-
-}
-
-.row-height{
-  min-height: 10rem;
-}
-
 .spinner_pos{
   display: flex;
   flex-direction: column;
   justify-content: center;
+  align-items: stretch;
+  //align-items: center;
+
+}
+
+.spinner_center{
+  display: flex;
+  //flex-direction: column;
+  justify-content: center;
   align-items: center;
+  width: 100%;
+  min-height: 10rem;
 
 }
 

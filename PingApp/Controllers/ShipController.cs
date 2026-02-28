@@ -13,12 +13,15 @@ namespace PingApp.Controllers
 
     {
         private readonly ILogger<ShipController> _logging;
+        private readonly IShipPingRequester _pingRequester;
         private readonly IShipQueryService _query;
+        
 
 
-        public ShipController(ILogger<ShipController> logger, IShipQueryService query)
+        public ShipController(ILogger<ShipController> logger, IShipPingRequester pingRequester ,IShipQueryService query)
         {
             _logging = logger;
+            _pingRequester = pingRequester;
             _query = query;
         }
 
@@ -76,7 +79,7 @@ namespace PingApp.Controllers
 
         [HttpPost]
         [Route("register")]
-        public async Task<ActionResult<ShipNewDto>> RegisterShip([FromBody] ShipNewDto regShipModel)
+        public async Task<ActionResult<ShipDto>> RegisterShip([FromBody] ShipCreateDto regShipModel)
         {
             var createdShip = await _query.RegisterNewShipAsync(regShipModel);
             return Ok(createdShip);
@@ -85,14 +88,15 @@ namespace PingApp.Controllers
 
         [HttpPut]
         [Route("update/{id}")]
-        [ProducesResponseType(typeof(ShipResult), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ShipStatusDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<ShipResult>> UpdateShipModel(Guid id, [FromBody] ShipUpdateDto updatedShip,
+        public async Task<ActionResult<ShipStatusDto>> UpdateShipModel(Guid id, [FromBody] ShipUpdateDto updatedShip,
             CancellationToken ct)
         {
             try
             {
                 var updated = await _query.UpdateShipModelAsync(id, updatedShip, ct);
+                await _pingRequester.PingNowAsync(id, ct);
                 return Ok(updated);
             }
             catch (KeyNotFoundException ex)

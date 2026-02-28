@@ -4,9 +4,22 @@
 
 
   <ng-container *ngIf="viewModel$ | async as vm">
-    <ng-container *ngIf="vm.loading; else showShips">
+
+
+
+      <ng-container *ngIf ="deleteState.deleteStatus$ | async as dst">
+        <div *ngIf="dst === 'deleting'" class="alert alert-info">⏳ Deleting ship, please wait...</div>
+        <div *ngIf="dst === 'success'" class="alert alert-success">🟢 Ship successfully deleted! 🚢</div>
+        <div *ngIf="dst === 'error'" class="alert alert-danger">❌ {{ deleteState.deleteErrorMessage$ | async }}</div>
+      </ng-container>
+
+
+    <ng-container *ngIf="vm.isLoading; else showShips">
+      <div class="spinner_center">
       <app-spinner-2></app-spinner-2>
+      </div>
     </ng-container>
+
 
 
     @let newlyAddedShipId = (newlyAddedShipId$ | async);
@@ -14,9 +27,9 @@
 
     <ng-template #showShips>
       <ng-container *ngIf="vm.ships.length >0; else noShips">
-        <div class="row row-deck row-cards row-height">
-          <ng-container *ngFor="let a_Ship of vm.ships; let i = index; trackBy: utility.trackByShipDtoId">
-            <div class="col-4">
+        <div class="row row-cards row-deck">
+          <ng-container *ngFor="let a_Ship of vm.ships; let i = index; trackBy: utility.trackByShipResultId">
+            <div class="col-12 col-sm-6 col-lg-4">
               <div class="card"
                    [class.flash-new]="newlyAddedShipId === a_Ship.id"
                    [class.flash-edit]="newlyEditedShipId === a_Ship.id">
@@ -52,4 +65,5 @@
 <ng-template #noShips>
   <h2>No Ship data available</h2>
 </ng-template>
+
 

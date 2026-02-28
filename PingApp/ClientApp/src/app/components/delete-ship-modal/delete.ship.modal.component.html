@@ -5,16 +5,11 @@
 
 
 <div class="modal-body">
-  <ng-container [ngSwitch]="deleteStatus">
-        <p *ngSwitchCase="'idle'">🛑 Are you sure? Once deleted the information cannot be recovered 🛑</p>
-        <p *ngSwitchCase="'deleting'">⏳ Deleting ship, please wait...</p>
-        <p *ngSwitchCase="'success'">🟢 Ship successfully deleted! 🚢</p>
-        <p *ngSwitchCase="'error'" class="text-danger">❌ {{ errorMessage }}</p>
-  </ng-container>
+          <div>🛑 Are you sure? Once deleted the information cannot be recovered 🛑</div>
 </div>
 
 
-<div class="modal-footer" *ngIf="deleteStatus !== 'deleting'">
-  <button type="button" class="btn btn-outline-purple" (click) = "activeModal.dismiss('Cancel')">Cancel</button>
-  <button type="button" class="btn btn-outline-secondary" [class.fade-out]="isConfirmed" [disabled]="isConfirmed" (click) = "confirm()">Confirm</button>
+<div class="modal-footer">
+  <button type="button" class="btn btn-outline-purple" (click) = "cancelDelete()">Cancel</button>
+  <button type="button" class="btn btn-outline-secondary" [class.fade-out]="isConfirmed" [disabled]="isConfirmed" (click) = "confirmDelete()">Confirm</button>
 </div>

@@ -5,42 +5,61 @@ namespace PingApp.DataAndHelpers
 {
     public class AssetSeedData
     {
+        private readonly ILogger<AssetSeedData> _logging;
+        public AssetSeedData(ILogger<AssetSeedData> log)
+        {
+            _logging = log;
+        }
 
-            internal async Task InitAsync(IConfiguration configuration, PingAppDbContext db)
+            internal async Task<bool> InitAsync(CancellationToken ct, IConfiguration configuration, PingAppDbContext db)
             {
 
-                if (await db.ShipModel.AnyAsync()) return; //This ia a check to see if data exists in the DB. If false ships will be seeded into the dB.
+                if (await db.ShipModel.AnyAsync(ct))
+                {
+                    _logging.LogInformation("Seeding skipped: ships already exist in db.");
+                    return false; 
+                }
 
 
                 ShipModel[] ships = SeedShipsDb(configuration);
-                await db.ShipModel.AddRangeAsync(ships);
-                Console.WriteLine($"Ships seeded.....");
 
+                if (ships.Length == 0)
+                {
+                   _logging.LogWarning("Seeding skipped: ShipAssetsDb config is empty or missing.");
+                    return false;
+                }
+                
+                await db.ShipModel.AddRangeAsync(ships, ct);
+                await db.SaveChangesAsync(ct);
 
-                await db.SaveChangesAsync();
-                //logging.LogInformation("Ships seeded and saved to database");
-                Console.WriteLine("Saving changes to the database.....");
+                _logging.LogInformation("Seeded {Count} ships into the database.", ships.Length);
+                
+                return true;
+
+               
             }
 
 
             private static ShipModel[] SeedShipsDb(IConfiguration configuration)
             {
 
-                var shipsConfig = configuration.GetSection("ShipAssetsDb").Get<Ship[]>()!;
-                var shipsCollection = new ShipModel[shipsConfig.Length];
+                var shipsConfig = configuration.GetSection("ShipAssetsDb").Get<SeedShipConfig[]>() ?? Array.Empty<SeedShipConfig>();
+                var shipsCollection = new List<ShipModel>(shipsConfig.Length);
 
                 for (int i = 0; i < shipsConfig.Length; i++)
                 {
+                    
+                    var name = shipsConfig[i].ShipName.Trim();
+                    var host = shipsConfig[i].ShipHost.Trim();
+                    
+                    if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(host))
+                        continue;
 
-                    shipsCollection[i] = new ShipModel()
-                        {
-                        Name = shipsConfig[i].ShipName,
-                        HostAddr = shipsConfig[i].ShipHost,
-                    };
-
+                    shipsCollection.Add(new ShipModel { Name = name, HostAddr = host });
+                    
                 }
 
-                return shipsCollection;
+                return shipsCollection.ToArray();
             }
     }
 

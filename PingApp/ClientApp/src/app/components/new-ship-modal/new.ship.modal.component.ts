@@ -1,8 +1,7 @@
 import { Component, Input} from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { Store } from '@ngrx/store';
-import { registerShip } from '../../state/actions/ship.actions';
+
 
 
 @Component({
@@ -18,7 +17,7 @@ export class NewShipModalComponent {
   @Input() result!: string;
 
   constructor(
-    protected activeModal: NgbActiveModal, protected store: Store) {
+    protected activeModal: NgbActiveModal) {
     this.newForm = new FormGroup({
       name: new FormControl<string>('', {nonNullable: true}),
       hostAddr: new FormControl<string>('', {nonNullable: true}),
@@ -30,18 +29,17 @@ export class NewShipModalComponent {
 
     if (!this.newForm.valid)  return;
 
+      const createShipDto = this.newForm.getRawValue();
+      this.activeModal.close(createShipDto);
+      this.newForm.reset({
+        name: '',
+        hostAddr: ''
+      });
 
-    const newShip = {...this.newForm.value};
-
-      this.store.dispatch(registerShip({newShipDto: newShip}));
-      this.newForm.reset();
-
-      this.activeModal.close('ship-added');
     }
 
 
-    onAddCancel(): void {
-      console.log('button pressed cancel input ship');
+    onClearInput(): void {
       this.newForm.reset();
     }
 

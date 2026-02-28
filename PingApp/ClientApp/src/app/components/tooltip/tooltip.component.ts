@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { IShipResult, ShipDto } from '../../services/api/pingapp-api.service';
+import { IShipStatusDto } from '../../services/api/pingapp-api.service';
 import { NgIf } from '@angular/common';
 
 @Component({
@@ -16,28 +16,19 @@ import { NgIf } from '@angular/common';
 export class TooltipComponent {
 
 
-  @Input() ship!: ShipDto;
+  @Input() ship!: IShipStatusDto;
   @Input() isSelected: boolean = false;
 
-  @Output() edit = new EventEmitter<IShipResult>();
-  @Output() delete = new EventEmitter<IShipResult>();
+  @Output() edit = new EventEmitter<IShipStatusDto>();
+  @Output() delete = new EventEmitter<IShipStatusDto>();
 
-  // Convert ShipDto to IShipResult before emitting
-  get resultDto(): IShipResult {
-    return {
-      id: this.ship.id,
-      name: this.ship.name,
-      hostAddr: this.ship.hostAddr,
-      result: this.ship.toJSON()
-    };
-  }
 
   onEdit(): void {
-    this.edit.emit(this.resultDto);
+    this.edit.emit(this.ship);
   }
 
   onDelete(): void {
-    this.delete.emit(this.resultDto);
+    this.delete.emit(this.ship);
   }
 
 }

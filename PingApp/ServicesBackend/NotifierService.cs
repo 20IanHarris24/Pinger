@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.SignalR;
-using PingApp.DataAndHelpers;
 using PingApp.Hubs;
-using PingApp.Models.Entities;
+using PingApp.Models.Dtos;
+
 
 namespace PingApp.ServicesBackend;
 
@@ -17,12 +17,12 @@ public class NotifierService
     }
     
     
-    public async Task ShipIsCreated(ShipModel newShip)
+    public async Task ShipIsCreated(ShipDto newShip)
     {
         await _hubContext.Clients.All.SendAsync("ShipCreated", newShip);
     }
 
-    public async Task ShipIsUpdated(ShipResult editShip)
+    public async Task ShipIsUpdated(ShipStatusDto editShip)
     {
         await _hubContext.Clients.All.SendAsync("ShipUpdated", editShip);
     }
@@ -32,7 +32,11 @@ public class NotifierService
         await _hubContext.Clients.All.SendAsync("ShipDeleted", deletedShipId);
     }
     
-    
+    public async Task BroadcastShipStatuses(ShipStatusDto[] shipResults, CancellationToken ct = default)
+    {
+        await _hubContext.Clients.All.SendAsync("DisplayShips", shipResults, cancellationToken: ct);
+    }
+
     
     
 }

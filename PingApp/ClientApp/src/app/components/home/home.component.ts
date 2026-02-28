@@ -1,12 +1,11 @@
 import {AsyncPipe, NgClass, NgFor, NgIf} from '@angular/common';
 import { Component} from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
-import { IShipResult } from '../../services/api/pingapp-api.service';
+import { IShipStatusDto} from '../../services/api/pingapp-api.service';
 import {combineLatest, distinctUntilChanged, map, Observable} from 'rxjs';
 import {selectAllShips} from '../../state/selectors/ship.selectors';
 import { Store } from '@ngrx/store';
 import {UtilityService} from '../../services/utility.service';
-//import {SpinnerComponent} from '../spinner/spinner.component';
 import {Spinner2Component} from '../spinner-2/spinner-2.component';
 
 
@@ -19,20 +18,20 @@ import {Spinner2Component} from '../spinner-2/spinner-2.component';
 })
 export class HomeComponent {
 
-  ships$: Observable<IShipResult[]>;
-  loading$: Observable<boolean>;
+  ships$: Observable<IShipStatusDto[]>;
+  isLoading$: Observable<boolean>;
   viewModel$: Observable<any>;
 
 
   constructor(protected utility: UtilityService, private store: Store) {
     this.ships$ = this.store.select(selectAllShips);
-    this.loading$ = this.ships$.pipe(
+    this.isLoading$ = this.ships$.pipe(
       map(ships => ships.length === 0),
       distinctUntilChanged()
     );
 
-    this.viewModel$ = combineLatest([this.loading$, this.ships$]).pipe(
-      map(([loading, ships]) => ({ loading, ships }))
+    this.viewModel$ = combineLatest([this.isLoading$, this.ships$]).pipe(
+      map(([isLoading, ships]) => ({ isLoading, ships }))
     );
 
   }
