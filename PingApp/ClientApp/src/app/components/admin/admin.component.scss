@@ -1,26 +1,11 @@
-.col-10-container{
-
-  padding-right: 2.5rem;
-}
-
-.page-body{
-  display: flex;
-  flex-direction: row;
-}
-
-.page-header{
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  align-content: flex-start;
-  align-items: center;
+.ships-card-body {
+  min-height: 10rem;
 }
 
 
-.pagination{
+.pagination-wrapper{
   display: flex;
-  flex-direction: column;
-  align-content: flex-start;
-  align-items: center;
+  justify-content: center;
+  margin-top: 1rem;
 
 }

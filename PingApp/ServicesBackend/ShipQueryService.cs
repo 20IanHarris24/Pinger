@@ -10,15 +10,13 @@ namespace PingApp.ServicesBackend;
 public class ShipQueryService : IShipQueryService
 {
     private readonly IShipStatusService _status;
-    private readonly ILogger<ShipQueryService> _logging;
     private readonly NotifierService _notifyThat;
     private readonly PingAppDbContext _dbContext;
 
-    public ShipQueryService(ILogger<ShipQueryService> logger, NotifierService notify, PingAppDbContext context,
+    public ShipQueryService(NotifierService notify, PingAppDbContext context,
         IShipStatusService status)
     {
         _dbContext = context;
-        _logging = logger;
         _notifyThat = notify;
         _status = status;
     }
@@ -32,11 +30,6 @@ public class ShipQueryService : IShipQueryService
 
         var dataQuery = _dbContext.ShipModel.AsQueryable();
 
-        // if (!string.IsNullOrWhiteSpace(search))
-        // {
-        //     dataQuery = dataQuery.Where(s => s.Name.Contains(search));
-        // }
-        
         bool sortByName       = string.Equals(sort, "name", StringComparison.OrdinalIgnoreCase);
         bool sortByDirection = string.Equals(direction, "desc", StringComparison.OrdinalIgnoreCase);
         
@@ -50,21 +43,13 @@ public class ShipQueryService : IShipQueryService
                 .ThenBy(s => s.Id)// default
         };
         
-        
-
-        // dataQuery = (sortIsName, desc) switch
-        // {
-        //     (true, true)  => dataQuery.OrderByDescending(s => EF.Functions.Collate(s.Name, "sv_se")),
-        //     (true, false) => dataQuery.OrderBy(s => EF.Functions.Collate(s.Name,  "sv_se")),
-        //     _                            => dataQuery.OrderBy(s => EF.Functions.Collate(s.Name, "sv_se")) // default
-        // };
-
+      
 
         var totalCount = await dataQuery.CountAsync();
 
         var data = await dataQuery
-            .Skip((pageNumber - 1) * size)
-            .Take(size)
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
             .Select(s => new ShipDto
             {
                 Id = s.Id,
@@ -82,7 +67,7 @@ public class ShipQueryService : IShipQueryService
         return await _dbContext.ShipModel
             .AsNoTracking()
             .OrderBy(s => s.Name)
-            .Select(s => new ShipDto
+            .Select(s => new ShipDto()
             {
                 Id = s.Id,
                 Name = s.Name,
@@ -109,35 +94,32 @@ public class ShipQueryService : IShipQueryService
 
         _dbContext.ShipModel.Remove(theShipForDeletion);
         await _dbContext.SaveChangesAsync(ct);
-        var removed = _status.RemoveLatestPingResult(id);
-
-        string removedP = removed ? "cached ping removal SUCCESS" : "cached ping removal FAILED";
-
-        _logging.LogInformation("Attempted to remove ping cache for ship {ShipId}, success: {Removed}", id,
-            removedP);
-
         await _notifyThat.ShipIsDeleted(id);
 
         return true;
     }
 
 
-    public async Task<ShipNewDto> RegisterNewShipAsync(ShipNewDto regShipModel)
+    public async Task<ShipDto> RegisterNewShipAsync(ShipCreateDto regShipModel)
     {
         var regShip = new ShipModel { Name = regShipModel.Name, HostAddr = regShipModel.HostAddr };
         _dbContext.ShipModel.Add(regShip);
         await _dbContext.SaveChangesAsync();
-        await _notifyThat.ShipIsCreated(regShip);
-
-        return new ShipNewDto
+        
+        var regShipDto = new ShipDto
         {
             Id = regShip.Id,
             Name = regShip.Name,
             HostAddr = regShip.HostAddr
         };
+        
+        
+        await _notifyThat.ShipIsCreated(regShipDto);
+
+        return regShipDto;
     }
 
-    public async Task<ShipResult> UpdateShipModelAsync(Guid id, ShipUpdateDto updatedShip,
+    public async Task<ShipStatusDto> UpdateShipModelAsync(Guid id, ShipUpdateDto updatedShip,
         CancellationToken ct = default)
     {
         //Normalize inputs
@@ -176,9 +158,9 @@ public class ShipQueryService : IShipQueryService
     }
 
 
-    private ShipResult MapToShipResult(ShipModel ship)
+    private ShipStatusDto MapToShipResult(ShipModel ship)
     {
-        return new ShipResult
+        return new ShipStatusDto()
 
         {
             Id = ship.Id,

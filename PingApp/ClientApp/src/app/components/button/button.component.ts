@@ -7,13 +7,13 @@ import { Component, EventEmitter, Output } from "@angular/core";
   styleUrl: "./button.component.scss",
 })
 export class ButtonComponent {
-  @Output() actionSelection = new EventEmitter<"New">();
+  @Output() addShipSelection = new EventEmitter<"New">();
 
   constructor() {}
 
   onActionSelect(action: "New" ): void {
-    this.actionSelection.emit(action);
-    // console.log(`button pressed - Emitting action: ${action}`);
+    this.addShipSelection.emit(action);
+
   }
 
 }

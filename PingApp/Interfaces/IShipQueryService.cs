@@ -1,6 +1,5 @@
 
 
-using PingApp.DataAndHelpers;
 using PingApp.Models.Dtos;
 
 namespace PingApp.Interfaces;
@@ -15,9 +14,9 @@ public interface IShipQueryService
 
     Task<bool> DeleteShipByIdAsync(Guid id, CancellationToken ct);
 
-    Task<ShipNewDto> RegisterNewShipAsync(ShipNewDto regShipModel);
+    Task<ShipDto> RegisterNewShipAsync(ShipCreateDto regShipModel);
 
-    Task<ShipResult> UpdateShipModelAsync(Guid id, ShipUpdateDto updatedShip, CancellationToken ct = default);
+    Task<ShipStatusDto> UpdateShipModelAsync(Guid id, ShipUpdateDto updatedShip, CancellationToken ct = default);
 
 
 }

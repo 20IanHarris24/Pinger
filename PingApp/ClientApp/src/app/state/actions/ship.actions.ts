@@ -1,129 +1,154 @@
 import { createAction, props } from '@ngrx/store';
 import {
-  IShipResult, ShipDto,
-  ShipNewDto, ShipResult,
-  ShipUpdateDto
+  ShipCreateDto,
+  ShipDto,
+  ShipUpdateDto,
+  IShipStatusDto
 } from '../../services/api/pingapp-api.service';
 
+export const createShip = createAction(
+  '[Action] CREATE ship',
+  props<{ createNewShipDto: ShipCreateDto }>()
+);
+
+export const createShipSuccess = createAction(
+  '[Action] CREATE ship success',
+   props<{ createNewShipSuccess: IShipStatusDto }>()
+);
+
+export const createShipFailure = createAction(
+  '[Action] CREATE ship failure',
+   props<{ error: any }>()
+);
 
 export const deleteShip = createAction(
- '[Action] Delete Ship',
+ '[Action] DELETE Ship',
   props<{ id: string }>()
 );
 
 export const deleteShipSuccess = createAction(
-  '[Action] Delete Ship Success',
+  '[Action] DELETE ship success',
    props<{ id: string }>()
 );
 
 export const deleteShipFailure = createAction(
-  '[Action] Delete Ship Failure',
+  '[Action] DELETE ship failure',
   props<{ error: any }>()
 );
 
-export const loadAllShips = createAction('[Ship] Load All Ships');
+
+export const externalShipCreate = createAction(
+  '[Action] EXTERNAL ship create',
+  props<{ extShipCreateDto: IShipStatusDto }>()
+)
+
+
+export const externalShipDelete = createAction(
+  '[Action] EXTERNAL ship delete',
+  props<{ id: string }>()
+)
+
+
+export const externalShipUpdate = createAction(
+  '[Action] EXTERNAL ship update',
+  props<{ extShipUpdateDto: IShipStatusDto }>()
+)
+
+export const externalShipsUpsert = createAction(
+  '[Action] EXTERNAL ship upserts',
+  props<{ extShipsUpsertDto: IShipStatusDto[] }>()
+)
+
+
+export const loadAllShips = createAction('[Ship] LOAD All ships');
 
 export const loadAllShipsSuccess = createAction(
-  '[Action] Load All Ships Success',
-  props<{ ships: IShipResult[] }>()
+  '[Action] LOAD All ships success',
+  props<{ ships: IShipStatusDto[] }>()
 );
 
 export const loadAllShipsFailure = createAction(
-  '[Action] Load All Ships Failure',
+  '[Action] LOAD All ships failure',
   props<{ error: any }>()
 );
 
 export const loadPaginatedShips = createAction(
-  '[Ship] Load Paginated Ships',
+  '[Action] LOAD Paginated ships',
   props<{ page: number }>()
 );
 
 export const loadPaginatedShipsSuccess = createAction(
-  '[Ship] Load Paginated Ships Success',
+  '[Action] LOAD Paginated ships success',
   props<{ ships: ShipDto[]; page: number; pageSize: number; totalPages: number; totalItems: number;  sort: string; direction: string; }>()
 );
 
 export const loadPaginatedShipsFailure = createAction(
-  '[Ship] Load Paginated Ships Failure',
+  '[Action] LOAD Paginated ships failure',
   props<{ error: unknown }>()
 );
 
 
 export const loadShip = createAction(
-  '[Action] Load Ship',
+  '[Action] LOAD Ship',
   props<{ id: string }>()
 );
 
 export const loadShipSuccess = createAction(
-  '[Action] Load Ship Success',
-  props<{ ship: IShipResult }>()
+  '[Action] LOAD ship success',
+  props<{ ship: IShipStatusDto }>()
 );
 
 
 export const loadShipFailure = createAction(
-  '[Action] Load Ship Failure',
+  '[Action] LOAD ship failure',
   props<{ error: any }>()
 );
 
 
-export const registerShip = createAction(
-  '[Action] Register New Ship',
-  props<{ newShipDto: ShipNewDto }>()
-);
-
-export const registerShipSuccess = createAction(
-  '[Action] Register Ship Success',
-   props<{ newShip: any }>()
-);
-
-export const registerShipFailure = createAction(
-  '[Action] Register Ship Failure',
-   props<{ error: any }>()
-);
 
 
-// ship.actions.ts
 export const reloadCurrentPage = createAction(
-  '[Ship] Reload Current Page'
+  '[Action] RELOAD current page'
 );
 
 
 
 export const setAddedShipId = createAction(
-  '[Action] Set Newly Added Ship ID',
+  '[Action] set ADDED ship Id',
   props<{ idTrack: string | null }>()
 );
 
 
-export const setEditedShipId = createAction(
-  '[Action] Set Newly Edited Ship Id',
-  props<{ idEdit: string | null }>()
+export const setUpdatedShipId = createAction(
+  '[Action] set UPDATED ship Id',
+  props<{ editedShipId: string | null }>()
 );
 
 
-export const setRecentlyDeletedId = createAction(
-  '[Action] Set Recently Deleted Ship Id',
+export const setDeletedId = createAction(
+  '[Action] set DELETED Ship Id',
   props<{ idTrack: string }>()
 );
 
 
 
+
 export const updateShip = createAction(
-  '[Action] Update Ship',
+  '[Action] EDIT ship',
   props<{id: string, updateDto: ShipUpdateDto }>()
 );
 
 export const updateShipSuccess = createAction(
-  '[Action] Update Ship Success',
-  props<{ editShip: ShipResult }>()
+  '[Action] EDIT ship success',
+  props<{ updatedShip: IShipStatusDto }>()
 );
 
 export const updateShipFailure = createAction(
-  '[Action] Update Ship Failure',
+  '[Action] EDIT ship failure',
   props<{ error: any }>()
 );
 
 export const upsertManyShips = createAction(
-  '[Action] Upsert Many Ships',
-  props<{ ships: IShipResult[] }>()
+  '[Action] UPSERT all ships',
+  props<{ ships: IShipStatusDto[] }>()
 );

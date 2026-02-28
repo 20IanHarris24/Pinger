@@ -27,7 +27,7 @@ export class ShipsClient {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ?? "http://127.0.0.1:34011";
+        this.baseUrl = baseUrl ?? "http://localhost:34011";
     }
 
     getAllShips(): Observable<ShipDto[]> {
@@ -241,7 +241,7 @@ export class ShipsClient {
         return _observableOf(null as any);
     }
 
-    registerShip(regShipModel: ShipNewDto): Observable<ShipNewDto> {
+    registerShip(regShipModel: ShipCreateDto): Observable<ShipDto> {
         let url_ = this.baseUrl + "/api/ship/register";
         url_ = url_.replace(/[?&]$/, "");
 
@@ -264,14 +264,14 @@ export class ShipsClient {
                 try {
                     return this.processRegisterShip(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ShipNewDto>;
+                    return _observableThrow(e) as any as Observable<ShipDto>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ShipNewDto>;
+                return _observableThrow(response_) as any as Observable<ShipDto>;
         }));
     }
 
-    protected processRegisterShip(response: HttpResponseBase): Observable<ShipNewDto> {
+    protected processRegisterShip(response: HttpResponseBase): Observable<ShipDto> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -282,7 +282,7 @@ export class ShipsClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ShipNewDto.fromJS(resultData200);
+            result200 = ShipDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status !== 200 && status !== 204) {
@@ -293,7 +293,7 @@ export class ShipsClient {
         return _observableOf(null as any);
     }
 
-    updateShipModel(id: string, updatedShip: ShipUpdateDto): Observable<ShipResult> {
+    updateShipModel(id: string, updatedShip: ShipUpdateDto): Observable<ShipStatusDto> {
         let url_ = this.baseUrl + "/api/ship/update/{id}";
         if (id === undefined || id === null)
             throw new Error("The parameter 'id' must be defined.");
@@ -319,14 +319,14 @@ export class ShipsClient {
                 try {
                     return this.processUpdateShipModel(response_ as any);
                 } catch (e) {
-                    return _observableThrow(e) as any as Observable<ShipResult>;
+                    return _observableThrow(e) as any as Observable<ShipStatusDto>;
                 }
             } else
-                return _observableThrow(response_) as any as Observable<ShipResult>;
+                return _observableThrow(response_) as any as Observable<ShipStatusDto>;
         }));
     }
 
-    protected processUpdateShipModel(response: HttpResponseBase): Observable<ShipResult> {
+    protected processUpdateShipModel(response: HttpResponseBase): Observable<ShipStatusDto> {
         const status = response.status;
         const responseBlob =
             response instanceof HttpResponse ? response.body :
@@ -337,7 +337,7 @@ export class ShipsClient {
             return blobToText(responseBlob).pipe(_observableMergeMap((_responseText: string) => {
             let result200: any = null;
             let resultData200 = _responseText === "" ? null : JSON.parse(_responseText, this.jsonParseReviver);
-            result200 = ShipResult.fromJS(resultData200);
+            result200 = ShipStatusDto.fromJS(resultData200);
             return _observableOf(result200);
             }));
         } else if (status === 404) {
@@ -366,7 +366,7 @@ export class SocketExportsClient {
 
     constructor(@Inject(HttpClient) http: HttpClient, @Optional() @Inject(API_BASE_URL) baseUrl?: string) {
         this.http = http;
-        this.baseUrl = baseUrl ?? "http://127.0.0.1:34011";
+        this.baseUrl = baseUrl ?? "http://localhost:34011";
     }
 
     getSocketExport(): Observable<SocketExport> {
@@ -530,12 +530,11 @@ export interface IPaginatedDisplayOfShipDto {
     direction: string;
 }
 
-export class ShipNewDto implements IShipNewDto {
-    id!: string;
+export class ShipCreateDto implements IShipCreateDto {
     name!: string;
     hostAddr!: string;
 
-    constructor(data?: IShipNewDto) {
+    constructor(data?: IShipCreateDto) {
         if (data) {
             for (var property in data) {
                 if (data.hasOwnProperty(property))
@@ -546,82 +545,35 @@ export class ShipNewDto implements IShipNewDto {
 
     init(_data?: any) {
         if (_data) {
-            this.id = _data["id"];
             this.name = _data["name"];
             this.hostAddr = _data["hostAddr"];
         }
     }
 
-    static fromJS(data: any): ShipNewDto {
+    static fromJS(data: any): ShipCreateDto {
         data = typeof data === 'object' ? data : {};
-        let result = new ShipNewDto();
+        let result = new ShipCreateDto();
         result.init(data);
         return result;
     }
 
     toJSON(data?: any) {
         data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
         data["name"] = this.name;
         data["hostAddr"] = this.hostAddr;
         return data;
     }
 }
 
-export interface IShipNewDto {
-    id: string;
+export interface IShipCreateDto {
     name: string;
     hostAddr: string;
 }
 
-export class ShipModel implements IShipModel {
-    id!: string;
-    name!: string;
-    hostAddr!: string;
-
-    constructor(data?: IShipModel) {
-        if (data) {
-            for (var property in data) {
-                if (data.hasOwnProperty(property))
-                    (<any>this)[property] = (<any>data)[property];
-            }
-        }
-    }
-
-    init(_data?: any) {
-        if (_data) {
-            this.id = _data["id"];
-            this.name = _data["name"];
-            this.hostAddr = _data["hostAddr"];
-        }
-    }
-
-    static fromJS(data: any): ShipModel {
-        data = typeof data === 'object' ? data : {};
-        let result = new ShipModel();
-        result.init(data);
-        return result;
-    }
-
-    toJSON(data?: any) {
-        data = typeof data === 'object' ? data : {};
-        data["id"] = this.id;
-        data["name"] = this.name;
-        data["hostAddr"] = this.hostAddr;
-        return data;
-    }
-}
-
-export interface IShipModel {
-    id: string;
-    name: string;
-    hostAddr: string;
-}
-
-export class ShipResult extends ShipModel implements IShipResult {
+export class ShipStatusDto extends ShipDto implements IShipStatusDto {
     result!: string;
 
-    constructor(data?: IShipResult) {
+    constructor(data?: IShipStatusDto) {
         super(data);
     }
 
@@ -632,9 +584,9 @@ export class ShipResult extends ShipModel implements IShipResult {
         }
     }
 
-    static override fromJS(data: any): ShipResult {
+    static override fromJS(data: any): ShipStatusDto {
         data = typeof data === 'object' ? data : {};
-        let result = new ShipResult();
+        let result = new ShipStatusDto();
         result.init(data);
         return result;
     }
@@ -647,7 +599,7 @@ export class ShipResult extends ShipModel implements IShipResult {
     }
 }
 
-export interface IShipResult extends IShipModel {
+export interface IShipStatusDto extends IShipDto {
     result: string;
 }
 

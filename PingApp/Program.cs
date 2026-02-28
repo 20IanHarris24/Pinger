@@ -65,7 +65,7 @@ namespace PingApp
 
 
                 // --- Background Services ---
-                serv.AddHostedService<ShipBackgroundPingService>();
+                serv.AddSingleton<ShipBackgroundPingService>();
 
                 // --- Options & Validation
 
@@ -82,10 +82,15 @@ namespace PingApp
                 // --- App Services ___
 
 
-                serv.AddScoped<NotifierService>();
+                serv.AddSingleton<ConcurrentDictionary<Guid, string>>();
+                serv.AddSingleton<IHostedService>(sp => sp.GetRequiredService<ShipBackgroundPingService>());
+                serv.AddSingleton<IShipPingRequester>(sp => sp.GetRequiredService<ShipBackgroundPingService>());
+                serv.AddSingleton<ShipStatusService>();
+                serv.AddSingleton<IShipStatusService>(sp => sp.GetRequiredService<ShipStatusService>());
+                serv.AddSingleton<IShipStatusMaintenance>(sp => sp.GetRequiredService<ShipStatusService>());
+                serv.AddSingleton<NotifierService>();
+                serv.AddScoped<AssetSeedData>();
                 serv.AddScoped<IShipQueryService, ShipQueryService>();
-                serv.AddScoped<IShipStatusService, ShipStatusService>();
-                serv.AddSingleton(new ConcurrentDictionary<Guid, string>());
 
 
 
@@ -164,17 +169,17 @@ namespace PingApp
 
                 app.MapHub<DisplayHub>("/display");
                 app.MapControllers();
-                //app.MapDefaultControllerRoute();
+                
 
 
                 // --- Scope Seed dB Database ---
-                using (var scope = app.Services.CreateScope()) //new code
+                using (var scope = app.Services.CreateScope())
                 {
-                    var seedShips = new AssetSeedData();
-                    var sp = scope.ServiceProvider; //new code
-                    var db = sp.GetRequiredService<PingAppDbContext>(); //new code
+                    var sp = scope.ServiceProvider;
+                    var db = sp.GetRequiredService<PingAppDbContext>();
                     var initCfg = sp.GetRequiredService<IConfiguration>();
                     var logging = sp.GetRequiredService<ILogger<Program>>();
+                    var seedShips = sp.GetRequiredService<AssetSeedData>();
 
 
 
@@ -182,10 +187,10 @@ namespace PingApp
                     {
                         //await db.Database.EnsureDeletedAsync(); //after the database has been seeded comment out this line.
                         //await db.Database.MigrateAsync(); //after first run when the empty database is created comment out this line.
-                        await seedShips.InitAsync(initCfg, db); //Seed initial ship information properties
+                        var seeded = await seedShips.InitAsync(CancellationToken.None, initCfg, db); //Seed initial ship information properties
                         //var shipBackgroundService = sp.GetRequiredService<ShipBackgroundPingService>();
                         //await shipBackgroundService.ExecuteAsync(db);
-                        logging.LogInformation("Database seeded and ready.");
+                        logging.LogInformation(seeded ? "Database seeded and ready." : "Database ready (seeding not required)." );
                     }
                     catch (Exception ex)
                     {

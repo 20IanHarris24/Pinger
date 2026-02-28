@@ -4,6 +4,7 @@ import {
   importProvidersFrom,
   provideZoneChangeDetection,
 } from '@angular/core';
+import { provideStoreDevtools } from '@ngrx/store-devtools'; //dependancy
 import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
 import { API_BASE_URL } from './services/api/pingapp-api.service';
@@ -26,6 +27,10 @@ export const appConfig: ApplicationConfig = {
       ),
       EffectsModule.forRoot([ShipEffects]) //shipEffects
     ),
+    provideStoreDevtools({
+      maxAge: 25,
+      logOnly: environment.production, //dependency
+    }),
     provideRouter(routes),
     provideHttpClient(),
     {

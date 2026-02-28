@@ -24,10 +24,10 @@
   </div>
 
   <div class="btn-position">
-    <button class="btn btn-md btn-ghost-info" type="button" (click)="onEdit()">
+    <button class="btn btn-md btn-ghost-info" type="button" (click)="$event.stopPropagation();onEdit()">
       <i class="ti ti-edit"></i>Edit
     </button>
-    <button class="btn btn-md btn-ghost-danger" type="button" (click)="onDelete()">
+    <button class="btn btn-md btn-ghost-danger" type="button" (click)="$event.stopPropagation();onDelete()">
       <i class="ti ti-trash"></i>Delete
     </button>
   </div>

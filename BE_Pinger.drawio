@@ -1,0 +1,351 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/29.5.2 Chrome/142.0.7444.265 Electron/39.6.1 Safari/537.36" version="29.5.2">
+  <diagram id="C5RBs43oDa-KdzZeNtuy" name="Page-1">
+    <mxGraphModel dx="1284" dy="972" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="WIyWlLk6GJQsqaUBKTNV-0" />
+        <mxCell id="WIyWlLk6GJQsqaUBKTNV-1" parent="WIyWlLk6GJQsqaUBKTNV-0" />
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-28" parent="WIyWlLk6GJQsqaUBKTNV-1" style="verticalAlign=top;align=left;overflow=fill;html=1;whiteSpace=wrap;" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;i&gt;&amp;lt;&amp;lt;Interface&amp;gt;&amp;gt;&lt;/i&gt;&lt;br&gt;&lt;b&gt;I&lt;/b&gt;&lt;span style=&quot;font-weight: 700; background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;ShipQueryService&lt;/span&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;span style=&quot;font-size: 10px;&quot;&gt;+&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;font-size: 10px; background-color: transparent;&quot;&gt;GetPaginatedShips(int page, int size,&lt;/span&gt;&lt;span style=&quot;font-size: 10px; background-color: transparent;&quot;&gt;&amp;nbsp;string sort, string direction)&lt;/span&gt;&lt;span style=&quot;font-size: 10px;&quot;&gt;&amp;nbsp;: &amp;lt;PaginatedDisplay&amp;lt;ShipDto&amp;gt;&amp;gt;&lt;/span&gt;&lt;br style=&quot;font-size: 10px;&quot;&gt;&lt;span style=&quot;font-size: 10px;&quot;&gt;+ GetAllShipsAsync(CancellationToken ct = default) : &amp;lt;IReadOnlyList&amp;lt;ShipDto&amp;gt;&amp;gt;&amp;nbsp;&lt;/span&gt;&lt;br style=&quot;font-size: 10px;&quot;&gt;&lt;span style=&quot;font-size: 10px;&quot;&gt;+ GetShipByIdAsync(Guid id, CancellationToken ct) : ShipDto?&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;span style=&quot;font-size: 10px; background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;+ DeleteShipByIdAsync(Guid id, CancellationToken ct) : bool&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;span style=&quot;font-size: 10px; background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;+ RegisterNewShipAsync(ShipCreateDto regShipModel) :&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;font-size: 10px; background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;ShipDto&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;span style=&quot;font-size: 10px; background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;+&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;font-size: 10px; background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;UpdateShipModelAsync(Guid id, ShipUpdateDto updatedShip,&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;font-size: 10px; background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;CancellationToken ct = default)&lt;/span&gt;&lt;span style=&quot;font-size: 10px; background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;&amp;nbsp;:&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;font-size: 10px; background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;ShipStatusDto&lt;/span&gt;&lt;/p&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;span style=&quot;font-size: 10px; background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;-&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;font-size: 10px; background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;MapToShipResult(ShipModel ship) :&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;font-size: 10px; background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;ShipStatusDto&lt;/span&gt;&lt;/p&gt;" vertex="1">
+          <mxGeometry height="160" width="520" x="830" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-38" parent="WIyWlLk6GJQsqaUBKTNV-1" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;recursiveResize=0;container=1;collapsible=0;width=160;strokeColor=#7EA6E0;" value="Interfaces" vertex="1">
+          <mxGeometry height="250" width="823" x="829" y="10" as="geometry" />
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-26" parent="RuRTmMvm1uriL1p6LZZ5-38" style="verticalAlign=top;align=left;overflow=fill;html=1;whiteSpace=wrap;" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;i&gt;&amp;lt;&amp;lt;Interface&amp;gt;&amp;gt;&lt;/i&gt;&lt;br&gt;&lt;b&gt;I&lt;/b&gt;&lt;span style=&quot;font-weight: 700; background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;ShipStatusService&lt;/span&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;span style=&quot;font-size: 10px;&quot;&gt;+&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;font-size: 10px; background-color: transparent;&quot;&gt;GetLatestPingResult(Guid shipId) : string&lt;/span&gt;&lt;br style=&quot;font-size: 10px;&quot;&gt;&lt;span style=&quot;font-size: 10px;&quot;&gt;+ SetLtestPingStatus(Guid shipId, string status) : void&lt;/span&gt;&lt;/p&gt;" vertex="1">
+          <mxGeometry height="80" width="250" x="553" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-27" parent="RuRTmMvm1uriL1p6LZZ5-38" style="verticalAlign=top;align=left;overflow=fill;html=1;whiteSpace=wrap;" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;i&gt;&amp;lt;&amp;lt;Interface&amp;gt;&amp;gt;&lt;/i&gt;&lt;br&gt;&lt;b&gt;I&lt;/b&gt;&lt;span style=&quot;font-weight: 700; background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;ShipStatusMaintnance&lt;/span&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;span style=&quot;font-size: 10px;&quot;&gt;+ PruneToLiveIds(ICollection&amp;lt;Guid&amp;gt;) : void&lt;/span&gt;&lt;/p&gt;" vertex="1">
+          <mxGeometry height="70" width="250" x="553" y="162" as="geometry" />
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-39" parent="WIyWlLk6GJQsqaUBKTNV-1" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;recursiveResize=0;container=1;collapsible=0;width=160;strokeColor=#7EA6E0;" value="Services Backend" vertex="1">
+          <mxGeometry height="620" width="820" x="827" y="280" as="geometry" />
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-20" parent="RuRTmMvm1uriL1p6LZZ5-39" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="NotifierService" vertex="1">
+          <mxGeometry height="120" width="400" x="411" y="470" as="geometry" />
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-21" parent="RuRTmMvm1uriL1p6LZZ5-20" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="&lt;font style=&quot;font-size: 10px;&quot; face=&quot;Courier New&quot;&gt;- _hubContext : IHubContext&amp;lt;DisplayHub&amp;gt;&lt;/font&gt;" vertex="1">
+          <mxGeometry height="24" width="400" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-22" parent="RuRTmMvm1uriL1p6LZZ5-20" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" value="" vertex="1">
+          <mxGeometry height="8" width="400" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-23" parent="RuRTmMvm1uriL1p6LZZ5-20" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=10;" value="+ ShipIsCreated(ShipDto newShip) : void&lt;br&gt;+ ShipIsUpdated(ShipStatusDto editShip) : void&lt;br&gt;+ ShipIsDeleted(Guid deletedShipId) : void&lt;div&gt;+&amp;nbsp;BroadcastShipStatuses(ShipStatusDto[] shipResults, CancellationToken ct = default)&lt;br&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="62" width="400" y="58" as="geometry" />
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-16" parent="RuRTmMvm1uriL1p6LZZ5-39" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="ShipStatusService" vertex="1">
+          <mxGeometry height="130" width="340" x="471" y="320" as="geometry" />
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-17" parent="RuRTmMvm1uriL1p6LZZ5-16" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="&lt;font style=&quot;font-size: 10px;&quot; face=&quot;Courier New&quot;&gt;+ _latestPing : ConcurrentDictionary &amp;lt;Guid, string&amp;gt;&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot; face=&quot;Courier New&quot;&gt;+ _logging : Ilogger&amp;lt;ShipStatusService&amp;gt;&lt;/font&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="44" width="340" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-18" parent="RuRTmMvm1uriL1p6LZZ5-16" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" value="" vertex="1">
+          <mxGeometry height="8" width="340" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-19" parent="RuRTmMvm1uriL1p6LZZ5-16" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=10;" value="+ PruneToLiveIds(ICollection&amp;lt;Guid&amp;gt; liveIds) : void&lt;br&gt;+ GetLatestPingResult(Guid shipId) : string&lt;br&gt;+ SetLatestPingStatus(Guid shipId, string status) : void&lt;div&gt;&lt;br/&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="52" width="340" y="78" as="geometry" />
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-6" parent="RuRTmMvm1uriL1p6LZZ5-39" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="ShipBackgroundService" vertex="1">
+          <mxGeometry height="180" width="389" x="10" y="290" as="geometry" />
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-7" parent="RuRTmMvm1uriL1p6LZZ5-6" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="&lt;font style=&quot;font-size: 10px;&quot; face=&quot;Courier New&quot;&gt;- _logging : Ilogger&lt;/font&gt;&lt;font face=&quot;Courier New&quot;&gt;&lt;span style=&quot;font-size: 10px;&quot;&gt;&amp;lt;ShipBackgroundPingService&amp;gt;&lt;/span&gt;&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot; face=&quot;Courier New&quot;&gt;- _scopeFactory : IServiceScopeFactory&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot; face=&quot;Courier New&quot;&gt;- _maintenance : IShipStatusMaintenance&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot; face=&quot;Courier New&quot;&gt;- _statusSrv : IshipStatusService&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;font-size: 10px;&quot;&gt;&lt;font face=&quot;Courier New&quot;&gt;- _toNotifyOf : NotifierService&lt;/font&gt;&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;font-size: 10px;&quot;&gt;&lt;font face=&quot;Courier New&quot;&gt;- _simultaneousNoOfPings : SemaphoreSlim&lt;/font&gt;&lt;/span&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="104" width="389" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-8" parent="RuRTmMvm1uriL1p6LZZ5-6" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" value="" vertex="1">
+          <mxGeometry height="8" width="389" y="130" as="geometry" />
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-9" parent="RuRTmMvm1uriL1p6LZZ5-6" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=10;" value="# ExecuteAsync(CancellationToken, stoppingToken) : void&lt;br&gt;- PingShipAsync(ShipModel ship, CancellationToken stoppingToken) : ShipStatusDto&amp;nbsp;" vertex="1">
+          <mxGeometry height="42" width="389" y="138" as="geometry" />
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-12" parent="RuRTmMvm1uriL1p6LZZ5-39" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="ShipQueryService" vertex="1">
+          <mxGeometry height="190" width="510" x="10" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-13" parent="RuRTmMvm1uriL1p6LZZ5-12" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="&lt;font style=&quot;font-size: 10px;&quot; face=&quot;Courier New&quot;&gt;- _status : IShipStatusService&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot; face=&quot;Courier New&quot;&gt;- _notifyThat : NotifierService&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot; face=&quot;Courier New&quot;&gt;- _dBContext : PingAppDbContext&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;br&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="54" width="510" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-14" parent="RuRTmMvm1uriL1p6LZZ5-12" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" value="" vertex="1">
+          <mxGeometry height="8" width="510" y="80" as="geometry" />
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-15" parent="RuRTmMvm1uriL1p6LZZ5-12" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=10;" value="+&amp;nbsp;&lt;span style=&quot;background-color: transparent;&quot;&gt;GetPaginatedShips(int page, int size,&lt;/span&gt;&lt;span style=&quot;background-color: transparent;&quot;&gt;&amp;nbsp;string sort, string direction)&lt;/span&gt;&amp;nbsp;: &amp;lt;PaginatedDisplay&amp;lt;ShipDto&amp;gt;&amp;gt;&lt;br&gt;+ GetAllShipsAsync(CancellationToken ct = default) : &amp;lt;IReadOnlyList&amp;lt;ShipDto&amp;gt;&amp;gt;&amp;nbsp;&lt;br&gt;+ GetShipByIdAsync(Guid id, CancellationToken ct) : ShipDto?&lt;br&gt;+ DeleteShipByIdAsync(Guid id, CancellationToken ct) : bool&lt;div&gt;+ RegisterNewShipAsync(ShipCreateDto regShipModel) :&amp;nbsp;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;ShipDto&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;+&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: transparent;&quot;&gt;UpdateShipModelAsync(Guid id, ShipUpdateDto updatedShip,&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;CancellationToken ct = default)&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;&amp;nbsp;:&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;ShipStatusDto&lt;br&gt;-&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: transparent;&quot;&gt;&amp;nbsp;MapToShipResult(ShipModel ship) :&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;ShipStatusDto&lt;/span&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="102" width="510" y="88" as="geometry" />
+        </mxCell>
+        <mxCell id="v_vXyQ3x_4KX_zde8WJ_-3" edge="1" parent="RuRTmMvm1uriL1p6LZZ5-39" source="RuRTmMvm1uriL1p6LZZ5-15" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=-0.005;entryY=0.161;entryDx=0;entryDy=0;entryPerimeter=0;endArrow=blockThin;endFill=1;" target="RuRTmMvm1uriL1p6LZZ5-23">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="540" y="209" />
+              <mxPoint x="540" y="280" />
+              <mxPoint x="403" y="280" />
+              <mxPoint x="403" y="538" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="v_vXyQ3x_4KX_zde8WJ_-8" edge="1" parent="RuRTmMvm1uriL1p6LZZ5-39" source="RuRTmMvm1uriL1p6LZZ5-23" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.473;entryY=0.976;entryDx=0;entryDy=0;entryPerimeter=0;endArrow=classicThin;endFill=0;" target="RuRTmMvm1uriL1p6LZZ5-9">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-41" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="RuRTmMvm1uriL1p6LZZ5-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.461;entryY=1.002;entryDx=0;entryDy=0;entryPerimeter=0;endArrow=block;endFill=0;dashed=1;" target="RuRTmMvm1uriL1p6LZZ5-28" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-43" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="RuRTmMvm1uriL1p6LZZ5-16" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;dashed=1;endArrow=block;endFill=0;" target="RuRTmMvm1uriL1p6LZZ5-27">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-44" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="RuRTmMvm1uriL1p6LZZ5-16" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;dashed=1;endArrow=block;endFill=0;" target="RuRTmMvm1uriL1p6LZZ5-26">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1468" y="410" />
+              <mxPoint x="1360" y="410" />
+              <mxPoint x="1360" y="80" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-45" parent="WIyWlLk6GJQsqaUBKTNV-1" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;recursiveResize=0;container=1;collapsible=0;width=160;strokeColor=#7EA6E0;" value="Models" vertex="1">
+          <mxGeometry height="470" width="800" x="10" y="10" as="geometry" />
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-73" parent="RuRTmMvm1uriL1p6LZZ5-45" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;recursiveResize=0;container=1;collapsible=0;width=160;strokeColor=#A680B8;" value="Dtos" vertex="1">
+          <mxGeometry height="220" width="780" x="10" y="40" as="geometry" />
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-58" parent="RuRTmMvm1uriL1p6LZZ5-73" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="ShipStatusDto" vertex="1">
+          <mxGeometry height="52" width="140" x="20" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-74" edge="1" parent="RuRTmMvm1uriL1p6LZZ5-58" style="endArrow=none;startArrow=block;endFill=0;startFill=0;endSize=8;html=1;verticalAlign=bottom;labelBackgroundColor=none;rounded=0;entryX=0.929;entryY=0.407;entryDx=0;entryDy=0;entryPerimeter=0;" value="">
+          <mxGeometry relative="1" width="160" as="geometry">
+            <mxPoint x="70" as="sourcePoint" />
+            <mxPoint x="69.72000000000017" y="-28.002000000000066" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-59" parent="RuRTmMvm1uriL1p6LZZ5-58" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;+ Result: string&lt;/font&gt;" vertex="1">
+          <mxGeometry height="26" width="140" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-61" parent="RuRTmMvm1uriL1p6LZZ5-73" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="ShipUpdateDto" vertex="1">
+          <mxGeometry height="70" width="140" x="20" y="42" as="geometry" />
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-62" parent="RuRTmMvm1uriL1p6LZZ5-61" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;+ Name: string&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;+ HostAddr: string&lt;/font&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="44" width="140" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-50" parent="RuRTmMvm1uriL1p6LZZ5-73" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="ShipCreateDto" vertex="1">
+          <mxGeometry height="70" width="130" x="220" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-51" parent="RuRTmMvm1uriL1p6LZZ5-50" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;+ Name: string&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;+ HostAddr: string&lt;/font&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="44" width="130" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-54" parent="RuRTmMvm1uriL1p6LZZ5-73" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="ShipDto" vertex="1">
+          <mxGeometry height="80" width="140" x="220" y="112" as="geometry" />
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-55" parent="RuRTmMvm1uriL1p6LZZ5-54" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;+ Id : Guid&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;+ Name: string&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;+ HostAdd: type&lt;/font&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="54" width="140" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-64" parent="RuRTmMvm1uriL1p6LZZ5-73" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="PaginatedDisplay" vertex="1">
+          <mxGeometry height="160" width="306" x="394" y="32" as="geometry" />
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-65" parent="RuRTmMvm1uriL1p6LZZ5-64" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;+ Data : IEnumerable &amp;lt;T&amp;gt;&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;+ PageNumber : int&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;+ PageSize : int&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;+ TotalCount : int&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;+ TotalPages : int&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;+ Sort : string&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;+ Direction : string&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;+ PaginatedDisplay : IEnumerable&amp;lt;T&amp;gt;, int, int, int, string, string&amp;nbsp;&lt;/font&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="134" width="306" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-75" parent="RuRTmMvm1uriL1p6LZZ5-45" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;recursiveResize=0;container=1;collapsible=0;width=160;strokeColor=#A680B8;" value="Db Entities" vertex="1">
+          <mxGeometry height="170" width="190" x="10" y="270" as="geometry" />
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-83" parent="RuRTmMvm1uriL1p6LZZ5-75" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="ShipModel" vertex="1">
+          <mxGeometry height="80" width="110" x="20" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-84" parent="RuRTmMvm1uriL1p6LZZ5-83" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;+ Id : Guid&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;+ Name: string&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;+ HostAdd: type&lt;/font&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="54" width="110" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-87" parent="WIyWlLk6GJQsqaUBKTNV-1" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;recursiveResize=0;container=1;collapsible=0;width=160;strokeColor=#7EA6E0;" value="Hubs" vertex="1">
+          <mxGeometry height="220" width="470" x="10" y="510" as="geometry" />
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-88" parent="RuRTmMvm1uriL1p6LZZ5-87" style="verticalAlign=top;align=left;overflow=fill;html=1;whiteSpace=wrap;" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;b&gt;DisplayHub&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;div style=&quot;height:2px;&quot;&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="60" width="140" x="10" y="45" as="geometry" />
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-105" edge="1" parent="RuRTmMvm1uriL1p6LZZ5-87" source="RuRTmMvm1uriL1p6LZZ5-89" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=0;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="150" y="70" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-89" parent="RuRTmMvm1uriL1p6LZZ5-87" style="verticalAlign=top;align=left;overflow=fill;html=1;whiteSpace=wrap;" value="&lt;p style=&quot;margin:0px;margin-top:4px;text-align:center;&quot;&gt;&lt;i&gt;&amp;lt;&amp;lt;Abstract&amp;gt;&amp;gt;&lt;/i&gt;&lt;br&gt;&lt;b&gt;Hub&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:4px;&quot;&gt;&lt;br&gt;&lt;/p&gt;" vertex="1">
+          <mxGeometry height="70" width="190" x="240" y="35" as="geometry" />
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-106" edge="1" parent="RuRTmMvm1uriL1p6LZZ5-87" source="RuRTmMvm1uriL1p6LZZ5-90" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;endArrow=block;endFill=0;" target="RuRTmMvm1uriL1p6LZZ5-89">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-90" parent="RuRTmMvm1uriL1p6LZZ5-87" style="align=left;overflow=fill;html=1;dropTarget=0;whiteSpace=wrap;" value="&lt;p style=&quot;margin:0px;margin-top:6px;text-align:center;&quot;&gt;&lt;b&gt;IDisposable&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:8px;&quot;&gt;ASP.NET&lt;/p&gt;" vertex="1">
+          <mxGeometry height="50" width="180" x="10" y="140" as="geometry" />
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-91" parent="RuRTmMvm1uriL1p6LZZ5-90" style="shape=component;jettyWidth=8;jettyHeight=4;" value="" vertex="1">
+          <mxGeometry height="20" relative="1" width="20" x="1" as="geometry">
+            <mxPoint x="-24" y="4" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-92" edge="1" parent="RuRTmMvm1uriL1p6LZZ5-87" source="RuRTmMvm1uriL1p6LZZ5-90" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" target="RuRTmMvm1uriL1p6LZZ5-90">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-95" parent="WIyWlLk6GJQsqaUBKTNV-1" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;recursiveResize=0;container=1;collapsible=0;width=160;strokeColor=#7EA6E0;" value="Controllers" vertex="1">
+          <mxGeometry height="426" width="710" x="10" y="750" as="geometry" />
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-111" edge="1" parent="RuRTmMvm1uriL1p6LZZ5-95" source="RuRTmMvm1uriL1p6LZZ5-96" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;endArrow=none;endFill=0;startArrow=block;startFill=0;" target="RuRTmMvm1uriL1p6LZZ5-107">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-96" parent="RuRTmMvm1uriL1p6LZZ5-95" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="ShipController" vertex="1">
+          <mxGeometry height="160" width="670" x="10" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-97" parent="RuRTmMvm1uriL1p6LZZ5-96" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="&lt;font style=&quot;font-size: 10px;&quot; face=&quot;Courier New&quot;&gt;- _logging : ILogger&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot; face=&quot;Courier New&quot;&gt;- _query : IShipQueryService&lt;/font&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="44" width="670" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-98" parent="RuRTmMvm1uriL1p6LZZ5-96" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" value="" vertex="1">
+          <mxGeometry height="8" width="670" y="70" as="geometry" />
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-99" parent="RuRTmMvm1uriL1p6LZZ5-96" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;fontSize=10;" value="+&amp;nbsp;&lt;span style=&quot;background-color: transparent;&quot;&gt;GetAllShips(&lt;/span&gt;CancellationToken ct&lt;span style=&quot;background-color: transparent;&quot;&gt;)&lt;/span&gt;&amp;nbsp;: &amp;lt;IEnumerable&amp;lt;ShipDto&amp;gt;&amp;gt;&lt;br&gt;+ GetShipById(Guid id, CancellationToken ct) : ShipDto?&lt;div&gt;+ GetPaginationResult(&lt;span style=&quot;background-color: transparent;&quot;&gt;FromQuery] int? page,&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: transparent;&quot;&gt;[FromServices] IOptionsSnapshot&amp;lt;PaginationSettings&amp;gt; opts&lt;/span&gt;&amp;nbsp;: PaginatedDisplay&amp;lt;ShipDto&amp;gt;&lt;br&gt;+ DeleteShip(Guid id, CancellationToken ct) : void&lt;div&gt;+ RegisterShip([FromBody] ShipCreateDto regShipModel) :&amp;nbsp;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;ShipDto&lt;/span&gt;&lt;/div&gt;&lt;div&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;+&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: transparent;&quot;&gt;UpdateShipModel(&lt;/span&gt;&lt;span style=&quot;background-color: transparent;&quot;&gt;Guid id, [FromBody] ShipUpdateDto updatedShip,&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: transparent;&quot;&gt;CancellationToken ct&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;)&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;&amp;nbsp;:&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;ShipStatusDto&lt;br&gt;&lt;/span&gt;&lt;/div&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="82" width="670" y="78" as="geometry" />
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-107" parent="RuRTmMvm1uriL1p6LZZ5-95" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="&lt;b&gt;ControlBase&lt;/b&gt;" vertex="1">
+          <mxGeometry height="52" width="140" x="265" y="260" as="geometry" />
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-108" parent="RuRTmMvm1uriL1p6LZZ5-107" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;+ ASP.NET.Mvc&lt;/font&gt;" vertex="1">
+          <mxGeometry height="26" width="140" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-113" parent="WIyWlLk6GJQsqaUBKTNV-1" style="shape=umlFrame;whiteSpace=wrap;html=1;pointerEvents=0;recursiveResize=0;container=1;collapsible=0;width=160;strokeColor=#7EA6E0;" value="Data &amp;amp; Helpers" vertex="1">
+          <mxGeometry height="511" width="810" x="827" y="920" as="geometry" />
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-118" parent="RuRTmMvm1uriL1p6LZZ5-113" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="AssetSeed" vertex="1">
+          <mxGeometry height="100" width="420" x="10" y="51" as="geometry" />
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-119" parent="RuRTmMvm1uriL1p6LZZ5-118" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 10px;&quot;&gt;- _logging : ILogger&amp;lt;AssetSeedData&amp;gt;&lt;/font&gt;" vertex="1">
+          <mxGeometry height="24" width="420" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-120" parent="RuRTmMvm1uriL1p6LZZ5-118" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" value="" vertex="1">
+          <mxGeometry height="8" width="420" y="50" as="geometry" />
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-121" parent="RuRTmMvm1uriL1p6LZZ5-118" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;~ InitAsync(CancellationToken ct, IConfiguration configuration, PingAppDbContext db) : boo&lt;/font&gt;&lt;span style=&quot;font-size: 10px; background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;l&lt;/span&gt;&lt;div&gt;&lt;span style=&quot;font-size: 10px; background-color: transparent; color: light-dark(rgb(0, 0, 0), rgb(255, 255, 255));&quot;&gt;_&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;background-color: transparent; font-size: 10px;&quot;&gt;SeedShipsDb(IConfiguration configuration) : ShipModel[]&lt;/span&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="42" width="420" y="58" as="geometry" />
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-114" parent="RuRTmMvm1uriL1p6LZZ5-113" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="SeedShipConfig" vertex="1">
+          <mxGeometry height="70" width="120" x="220" y="400" as="geometry" />
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-115" parent="RuRTmMvm1uriL1p6LZZ5-114" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;+ ShipName : string&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;+ ShipHost : string&lt;/font&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="44" width="120" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-123" parent="RuRTmMvm1uriL1p6LZZ5-113" style="swimlane;fontStyle=0;childLayout=stackLayout;horizontal=1;startSize=26;fillColor=none;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="PaginationSettings" vertex="1">
+          <mxGeometry height="110" width="160" x="23" y="380" as="geometry" />
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-124" parent="RuRTmMvm1uriL1p6LZZ5-123" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;+ MaxPageSize : int&lt;/font&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;+ Page : int&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;+ PageSize : int&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;+ Sort : string&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;+ Direction : string&lt;/font&gt;&lt;/div&gt;&lt;div&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;&lt;br&gt;&lt;/font&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="84" width="160" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-139" edge="1" parent="RuRTmMvm1uriL1p6LZZ5-113" source="RuRTmMvm1uriL1p6LZZ5-125" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.52;entryY=1.026;entryDx=0;entryDy=0;entryPerimeter=0;exitX=0;exitY=0.5;exitDx=0;exitDy=0;endArrow=block;endFill=0;" target="RuRTmMvm1uriL1p6LZZ5-134" value="">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="180" y="281" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-125" parent="RuRTmMvm1uriL1p6LZZ5-113" style="align=left;overflow=fill;html=1;dropTarget=0;whiteSpace=wrap;" value="&lt;p style=&quot;margin:0px;margin-top:6px;text-align:center;&quot;&gt;&lt;b&gt;base&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:8px;&quot;&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;+ Entity Framework Core&lt;/font&gt;&lt;/p&gt;" vertex="1">
+          <mxGeometry height="59" width="130" x="210" y="301" as="geometry" />
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-126" parent="RuRTmMvm1uriL1p6LZZ5-125" style="shape=component;jettyWidth=8;jettyHeight=4;" value="" vertex="1">
+          <mxGeometry height="20" relative="1" width="20" x="1" as="geometry">
+            <mxPoint x="-24" y="4" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-131" parent="RuRTmMvm1uriL1p6LZZ5-113" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="PingAppDbContext" vertex="1">
+          <mxGeometry height="100" width="330" x="10" y="171" as="geometry" />
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-132" parent="RuRTmMvm1uriL1p6LZZ5-131" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="&lt;font face=&quot;Courier New&quot; style=&quot;font-size: 10px;&quot;&gt;+ ShipModel: Dbset&amp;lt;ShipModel&amp;gt;&lt;/font&gt;" vertex="1">
+          <mxGeometry height="26" width="330" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-133" parent="RuRTmMvm1uriL1p6LZZ5-131" style="line;strokeWidth=1;fillColor=none;align=left;verticalAlign=middle;spacingTop=-1;spacingLeft=3;spacingRight=3;rotatable=0;labelPosition=right;points=[];portConstraint=eastwest;strokeColor=inherit;" value="" vertex="1">
+          <mxGeometry height="8" width="330" y="52" as="geometry" />
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-134" parent="RuRTmMvm1uriL1p6LZZ5-131" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="&lt;font style=&quot;font-size: 10px;&quot;&gt;+ PingAppDbContext(DbContextOptions&amp;lt;PingAppDbContext&amp;gt; options)&lt;/font&gt;&lt;div&gt;&lt;span style=&quot;font-size: 10px;&quot;&gt;# OnModelCreating(ModelBuilder modelbuilder)&lt;/span&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="40" width="330" y="60" as="geometry" />
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-138" edge="1" parent="RuRTmMvm1uriL1p6LZZ5-113" source="RuRTmMvm1uriL1p6LZZ5-135" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=0;">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="180" y="271" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-135" parent="RuRTmMvm1uriL1p6LZZ5-113" style="align=left;overflow=fill;html=1;dropTarget=0;whiteSpace=wrap;" value="&lt;p style=&quot;margin:0px;margin-top:6px;text-align:center;&quot;&gt;&lt;b&gt;dBContext&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:8px;&quot;&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;+ Entity Framework Core&lt;/font&gt;&lt;/p&gt;" vertex="1">
+          <mxGeometry height="59" width="130" x="10" y="301" as="geometry" />
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-136" parent="RuRTmMvm1uriL1p6LZZ5-135" style="shape=component;jettyWidth=8;jettyHeight=4;" value="" vertex="1">
+          <mxGeometry height="20" relative="1" width="20" x="1" as="geometry">
+            <mxPoint x="-24" y="4" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-140" parent="RuRTmMvm1uriL1p6LZZ5-113" style="swimlane;fontStyle=1;align=center;verticalAlign=top;childLayout=stackLayout;horizontal=1;startSize=26;horizontalStack=0;resizeParent=1;resizeParentMax=0;resizeLast=0;collapsible=1;marginBottom=0;whiteSpace=wrap;html=1;" value="PingAppDbContextFactory" vertex="1">
+          <mxGeometry height="50" width="330" x="453" y="130" as="geometry" />
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-143" parent="RuRTmMvm1uriL1p6LZZ5-140" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=4;spacingRight=4;overflow=hidden;rotatable=0;points=[[0,0.5],[1,0.5]];portConstraint=eastwest;whiteSpace=wrap;html=1;" value="&lt;span style=&quot;font-size: 10px;&quot;&gt;+ CreateDbContext(string[] args) :&amp;nbsp;&lt;/span&gt;&lt;span style=&quot;font-size: 10px;&quot;&gt;PingAppDbContext&amp;nbsp;&lt;/span&gt;" vertex="1">
+          <mxGeometry height="24" width="330" y="26" as="geometry" />
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-144" parent="RuRTmMvm1uriL1p6LZZ5-113" style="align=left;overflow=fill;html=1;dropTarget=0;whiteSpace=wrap;" value="&lt;p style=&quot;margin:0px;margin-top:6px;text-align:center;&quot;&gt;&lt;b&gt;&amp;lt;PingAppDbContext&amp;gt; IDesignTimeDbContextFactory&lt;/b&gt;&lt;/p&gt;&lt;hr size=&quot;1&quot; style=&quot;border-style:solid;&quot;&gt;&lt;p style=&quot;margin:0px;margin-left:8px;&quot;&gt;&lt;font style=&quot;font-size: 10px;&quot;&gt;+ Entity Framework Core&lt;/font&gt;&lt;/p&gt;" vertex="1">
+          <mxGeometry height="59" width="391" x="392" y="271" as="geometry" />
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-145" parent="RuRTmMvm1uriL1p6LZZ5-144" style="shape=component;jettyWidth=8;jettyHeight=4;" value="" vertex="1">
+          <mxGeometry height="20" relative="1" width="20" x="1" as="geometry">
+            <mxPoint x="-24" y="4" as="offset" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-147" edge="1" parent="RuRTmMvm1uriL1p6LZZ5-113" source="RuRTmMvm1uriL1p6LZZ5-144" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.515;entryY=1.021;entryDx=0;entryDy=0;entryPerimeter=0;" target="RuRTmMvm1uriL1p6LZZ5-143">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="v_vXyQ3x_4KX_zde8WJ_-0" edge="1" parent="RuRTmMvm1uriL1p6LZZ5-113" source="RuRTmMvm1uriL1p6LZZ5-115" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1;entryY=0.5;entryDx=0;entryDy=0;endArrow=block;endFill=1;" target="RuRTmMvm1uriL1p6LZZ5-121">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="363" y="448" />
+              <mxPoint x="363" y="200" />
+              <mxPoint x="443" y="200" />
+              <mxPoint x="443" y="130" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-148" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="RuRTmMvm1uriL1p6LZZ5-84" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.928;entryDx=0;entryDy=0;entryPerimeter=0;endArrow=block;endFill=0;dashed=1;" target="RuRTmMvm1uriL1p6LZZ5-132">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="810" y="393" />
+              <mxPoint x="810" y="1141" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="RuRTmMvm1uriL1p6LZZ5-149" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="RuRTmMvm1uriL1p6LZZ5-123" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=1.002;entryY=-0.043;entryDx=0;entryDy=0;entryPerimeter=0;endArrow=block;endFill=0;dashed=1;" target="RuRTmMvm1uriL1p6LZZ5-99">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="770" y="1355" />
+              <mxPoint x="770" y="875" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="v_vXyQ3x_4KX_zde8WJ_-1" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="RuRTmMvm1uriL1p6LZZ5-96" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;endArrow=blockThin;endFill=1;" target="RuRTmMvm1uriL1p6LZZ5-28" value="">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="355" y="740" />
+              <mxPoint x="620" y="740" />
+              <mxPoint x="620" y="290" />
+              <mxPoint x="820" y="290" />
+              <mxPoint x="820" y="120" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="v_vXyQ3x_4KX_zde8WJ_-2" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="RuRTmMvm1uriL1p6LZZ5-12" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=0;exitDx=0;exitDy=0;entryX=0.224;entryY=0.963;entryDx=0;entryDy=0;entryPerimeter=0;endArrow=blockThin;endFill=1;" target="RuRTmMvm1uriL1p6LZZ5-26">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1220" y="290" />
+              <mxPoint x="1370" y="290" />
+              <mxPoint x="1370" y="150" />
+              <mxPoint x="1438" y="150" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="v_vXyQ3x_4KX_zde8WJ_-4" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="RuRTmMvm1uriL1p6LZZ5-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.468;entryY=1.013;entryDx=0;entryDy=0;entryPerimeter=0;endArrow=blockThin;endFill=1;" target="RuRTmMvm1uriL1p6LZZ5-26">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1032" y="550" />
+              <mxPoint x="1370" y="550" />
+              <mxPoint x="1370" y="160" />
+              <mxPoint x="1499" y="160" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="v_vXyQ3x_4KX_zde8WJ_-6" edge="1" parent="WIyWlLk6GJQsqaUBKTNV-1" source="RuRTmMvm1uriL1p6LZZ5-6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0.75;exitY=0;exitDx=0;exitDy=0;entryX=0.25;entryY=1;entryDx=0;entryDy=0;endArrow=blockThin;endFill=1;" target="RuRTmMvm1uriL1p6LZZ5-27">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1129" y="550" />
+              <mxPoint x="1445" y="550" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

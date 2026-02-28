@@ -1,5 +1,114 @@
-bin/
-obj/
-/packages/
-riderModule.iml
-/_ReSharper.Caches/
+# =====================================================
+# macOS junk
+# =====================================================
+.DS_Store
+**/.DS_Store
+Thumbs.db
+
+# =====================================================
+# IDEs
+# =====================================================
+.idea/
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.DotSettings.user
+*.sln.DotSettings.user
+_ReSharper*/
+.vs/
+
+
+
+# =====================================================
+# ================= ANGULAR ============================
+# =====================================================
+
+# Compiled output
+**/dist/
+**/tmp/
+**/out-tsc/
+**/.angular/
+**/.angular/cache/
+**/coverage/
+
+# Node
+**/node_modules/
+npm-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Misc Angular
+**/.sass-cache/
+**/connect.lock
+**/libpeerconnection.log
+testem.log
+**/typings
+
+# Certificates / secrets
+**/*.pfx
+**/*.p12
+**/*.pem
+**/certs/
+**/BEcerts/
+
+# =====================================================
+# ================= .NET ===============================
+# =====================================================
+
+# Build artifacts
+**/bin/
+**/obj/
+*.pdb
+*.cache
+*.log
+
+# Rider / VS caches
+**/.vs/
+
+# =====================================================
+# ================= DATABASE ===========================
+# =====================================================
+
+# SQLite database files
+**/*.db
+**/*.sqlite
+**/*.sqlite3
+**/*.db-shm
+**/*.db-wal
+**/*.sqlite-shm
+**/*.sqlite-wal
+
+# Optional DB exports
+**/*.bak
+**/*.dump
+**/*.sql
+
+# =====================================================
+# ================= CONFIG / SECRETS ===================
+# =====================================================
+
+# If you DO NOT want to commit local dev config, uncomment:
+# **/appsettings.Development.json
+# **/.env
+# **/*.secrets.json
+
+
+# =====================================================
+# ================= ARTIFACTS ===================
+# =====================================================
+
+# draw.io backup temp files
+.$*.bkp
+
+
+
+# =====================================================
+# OPTIONAL: EF Migrations (ONLY if you decide to ignore them)
+# =====================================================
+# **/Migrations/**/Todo.txt

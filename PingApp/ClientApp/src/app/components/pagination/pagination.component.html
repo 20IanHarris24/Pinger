@@ -1,7 +1,7 @@
 <ng-container *ngIf="paginationModel$ | async as pm">
 
 
-  <div class="pagination-area" style="margin-top: 1rem;">
+  <div class="pagination-area mt-3">
     <ul class="pagination justify-content-center" *ngIf="pm.totalPages > 1">
       <li class="page-item" [class.disabled]="pm.page === 1">
         <button class="page-link page-text"
@@ -23,7 +23,8 @@
       <li class="page-item"
           [class.disabled]="pm.page === pm.totalPages">
         <button class="page-link page-text"
-                (click)="onPageChange(pm.page + 1)">
+                (click)="onPageChange(pm.page + 1)"
+                [disabled]="pm.page === pm.totalPages">
         Next
         </button>
       </li>

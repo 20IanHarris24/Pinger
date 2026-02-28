@@ -2,31 +2,35 @@ using System.Collections.Concurrent;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using PingApp.DataAndHelpers;
-using PingApp.Hubs;
+using PingApp.Interfaces;
+using PingApp.Models.Dtos;
 using PingApp.Models.Entities;
 
 namespace PingApp.ServicesBackend
 {
-    public class ShipBackgroundPingService : BackgroundService
+    public class ShipBackgroundPingService : BackgroundService, IShipPingRequester
 
     {
 
-    private readonly ConcurrentDictionary<Guid, string> _latestPing;
-    private readonly IHubContext<DisplayHub> _hubContext;
     private readonly ILogger<ShipBackgroundPingService> _logging;
     private readonly IServiceScopeFactory _scopeFactory;
+    private readonly IShipStatusMaintenance _maintenance;
+    private readonly IShipStatusService _statusSrv;
+    private readonly NotifierService _toNotifyOf;
+    private readonly SemaphoreSlim _simultaneousNoOfPings = new (5);
+    private readonly ConcurrentDictionary<Guid, Task> _inFlight = new(); 
     
 
 
-    public ShipBackgroundPingService(ConcurrentDictionary<Guid, string> latestPingResults, IHubContext<DisplayHub> hubContext, ILogger<ShipBackgroundPingService> logger, IServiceScopeFactory scopeFactory)
+    public ShipBackgroundPingService(IShipStatusService statusSrv, IShipStatusMaintenance maintenance,NotifierService notifier, ILogger<ShipBackgroundPingService> logger, IServiceScopeFactory scopeFactory)
     {
 
-        _hubContext = hubContext;
-        _latestPing = latestPingResults;
         _logging = logger;
+        _toNotifyOf = notifier;
+        _maintenance = maintenance;
+        _statusSrv = statusSrv;
         _scopeFactory = scopeFactory;
 
 
@@ -35,24 +39,24 @@ namespace PingApp.ServicesBackend
    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
 
-
+        
         while (!stoppingToken.IsCancellationRequested)
         {
             using var scope = _scopeFactory.CreateScope(); //new code
-            await using var dbContext = scope.ServiceProvider.GetRequiredService<PingAppDbContext>();
+            var dbContext = scope.ServiceProvider.GetRequiredService<PingAppDbContext>();
             
-            _logging.LogInformation("ShipBackgroundPingService running in the background at: {time}", DateTimeOffset.Now);
+            _logging.LogDebug("ShipBackgroundPingService tick at: {time}", DateTimeOffset.Now);
             
-            var simultaneousNoOfPings = new SemaphoreSlim(5); // Limit the concurrent number of threads to 5
-
             var shipsDb = await dbContext.ShipModel.AsNoTracking().ToListAsync(stoppingToken); // Create a list of tasks to run
             
-            // shipsDb = shipsDb.Where(ship => !deletedShipIds.Contains(ship.Id)).ToList();
+            
+            var liveIds = shipsDb.Select(s => s.Id).ToHashSet();
+            
+            _maintenance.PruneToLiveIds(liveIds); //updates on the next cycle, the cache by removing stale Ids that have been deleted
             
             var tasks =  shipsDb.Select(async ship =>
-
             {
-               await simultaneousNoOfPings.WaitAsync(stoppingToken); // ...wait for each 5 tasks, before running the next 5 tasks
+               await _simultaneousNoOfPings.WaitAsync(stoppingToken); // ...wait for each 5 tasks, before running the next 5 tasks
                 try
                 {
                     return await PingShipAsync(ship, stoppingToken); // Run the task
@@ -60,7 +64,7 @@ namespace PingApp.ServicesBackend
                 catch (Exception exception)
                 {
                     // handle the exception if any ships are not reachable
-                    return new ShipResult
+                    return new ShipStatusDto
                     {
                         Id = ship.Id,
                         Name = ship.Name,
@@ -70,22 +74,22 @@ namespace PingApp.ServicesBackend
                 }
                 finally
                 {
-                    simultaneousNoOfPings.Release(); // Always release the semaphore when done
+                    _simultaneousNoOfPings.Release(); // Always release the semaphore when done
                 }
             });
 
 
             // Now we actually run the tasks
-            var shipResults = await Task.WhenAll(tasks);
-            _logging.LogInformation("Broadcasting ping results for ships:\n{ShipIds}", string.Join(Environment.NewLine, shipResults.Select(s => "\t\t" + s.Id)));
-            await _hubContext.Clients.All.SendAsync("DisplayShips", shipResults, cancellationToken: stoppingToken);
+            var shipStatuses = await Task.WhenAll(tasks);
+            _logging.LogDebug("Broadcasting ping results for ships:\n{ShipIds}", string.Join(Environment.NewLine, shipStatuses.Select(s => "\t\t" + s.Id)));
+            await _toNotifyOf.BroadcastShipStatuses(shipStatuses, stoppingToken);
             await Task.Delay(2000, stoppingToken);
 
         }
 
     }
 
-    private async Task<ShipResult> PingShipAsync(ShipModel ship, CancellationToken stoppingToken)
+    private async Task<ShipStatusDto> PingShipAsync(ShipModel ship, CancellationToken stoppingToken)
     {
         _logging.LogDebug("Pinging ship {Name} ({Id}) at {Host}", ship.Name, ship.Id, ship.HostAddr);
 
@@ -94,10 +98,10 @@ namespace PingApp.ServicesBackend
         if (string.IsNullOrWhiteSpace(ship.HostAddr))
         {
             var msg = "No host configured";
+            
+            _statusSrv.SetLatestPingStatus(ship.Id, msg);
 
-            _latestPing[ship.Id] = msg;
-
-            return new ShipResult
+            return new ShipStatusDto
             {
                 Id       = ship.Id,
                 Name     = ship.Name,
@@ -110,10 +114,10 @@ namespace PingApp.ServicesBackend
             !IPAddress.TryParse(ship.HostAddr, out _))
         {
             var msg = $"Invalid host: {ship.HostAddr}";
+            
+            _statusSrv.SetLatestPingStatus(ship.Id, msg);
 
-            _latestPing[ship.Id] = msg;
-
-            return new ShipResult
+            return new ShipStatusDto
             {
                 Id       = ship.Id,
                 Name     = ship.Name,
@@ -125,37 +129,34 @@ namespace PingApp.ServicesBackend
 
         try
         {
-            var response = new Ping();
-            PingReply result = await response.SendPingAsync(ship.HostAddr, TimeSpan.FromMilliseconds(timeout),null, null,stoppingToken);
+            using var response = new Ping();
+            var result = await response.SendPingAsync(ship.HostAddr, TimeSpan.FromMilliseconds(timeout),null, null,stoppingToken);
             var roundTrip = result.Status == IPStatus.Success ? result.RoundtripTime : timeout;
             var resultString = $"{result.Status}. Time: {roundTrip} ms.";
+            
+            _statusSrv.SetLatestPingStatus(ship.Id, resultString);
         
-            _latestPing[ship.Id] = resultString;
-            //_logging.LogInformation("Ping updated for id {ShipId}: {Result}", ship.Id, resultString);
-        
-
-        
-            return new ShipResult
+            return new ShipStatusDto
             {
                 Id = ship.Id,
                 Name = ship.Name,
                 HostAddr = ship.HostAddr,
-                Result = $"{result.Status.ToString()}. Time: {roundTrip} ms."
+                Result = resultString
             };
 
         }
         catch (PingException ex) when (ex.InnerException is SocketException se)
         {
             var msg = $"Ping failed: {se.Message}";
-
-            _latestPing[ship.Id] = msg;
-
+            
+            _statusSrv.SetLatestPingStatus(ship.Id, msg);
+          
             _logging.LogWarning(
                 ex,
                 "Ping failed for ship {ShipName} ({ShipId}) host '{HostAddr}'. Socket error {Code}: {SocketMessage}",
                 ship.Name, ship.Id, ship.HostAddr, se.ErrorCode, se.Message);
 
-            return new ShipResult
+            return new ShipStatusDto
             {
                 Id       = ship.Id,
                 Name     = ship.Name,
@@ -166,10 +167,11 @@ namespace PingApp.ServicesBackend
         catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested)
         {
             var msg = "Ping cancelled";
+            
+            _statusSrv.SetLatestPingStatus(ship.Id, msg);
 
-            _latestPing[ship.Id] = msg;
-
-            return new ShipResult
+            
+            return new ShipStatusDto
             {
                 Id       = ship.Id,
                 Name     = ship.Name,
@@ -180,15 +182,16 @@ namespace PingApp.ServicesBackend
         catch (Exception ex)
         {
             var msg = $"Unexpected ping error: {ex.Message}";
+            
+            _statusSrv.SetLatestPingStatus(ship.Id, msg);
 
-            _latestPing[ship.Id] = msg;
-
+           
             _logging.LogError(
                 ex,
                 "Unexpected error pinging ship {ShipName} ({ShipId}) host '{HostAddr}'.",
                 ship.Name, ship.Id, ship.HostAddr);
 
-            return new ShipResult
+            return new ShipStatusDto
             {
                 Id       = ship.Id,
                 Name     = ship.Name,
@@ -200,6 +203,45 @@ namespace PingApp.ServicesBackend
         
         
     }
+    
+    public Task PingNowAsync(Guid shipId, CancellationToken ct)
+    {
+        return _inFlight.GetOrAdd(shipId, _ => PingNowInternalAsync(shipId, ct));
+    }
+
+    private async Task PingNowInternalAsync(Guid shipId, CancellationToken ct)
+    {
+        try
+        {
+            using var scope = _scopeFactory.CreateScope();
+            var dBContext = scope.ServiceProvider.GetRequiredService<PingAppDbContext>();
+            
+            var ship = await dBContext.ShipModel
+                .AsNoTracking()
+                .FirstOrDefaultAsync(s => s.Id == shipId, ct);
+            
+            if (ship == null) 
+                throw new KeyNotFoundException($"Ship {shipId} not found");
+            await _simultaneousNoOfPings.WaitAsync(ct);
+            try
+            {
+                var status = await PingShipAsync(ship, ct);
+                await _toNotifyOf.BroadcastShipStatuses(new[] { status }, ct);
+            }   
+            finally
+            {
+                _simultaneousNoOfPings.Release();
+            }    
+        }
+        finally
+        {
+            _inFlight.TryRemove(shipId, out _);
+        }
+    }
+    
+    
+    
+    
     
    
    }

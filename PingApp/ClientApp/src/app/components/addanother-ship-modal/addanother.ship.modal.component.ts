@@ -7,8 +7,8 @@ import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
   selector: 'app-addAnotherShipModal',
   imports: [ReactiveFormsModule],
   standalone: true,
-  templateUrl: './addanother.ship.modal.component.html',
-  styleUrl: './addanother.ship.modal.component.scss',
+  templateUrl: './addAnother.ship.modal.component.html',
+  styleUrl: './addAnother.ship.modal.component.scss',
 })
 export class AddAnotherShipModalComponent {
 
