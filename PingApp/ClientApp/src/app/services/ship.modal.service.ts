@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { NewShipModalComponent } from '../components/new-ship-modal/new.ship.modal.component';
-import { AddAnotherShipModalComponent } from '../components/addanother-ship-modal/addAnother.ship.modal.component';
+import { AddAnotherShipModalComponent } from '../components/addanother-ship-modal/addanother.ship.modal.component';
 import { UtilityService } from './utility.service';
 import {ShipCreateDto, ShipUpdateDto} from './api/pingapp-api.service';
 import {UpdateShipModalComponent} from '../components/update-ship-modal/update.ship.modal.component';
