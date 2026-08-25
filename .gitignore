@@ -111,3 +111,5 @@ testem.log
 # OPTIONAL: EF Migrations (ONLY if you decide to ignore them)
 # =====================================================
 # **/Migrations/**/Todo.txt
+
+**/Todo.txt
