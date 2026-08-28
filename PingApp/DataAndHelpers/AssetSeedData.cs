@@ -46,15 +46,17 @@ namespace PingApp.DataAndHelpers
                 var shipsConfig = configuration.GetSection("ShipAssetsDb").Get<SeedShipConfig[]>() ?? Array.Empty<SeedShipConfig>();
                 var shipsCollection = new List<ShipModel>(shipsConfig.Length);
 
-                for (int i = 0; i < shipsConfig.Length; i++)
+                foreach (var config in shipsConfig)   
                 {
                     
-                    var name = shipsConfig[i].ShipName.Trim();
-                    var host = shipsConfig[i].ShipHost.Trim();
-                    
-                    if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(host))
-                        continue;
+                    var name = config.ShipName.Trim();
+                    var host = config.ShipHost.Trim();
 
+                    if (string.IsNullOrWhiteSpace(name) || string.IsNullOrWhiteSpace(host))
+                    {
+                        continue; 
+                    }
+                        
                     shipsCollection.Add(new ShipModel { Name = name, HostAddr = host });
                     
                 }
