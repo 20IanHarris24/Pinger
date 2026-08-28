@@ -137,7 +137,14 @@ namespace PingApp
                     app.UseHsts();
                 }
                 
-                app.UseHttpsRedirection();
+                if (env.IsDevelopment())
+                {
+                    app.UseHttpsRedirection();
+                }
+
+                app.UseDefaultFiles();
+                app.UseStaticFiles();
+                
                 app.UseRouting();
                 app.UseCors("CorsPolicy");
 
@@ -147,17 +154,16 @@ namespace PingApp
                     app.UseOpenApi();
                     app.UseSwaggerUi();
 
-                    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                     app.MapGet("/debugpagination", (IOptionsSnapshot<PaginationSettings> opts) =>
                     {
-                        var s = opts.Value; // reflects config changes on next request
+                        var ps = opts.Value; // reflects config changes on next request
                         var checkPayload = new
                         {
-                            s.Page,
-                            s.PageSize,
-                            s.MaxPageSize,
-                            s.Sort,
-                            s.Direction
+                            ps.Page,
+                            ps.PageSize,
+                            ps.MaxPageSize,
+                            ps.Sort,
+                            ps.Direction
                         };
                         return Results.Json(checkPayload, new JsonSerializerOptions(JsonSerializerDefaults.Web)
                         {
@@ -169,6 +175,7 @@ namespace PingApp
 
                 app.MapHub<DisplayHub>("/display");
                 app.MapControllers();
+                app.MapFallbackToFile("index.html");
                 
 
 
@@ -185,11 +192,8 @@ namespace PingApp
 
                     try
                     {
-                        //await db.Database.EnsureDeletedAsync(); //after the database has been seeded comment out this line.
-                        //await db.Database.MigrateAsync(); //after first run when the empty database is created comment out this line.
+                        await db.Database.MigrateAsync();
                         var seeded = await seedShips.InitAsync(CancellationToken.None, initCfg, db); //Seed initial ship information properties
-                        //var shipBackgroundService = sp.GetRequiredService<ShipBackgroundPingService>();
-                        //await shipBackgroundService.ExecuteAsync(db);
                         logging.LogInformation(seeded ? "Database seeded and ready." : "Database ready (seeding not required)." );
                     }
                     catch (Exception ex)
