@@ -3,6 +3,7 @@ import * as signalR from '@microsoft/signalr';
 import { IShipStatusDto } from '../api/pingapp-api.service';
 import { Store } from '@ngrx/store';
 import * as ShipActions from '../../state/actions/ship.actions';
+import { environment } from '../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class ShipSocketService {
@@ -12,7 +13,7 @@ export class ShipSocketService {
 
   constructor() {
     this._displayScreenConnection = new signalR.HubConnectionBuilder()
-      .withUrl('https://localhost:34011/display')
+      .withUrl(environment.signalRUrl)
       .withAutomaticReconnect()
       .build();
 

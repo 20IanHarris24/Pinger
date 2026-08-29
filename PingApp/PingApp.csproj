@@ -34,6 +34,7 @@
 
     <ItemGroup>
       <Folder Include="Migrations\" />
+      <Folder Include="wwwroot\" />
     </ItemGroup>
     
   <Target Name="DebugEnsureNodeEnv" BeforeTargets="Build" Condition=" '$(Configuration)' == 'Debug' And !Exists('$(SpaRoot)node_modules') ">
@@ -46,7 +47,7 @@
     <Exec WorkingDirectory="$(SpaRoot)" Command="npm install" />
   </Target>
 
-  <Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish">
+    <Target Name="PublishRunWebpack" AfterTargets="ComputeFilesToPublish" Condition="'$(SkipSpaBuild)' != 'true'">
     <!-- As part of publishing, ensure the JS resources are freshly built in production mode -->
     <!-- Not needed since we want the copied cached node_modules -->
     <Exec WorkingDirectory="$(SpaRoot)" Command="npm ci" />
