@@ -83,7 +83,7 @@ namespace PingApp.ServicesBackend
             var shipStatuses = await Task.WhenAll(tasks);
             _logging.LogDebug("Broadcasting ping results for ships:\n{ShipIds}", string.Join(Environment.NewLine, shipStatuses.Select(s => "\t\t" + s.Id)));
             await _toNotifyOf.BroadcastShipStatuses(shipStatuses, stoppingToken);
-            await Task.Delay(2000, stoppingToken);
+            await Task.Delay(TimeSpan.FromSeconds(35), stoppingToken);
 
         }
 
