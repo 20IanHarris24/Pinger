@@ -23,13 +23,13 @@
 
       <ng-template  #showShips>
         <ng-container *ngIf="vm.ships.length > 0; else noShips">
-            <div class="row row-deck row-cards row-height">
-              <div class="col-3"  *ngFor="let a_Ship of vm.ships; trackBy: utility.trackByShipResultId">
-                <div class="card" [ngClass]="utility.getStatusClass(a_Ship.result)">
+            <div class="row row-cards">
+              <div class="col-12 col-md-6 col-lg-4 col-xl-3"  *ngFor="let a_Ship of vm.ships; trackBy: utility.trackByShipResultId">
+                <div class="card h-100" [ngClass]="utility.getStatusClass(a_Ship.result)">
                   <div class="card-body border-shadow">
-                    <h2 class="card-title">{{'Name:   ' + a_Ship.name}}</h2>
-                    <p class="card-text">{{'Status:   ' + a_Ship.result}}</p>
-                    <p class="card-text">{{'Host addr:   ' + a_Ship.hostAddr}}</p>
+                    <h2 class="card-title mb-3"><strong>Name: </strong>{{a_Ship.name}}</h2>
+                    <div class="card-text mb-1"><strong>Status: </strong>{{a_Ship.result}}</div>
+                    <div class="card-text"><strong>Host addr: </strong>{{a_Ship.hostAddr}}</div>
                   </div>
                 </div>
               </div>

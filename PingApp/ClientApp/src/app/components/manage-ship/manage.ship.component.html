@@ -1,15 +1,7 @@
-<div class="container">
-  <div class="row row-deck row-cards">
-    <div class="col-14">
-      <div class="card">
-        <div class="card-body" style="min-height: 8rem">
-<!--          <h2> Action</h2>-->
-          <div class="btn-container btn-fix ">
-            <app-buttons (addShipSelection)="handleActionSelection($event)"></app-buttons>
-           </div>
-        </div>
-      </div>
-    </div>
+<div class="card">
+  <div class="card-body">
+    <app-buttons
+      (addShipSelection)="handleActionSelection($event)">
+    </app-buttons>
   </div>
 </div>
-
