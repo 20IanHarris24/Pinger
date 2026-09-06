@@ -1,23 +1,23 @@
-Push to GITHub
-https://?
+Push to GitHub
+https://? done
 test?
 
-refactor the runtime files (remove basically)
-refactor and remove console logs?to
-applicationUrl": "https://localhost:4200",
+refactor the runtime files (remove basically) (done)
+refactor and remove console logs?to (done)
+applicationUrl": "https://localhost:4200", (done)
 
 
 
 https://localhost:34011/swagger (automatically opens)
-https://localhost:4200
+https://localhost:4200 (done)
 
-Implemented https://
-IDE is Rider
+Implemented https:// (done)
+IDE is Rider (done)
 
-installed mkcert from homebrew
-updated angular.json with path for certs & cert keys
+installed mkcert from homebrew (done)
+updated angular.json with path for certs & cert keys (done)
 
-working in macOS means have to update the pem to a pfx
+working in macOS means have to update the pem to a pfx (done)
 
 openssl pkcs12 -export openssl pkcs12 -export \
   -out BEcerts/localhost.pfx \
@@ -26,4 +26,25 @@ openssl pkcs12 -export openssl pkcs12 -export \
   -passout pass:
 
 
-browser chrome so can't answer if safari or MS are affected
+browser chrome so can't answer if safari or MS are affected (done
+
+Pinger refinement
+
+[X] Change ping cycle from 5s → 30s
+[X] Make Status page responsive
+    [X] Mobile card layout
+    [X] Improve card text layout
+    [X] Ensure Home/Admin navigation remains accessible
+
+[X] Add authentication
+    [X] Login/logout IdentitySeed: AdminPassword='MyAdmin2026!'
+    [X] Viewer role
+    [X] Admin role
+
+[X] Add backend authorization
+    [X] Viewer: GET/status only
+    [X] Admin: create/update/delete assets
+
+[ ] Update Angular UI based on permissions
+    [ ] Hide Admin navigation for Viewer
+    [ ] Protect Admin route

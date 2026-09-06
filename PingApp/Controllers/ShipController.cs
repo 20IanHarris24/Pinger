@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using PingApp.DataAndHelpers;
@@ -8,7 +9,7 @@ using PingApp.Models.Dtos;
 namespace PingApp.Controllers
 {
     [ApiController]
-    [Route("api/ship")]
+    [Route("api/[controller]")]
     public class ShipController : ControllerBase
 
     {
@@ -25,9 +26,9 @@ namespace PingApp.Controllers
             _query = query;
         }
 
-
+        [Authorize]
         [HttpGet]
-        [Route("get/all")]
+        [Route("all")]
         public async Task<ActionResult<IEnumerable<ShipDto>>> GetAllShips(CancellationToken ct = default)
         {
             var allShips = await _query.GetAllShipsAsync(ct);
@@ -36,8 +37,9 @@ namespace PingApp.Controllers
         }
 
 
+        [Authorize]
         [HttpGet]
-        [Route("get/{id:guid}")]
+        [Route("{id:guid}")]
         public async Task<ActionResult<ShipDto>> GetShipById(Guid id, CancellationToken ct)
         {
             try
@@ -56,8 +58,9 @@ namespace PingApp.Controllers
         }
 
 
+        [Authorize]
         [HttpGet]
-        [Route("get/paginated")]
+        [Route("paginated")]
         public async Task<ActionResult<PaginatedDisplay<ShipDto>>> GetPaginationResult([FromQuery] int? page,
             [FromServices] IOptionsSnapshot<PaginationSettings> opts)
         {
@@ -71,12 +74,14 @@ namespace PingApp.Controllers
         }
 
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete]
-        [Route("delete/{id:guid}")]
+        [Route("{id:guid}")]
         public async Task<IActionResult> DeleteShip(Guid id, CancellationToken ct) =>
             await _query.DeleteShipByIdAsync(id, ct) ? NoContent() : NotFound();
 
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         [Route("register")]
         public async Task<ActionResult<ShipDto>> RegisterShip([FromBody] ShipCreateDto regShipModel)
@@ -86,6 +91,7 @@ namespace PingApp.Controllers
         }
 
 
+        [Authorize(Roles = "Admin")]
         [HttpPut]
         [Route("update/{id}")]
         [ProducesResponseType(typeof(ShipStatusDto), StatusCodes.Status200OK)]

@@ -1,11 +1,13 @@
 using System.Collections.Concurrent;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using PingApp.DataAndHelpers;
 using PingApp.Hubs;
 using PingApp.Interfaces;
+using PingApp.Models.Entities;
 using PingApp.ServicesBackend;
 using Serilog;
 
@@ -56,6 +58,38 @@ namespace PingApp
                     options.UseSqlite(cs);
 
                 });
+                
+                // --- Identity / Authentication ---
+                serv.AddIdentity<ApplicationUser, IdentityRole>(options =>
+                    {
+                        options.Password.RequireDigit = true;
+                        options.Password.RequireLowercase = true;
+                        options.Password.RequireUppercase = true;
+                        options.Password.RequireNonAlphanumeric = false;
+                        options.Password.RequiredLength = 8;
+                    })
+                    .AddEntityFrameworkStores<PingAppDbContext>()
+                    .AddDefaultTokenProviders();
+
+                serv.ConfigureApplicationCookie(options =>
+                {
+                    options.Cookie.HttpOnly = true;
+                    options.Cookie.SecurePolicy = CookieSecurePolicy.SameAsRequest;
+                    options.Cookie.SameSite = SameSiteMode.Lax;
+                   
+                    options.Events.OnRedirectToLogin = context =>
+                    {
+                        context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                        return Task.CompletedTask;
+                    };
+
+                    options.Events.OnRedirectToAccessDenied = context =>
+                    {
+                        context.Response.StatusCode = StatusCodes.Status403Forbidden;
+                        return Task.CompletedTask;
+                    };
+                    
+                });
                     
                     
                     
@@ -76,6 +110,8 @@ namespace PingApp
                     .Validate(ps => ps.PageSize <= ps.MaxPageSize,
                         "PageSize must be less than or equal to MaxPagesSize")
                     .ValidateOnStart();
+                
+                serv.Configure<IdentitySeedSettings>(conf.GetSection("IdentitySeed"));
 
 
 
@@ -147,6 +183,9 @@ namespace PingApp
                 
                 app.UseRouting();
                 app.UseCors("CorsPolicy");
+                
+                app.UseAuthentication();
+                app.UseAuthorization();
 
 
                 if (env.IsDevelopment())
@@ -177,7 +216,10 @@ namespace PingApp
                 app.MapControllers();
                 app.MapFallbackToFile("index.html");
                 
-
+                using (var scope = app.Services.CreateScope())
+                {
+                    await IdentitySeedData.SeedAsync(scope.ServiceProvider);
+                }
 
                 // --- Scope Seed dB Database ---
                 using (var scope = app.Services.CreateScope())
