@@ -1,0 +1,147 @@
+<div class="modal-header">
+  <h3 class="modal-title">
+    Add new user
+  </h3>
+
+  <button
+    type="button"
+    class="btn-close"
+    aria-label="Close"
+    (click)="activeModal.dismiss('cancel')">
+  </button>
+</div>
+
+<div class="modal-body">
+
+  <form
+    [formGroup]="newForm"
+    (ngSubmit)="onAddUser()">
+
+    <!-- Username -->
+    <div class="mb-3">
+      <label
+        for="userName"
+        class="form-label">
+        Username
+      </label>
+
+      <input
+        id="userName"
+        type="text"
+        class="form-control"
+        formControlName="userName"
+        autocomplete="username">
+
+      @if (
+        newForm.controls['userName'].invalid &&
+        newForm.controls['userName'].touched
+        ) {
+        <div class="text-danger mt-1">
+          Username is required.
+        </div>
+      }
+    </div>
+
+    <!-- Email -->
+    <div class="mb-3">
+      <label
+        for="email"
+        class="form-label">
+        Email
+      </label>
+
+      <input
+        id="email"
+        type="email"
+        class="form-control"
+        formControlName="email"
+        autocomplete="email">
+
+      @if (
+        newForm.controls['email'].invalid &&
+        newForm.controls['email'].touched
+        ) {
+        <div class="text-danger mt-1">
+          Enter a valid email address.
+        </div>
+      }
+    </div>
+
+    <!-- Password -->
+    <div class="mb-3">
+      <label
+        for="password"
+        class="form-label">
+        Password
+      </label>
+
+      <input
+        id="password"
+        type="password"
+        class="form-control"
+        formControlName="password"
+        autocomplete="new-password">
+
+      @if (
+        newForm.controls['password'].invalid &&
+        newForm.controls['password'].touched
+        ) {
+        <div class="text-danger mt-1">
+          Password is required.
+        </div>
+      }
+    </div>
+
+    <!-- Role -->
+    <div class="mb-3">
+      <label
+        for="role"
+        class="form-label">
+        Role
+      </label>
+
+      <select
+        id="role"
+        class="form-select"
+        formControlName="role">
+
+        <option value="Viewer">
+          Viewer
+        </option>
+
+        <option value="Admin">
+          Admin
+        </option>
+
+      </select>
+    </div>
+
+    <div class="d-flex justify-content-end gap-2 mt-4">
+
+      <button
+        type="button"
+        class="btn btn-ghost-secondary"
+        (click)="onClearInput()">
+        Clear
+      </button>
+
+      <button
+        type="button"
+        class="btn btn-secondary"
+        (click)="activeModal.dismiss('cancel')">
+        Cancel
+      </button>
+
+      <button
+        type="submit"
+        class="btn btn-primary"
+        [disabled]="newForm.invalid">
+        <i class="ti ti-user-plus me-1"></i>
+        Add user
+      </button>
+
+    </div>
+
+  </form>
+
+</div>

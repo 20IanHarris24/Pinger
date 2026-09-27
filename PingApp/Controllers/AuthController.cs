@@ -46,7 +46,7 @@ namespace PingApp.Controllers
             return Ok();
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize]
         [HttpGet("me")]
         public async Task<IActionResult> Me()
         {

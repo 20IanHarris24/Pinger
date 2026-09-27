@@ -14,9 +14,9 @@ export class ManageShipComponent {
    constructor(protected actionService: ActionService) {}
 
 
-  handleActionSelection(action: 'New') {
+  onAddShip() {
     // console.log(`Action selected: ${action}`);
-    this.actionService.select(action).then();
+    this.actionService.select('New').then();
   }
 
 }

@@ -1,72 +1,16 @@
 <div class="page">
-  <!-- Navbar -->
-  <header class="navbar navbar-expand-md d-print-none">
-    <div class="container-xl">
-
-      <button
-        class="navbar-toggler"
-        type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#navbar-menu"
-        aria-controls="navbar-menu"
-        aria-expanded="false"
-        aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-
-      <div class="collapse navbar-collapse" id="navbar-menu">
-        <ul class="navbar-nav ms-auto">
-
-          <li
-            class="nav-item"
-            routerLinkActive="active"
-            [routerLinkActiveOptions]="{ exact: true }">
-
-            <a class="nav-link" [routerLink]="['/home']">
-              <span class="nav-link-title">
-                Home
-              </span>
-            </a>
-          </li>
-
-          <li
-            class="nav-item"
-            routerLinkActive="active">
-
-            <a class="nav-link" [routerLink]="['/admin']">
-              <span class="nav-link-title">
-                Admin
-              </span>
-            </a>
-          </li>
-
-        </ul>
-      </div>
-
-    </div>
-  </header>
-
-
-
-
-
-
-
-
-
-
   <div class="page-wrapper">
 
     <router-outlet></router-outlet>
 
     <footer class="footer footer-transparent d-print-none">
       <div class="container-xl">
-        <div class="row text-center align-items-center flex-row-reverse">
+        <div class="row text-center align-items-center">
           <div class="col-12 col-lg-auto mt-3 mt-lg-0">
             <ul class="list-inline list-inline-dots mb-0">
               <li class="list-inline-item">
                 Copyright © 2025
-                <a href="" class="link-secondary">68-TRES-19</a>.
+                <span>68-TRES-19</span>.
                 All rights reserved.
               </li>
             </ul>

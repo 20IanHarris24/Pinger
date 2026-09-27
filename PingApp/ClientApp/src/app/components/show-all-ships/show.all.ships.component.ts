@@ -1,20 +1,19 @@
+import { ActionService } from '../../services/action.service';
+import { AsyncPipe, NgForOf, NgIf } from '@angular/common';
 import { Component, EventEmitter, Output } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
-import {AsyncPipe, NgForOf, NgIf} from '@angular/common';
-import {IShipStatusDto, ShipDto} from '../../services/api/pingapp-api.service';
+import { IShipStatusDto, ShipDto } from '../../services/api/pingapp-api.service';
 import { loadPaginatedShips } from '../../state/actions/ship.actions';
+import { Observable } from 'rxjs';
+import { ReactiveFormsModule } from '@angular/forms';
 import {
   selectEditedShipId,
   selectNewlyAddedShipId, selectPaginatedShipViewModel
 } from '../../state/selectors/ship.selectors';
-import { Observable } from 'rxjs';
-import { Store } from '@ngrx/store';
+import { ShipDeleteService } from '../../services/ship.delete.service';
 import { Spinner2Component } from '../spinner-2/spinner-2.component';
+import { Store } from '@ngrx/store';
 import { TooltipComponent } from '../tooltip/tooltip.component';
-import { ActionService } from '../../services/action.service';
 import { UtilityService } from '../../services/utility.service';
-import {ShipDeleteService} from '../../services/ship.delete.service';
-
 
 @Component({
   selector: 'app-showAllShips',

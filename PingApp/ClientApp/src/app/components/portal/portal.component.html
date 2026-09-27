@@ -1,0 +1,112 @@
+<main class="portal-page" aria-labelledby="portal-title">
+    <section class="portal-content">
+      <div class="portal-mark" aria-hidden="true">
+        <i class="ti ti-activity"></i>
+      </div>
+
+      <button
+        class="portal-title"
+        id="portal-title"
+        type="button"
+        (click)="openLogin()"
+        aria-haspopup="dialog"
+        aria-controls="login-dialog">
+        Pinger App Demo
+      </button>
+
+      <p class="text-secondary portal-hint">
+        Select the title to continue
+      </p>
+    </section>
+</main>
+
+
+@if (isLoginOpen) {
+  <div
+    class="modal-backdrop"
+    role="presentation"
+    (click)="closeLogin()">
+
+    <section
+      class="card login-modal"
+      id="login-dialog"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="login-title"
+      (click)="$event.stopPropagation()">
+
+      <button
+        class="btn-close modal-close"
+        type="button"
+        aria-label="Close login"
+        (click)="closeLogin()">
+      </button>
+
+      <div class="card-body">
+        <span class="badge bg-blue-lt mb-3">
+          Pinger App Demo
+        </span>
+
+        <h2 id="login-title">Welcome back</h2>
+        <p class="text-secondary">
+          Enter your credentials to access the portal.
+        </p>
+
+        <form [formGroup]="loginForm" (ngSubmit)="submitLogin()">
+          <div class="mb-3">
+            <label class="form-label" for="userName">
+              Username
+            </label>
+
+            <input
+              class="form-control"
+              id="userName"
+              type="text"
+              formControlName="userName"
+              autocomplete="username">
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label" for="password">
+              Password
+            </label>
+
+            <div class="input-group">
+              <input
+                class="form-control"
+                id="password"
+                [type]="showPassword ? 'text' : 'password'"
+                formControlName="password"
+                autocomplete="current-password">
+
+              <button
+                class="btn"
+                type="button"
+                (click)="showPassword = !showPassword">
+                {{ showPassword ? "Hide" : "Show" }}
+              </button>
+            </div>
+          </div>
+
+          @if (loginError) {
+            <div class="alert alert-danger" role="alert">
+              {{ loginError }}
+            </div>
+          }
+
+          <button
+            class="btn btn-primary w-100"
+            type="submit"
+            [disabled]="isSubmitting">
+
+            @if (isSubmitting) {
+              Signing in...
+            } @else {
+              Sign in
+            }
+          </button>
+        </form>
+      </div>
+    </section>
+  </div>
+}

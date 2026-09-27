@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from "@angular/core";
+import {Component, EventEmitter, Input, Output} from "@angular/core";
 
 @Component({
   selector: "app-buttons",
@@ -7,12 +7,14 @@ import { Component, EventEmitter, Output } from "@angular/core";
   styleUrl: "./button.component.scss",
 })
 export class ButtonComponent {
-  @Output() addShipSelection = new EventEmitter<"New">();
+
+  @Input() label = "Add";
+  @Output() clicked = new EventEmitter<void>();
 
   constructor() {}
 
-  onActionSelect(action: "New" ): void {
-    this.addShipSelection.emit(action);
+  onClick(): void {
+    this.clicked.emit();
 
   }
 

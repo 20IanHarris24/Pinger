@@ -1,13 +1,13 @@
-import { Component } from '@angular/core';
 import { AsyncPipe, NgForOf, NgIf } from '@angular/common';
+import { Component } from '@angular/core';
+import { loadPaginatedShips } from '../../state/actions/ship.actions';
 import { map, Observable, shareReplay } from 'rxjs';
 import { ShipDto } from '../../services/api/pingapp-api.service';
-import {Store} from '@ngrx/store';
+import { Store } from '@ngrx/store';
 import {
   PaginationModel,
   selectPaginationModel
 } from '../../state/selectors/ship.selectors';
-import {loadPaginatedShips} from '../../state/actions/ship.actions';
 import {UtilityService} from '../../services/utility.service';
 
 

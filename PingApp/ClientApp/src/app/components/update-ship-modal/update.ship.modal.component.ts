@@ -2,8 +2,8 @@ import {Component, Input} from '@angular/core';
 import {FormControl, FormGroup, ReactiveFormsModule} from '@angular/forms';
 import {IShipDto, ShipUpdateDto} from '../../services/api/pingapp-api.service';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
-import {Store} from '@ngrx/store';
 import {selectDbShipById} from '../../state/selectors/ship.selectors';
+import {Store} from '@ngrx/store';
 import {take} from 'rxjs';
 
 

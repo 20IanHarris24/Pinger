@@ -22,7 +22,6 @@ namespace PingApp.DataAndHelpers
                 modelBuilder.Entity<ShipModel>().ToTable("Ships");
                 modelBuilder.Entity<ShipModel>().Property(s => s.Name).HasMaxLength(50).IsRequired();
                 modelBuilder.Entity<ShipModel>().Property(s => s.HostAddr).HasMaxLength(50).IsRequired();
-                //base.OnModelCreating(modelBuilder);
 
             }
 

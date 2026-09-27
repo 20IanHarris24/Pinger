@@ -1,26 +1,12 @@
-import { Component, OnDestroy, OnInit } from "@angular/core";
-import { RouterLink, RouterLinkActive, RouterOutlet} from "@angular/router";
-import { ShipSocketService } from "./services/socket/ship.socket.service";
-import { Title } from "@angular/platform-browser";
+import { Component } from "@angular/core";
+import { RouterOutlet } from "@angular/router";
 
 @Component({
   selector: "app-root",
-  templateUrl: "./app.component.html",
-  styleUrls: ["./app.component.scss"],
-  imports: [RouterLink, RouterOutlet, RouterLinkActive],
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.scss'],
+  imports: [ RouterOutlet ]
 })
-export class AppComponent implements OnInit, OnDestroy {
-  constructor(
-    private _titleService: Title,
-    private _shipSocketService: ShipSocketService,
-  ) {}
 
-  ngOnInit(): void {
-    this._titleService.setTitle("Config");
-    this._shipSocketService.startUpConnection();
-  }
 
-  ngOnDestroy() {
-    this._shipSocketService.stopConnection();
-  }
-}
+export class AppComponent {}

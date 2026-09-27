@@ -1,0 +1,38 @@
+<div class="modal-header">
+  <h5 class="modal-title">Manage users</h5>
+
+  <button
+    type="button"
+    class="btn-close"
+    aria-label="Close"
+    (click)="activeModal.dismiss()">
+  </button>
+</div>
+
+<div class="modal-body">
+
+  <div class="mb-4">
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="addNewUser()">
+      Add new user
+    </button>
+  </div>
+
+  <hr>
+
+  <h5>Existing users</h5>
+
+  <!-- User list will go here -->
+
+</div>
+
+<div class="modal-footer">
+  <button
+    type="button"
+    class="btn"
+    (click)="activeModal.close()">
+    Close
+  </button>
+</div>

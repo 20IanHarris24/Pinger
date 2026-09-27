@@ -1,6 +1,6 @@
 import {Component} from '@angular/core';
-import {ReactiveFormsModule} from '@angular/forms';
 import {NgbActiveModal} from '@ng-bootstrap/ng-bootstrap';
+import {ReactiveFormsModule} from '@angular/forms';
 
 
 @Component({

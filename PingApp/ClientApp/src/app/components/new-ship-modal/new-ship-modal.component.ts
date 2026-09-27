@@ -1,6 +1,6 @@
 import { Component, Input} from '@angular/core';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 
 
@@ -8,8 +8,8 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
   selector: 'app-newShipModal',
   imports: [ReactiveFormsModule],
   standalone: true,
-  templateUrl: './new.ship.modal.component.html',
-  styleUrl: './new.ship.modal.component.scss',
+  templateUrl: './new-ship-modal.component.html',
+  styleUrl: './new-ship-modal.component.scss',
 })
 export class NewShipModalComponent {
 

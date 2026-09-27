@@ -10,6 +10,8 @@ export class ShipSocketService {
   private readonly _displayScreenConnection: signalR.HubConnection;
   private readonly _store = inject(Store);
   private started = false;
+  private retryTimer?: ReturnType<typeof setTimeout>;
+
 
   constructor() {
     this._displayScreenConnection = new signalR.HubConnectionBuilder()
@@ -56,14 +58,29 @@ export class ShipSocketService {
     this.started = true;
 
     const start = () => {
-      this._displayScreenConnection
+
+      if (
+        !this.started ||
+        this._displayScreenConnection.state !== signalR.HubConnectionState.Disconnected
+        ) {
+         return;
+        }
+
+        this._displayScreenConnection
         .start()
         .then(() => {
-          console.log('SignalR state:', this._displayScreenConnection.state);
+          console.log('SignalR state:', this._displayScreenConnection.state)
         })
         .catch(error => {
+
+          if (!this.started) {
+            return;
+            }
+
+
           console.error('SignalR initial start failed, retrying in 3s...', error);
-          setTimeout(start, 3000);
+          // setTimeout(start, 3000);
+          this.retryTimer = setTimeout(start, 3000);
         });
     };
 
@@ -71,8 +88,24 @@ export class ShipSocketService {
   }
 
   public stopConnection(): void {
-    if (this._displayScreenConnection) {
-      this._displayScreenConnection
+    // if (this._displayScreenConnection) {
+
+    this.started = false;
+
+     if (this.retryTimer) {
+        clearTimeout(this.retryTimer);
+        this.retryTimer = undefined;
+    }
+
+      if (
+      this._displayScreenConnection.state !==
+      signalR.HubConnectionState.Disconnected
+      ) {
+
+
+
+
+    this._displayScreenConnection
         .stop()
         .then(() => console.log('SignalR state:', this._displayScreenConnection.state));
     }

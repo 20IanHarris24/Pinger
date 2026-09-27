@@ -1,0 +1,22 @@
+:host {
+  display: block;
+  min-height: 100%;
+}
+
+.navbar-brand {
+  font-weight: 600;
+}
+
+.page-wrapper {
+  flex: 1 1 auto;
+}
+
+@media (max-width: 767.98px) {
+  .navbar .container-xl {
+    gap: 0.75rem;
+  }
+
+  .navbar-brand {
+    margin-right: auto;
+  }
+}
