@@ -96,14 +96,13 @@ namespace PingApp.Controllers
         
         [Authorize(Roles = "Admin")]
         [HttpGet("users")]
-        public IActionResult GetUsers()
+        public ActionResult<IEnumerable<UserResponse>> GetUsers()
         {
             var users = _userManager.Users
-                .Select(user => new
-                {
-                    user.UserName,
-                    user.Email
-                })
+                .Select(user => new UserResponse(
+                    user.UserName!,
+                    user.Email!
+                ))
                 .ToList();
 
             return Ok(users);
@@ -115,5 +114,11 @@ namespace PingApp.Controllers
             string Email,
             string Password,
             string Role);
+        
+        
+        
+        public sealed record UserResponse(
+            string UserName,
+            string Email);
     }
 }

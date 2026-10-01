@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import { NewShipModalComponent } from "./new.ship.modal.component";
+import { NewShipModalComponent } from "./new-ship-modal.component";
 
 describe("ModalManageShipComponent", () => {
   let component: NewShipModalComponent;
