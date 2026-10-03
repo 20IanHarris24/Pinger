@@ -2,16 +2,18 @@ import { Injectable } from "@angular/core";
 
 import { UsersClient } from "./api/pingapp-api.service";
 import { UserModalService } from "./user.modal.service";
+import {firstValueFrom} from 'rxjs';
 
 @Injectable({ providedIn: "root" })
 export class UserActionService {
+
 
   constructor(
     private readonly usersClient: UsersClient,
     private readonly userModal: UserModalService,
   ) {}
 
-  async select(action: "New"): Promise<void> {
+  async select(action: "New" | "Edit" | "Delete"): Promise<boolean> {
     console.log("1. UserActionService.select called:", action);
 
     switch (action) {
@@ -26,29 +28,53 @@ export class UserActionService {
 
         if (!registerRequest) {
           console.log("4. No request returned - stopping");
-          return;
+          return false;
         }
 
-        console.log("5. Calling register");
 
-        this.usersClient.register(registerRequest)
-          .subscribe({
-            next: () => {
-              console.log(
-                "6. User created:",
-                registerRequest.userName,
-              );
-            },
-            error: (error) => {
+
+        try {
+          await firstValueFrom(
+            this.usersClient.register(registerRequest)
+          );
+
+
+          console.log(
+            "User created:",
+            registerRequest.userName
+          );
+
+          return true;
+
+
+
+        } catch (error) {
               console.error(
-                "6. Failed to create user:",
-                error,
+                "Failed to create user:",
+                error
               );
-            },
-          });
+              return false;
+            }
+          }
 
-        break;
+      case "Edit": {
+
+
+        console.log("Edit presssed");
+        return false;
+
       }
+
+
+      case "Delete": {
+
+        console.log("Delete presssed");
+        return false;
+
+      }
+
+
+
     }
   }
 }

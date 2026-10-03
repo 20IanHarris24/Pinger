@@ -6,11 +6,12 @@ import {
   UserResponse,
   UsersClient
 } from "../../services/api/pingapp-api.service";
+import {ButtonComponent} from '../button/button.component';
 
 @Component({
   selector: 'app-manage-user-modal',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ButtonComponent],
   templateUrl: './manage-user-modal.component.html',
   styleUrl: './manage-user-modal.component.scss'
 })
@@ -26,10 +27,24 @@ export class ManageUserModalComponent {
     this.loadUsers();
   }
 
-  addNewUser(): void {
-    void this.userAction.select("New");
-
+  async addNewUser(): Promise<void> {
+    const userCreated = await this.userAction.select("New");
+    if (userCreated){
+      this.loadUsers();
+    }
   }
+
+
+  editUser(): void {
+    void this.userAction.select( "Edit");
+  }
+
+  deleteUser(): void {
+    void this.userAction.select("Delete");
+  }
+
+
+
 
   private loadUsers(): void {
     this.usersClient.getUsers()

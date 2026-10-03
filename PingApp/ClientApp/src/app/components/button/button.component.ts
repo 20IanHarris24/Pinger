@@ -9,6 +9,8 @@ import {Component, EventEmitter, Input, Output} from "@angular/core";
 export class ButtonComponent {
 
   @Input() label = "Add";
+  @Input() iconClass = "ti ti-circle-plus";
+  @Input() btnProperty ="btn btn-lg btn-ghost-info";
   @Output() clicked = new EventEmitter<void>();
 
   constructor() {}

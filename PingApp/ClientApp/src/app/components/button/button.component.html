@@ -1,12 +1,10 @@
 <div class="d-grid">
   <button
     type="button"
-    class="btn btn-lg btn-ghost-info"
+    [class]="btnProperty"
     (click)="onClick()">
-
-    <i class="ti ti-circle-plus"></i>
+    <i [class]="iconClass"></i>
     {{ label }}
-
   </button>
 </div>
 

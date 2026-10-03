@@ -12,28 +12,48 @@
 <div class="modal-body">
 
   <div class="mb-4">
-    <button
-      type="button"
-      class="btn btn-primary"
-      (click)="addNewUser()">
-      Add new user
-    </button>
+
+    <app-buttons
+      label="Add new user"
+      (clicked)="addNewUser()">
+    </app-buttons>
+
+
   </div>
 
   <hr>
 
   <h4>Existing users</h4>
 
-  @for (user of users; track user.userName) {
+  <ng-container *ngFor="let user of users">
     <div class="d-flex justify-content-between align-items-center py-2 border-bottom">
       <div>
         <strong>{{ user.userName }}</strong>
-        <div class="text-secondary">
+        <span class="text-secondary">
           {{ user.email }}
-        </div>
+        </span>
       </div>
+
+
+      <app-buttons
+        btnProperty="btn btn-ghost-primary"
+        iconClass="ti ti-edit"
+        label="Edit"
+        (clicked)="editUser()">
+      </app-buttons>
+
+      <app-buttons
+        btnProperty="btn btn-ghost-danger"
+        iconClass="ti ti-trash"
+        label="Delete"
+        (clicked)="deleteUser()">
+      </app-buttons>
+
+
+
+
     </div>
-  }
+  </ng-container>
 
 </div>
 
