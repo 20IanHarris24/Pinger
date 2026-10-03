@@ -35,8 +35,12 @@ export class ManageUserModalComponent {
   }
 
 
-  editUser(): void {
-    void this.userAction.select( "Edit");
+  async editUser(user:UserResponse): Promise<void> {
+    const userUpdated = await this.userAction.select( "Edit", user);
+
+    if (userUpdated) {
+      this.loadUsers();
+    }
   }
 
   async deleteUser(user: UserResponse): Promise<void> {

@@ -1,12 +1,13 @@
 import { Injectable } from "@angular/core";
 import { UtilityService } from "./utility.service";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
-import { RegisterRequest } from './api/pingapp-api.service';
+import {RegisterRequest, UpdateUserRequest, UserResponse} from './api/pingapp-api.service';
 import { NewUserModalComponent } from '../components/new-user-modal/new-user-modal.component';
 import { ManageUserModalComponent } from '../components/manage-user-modal/manage-user-modal.component';
 import {
   ConfirmDeleteUserModalComponent
 } from '../components/confirm-delete-user-modal/confirm-delete-user-modal.component';
+import {EditUserModalComponent} from '../components/edit-user-modal/edit-user-modal.component';
 
 
   @Injectable({
@@ -54,6 +55,22 @@ import {
         return await modalRef.result;
       } catch {
         return false;
+      }
+    }
+
+    async openEdit(
+      user: UserResponse
+    ): Promise<UpdateUserRequest | undefined> {
+
+      const modalRef =
+        this.modalService.open(EditUserModalComponent);
+
+      modalRef.componentInstance.user = user;
+
+      try {
+        return await modalRef.result;
+      } catch {
+        return undefined;
       }
     }
 

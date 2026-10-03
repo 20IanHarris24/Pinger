@@ -59,10 +59,44 @@ export class UserActionService {
 
       case "Edit": {
 
+        if (!user?.userName) {
+          console.error("Cannot edit user: username is missing");
+          return false;
+        }
 
-        console.log("Edit presssed");
-        return false;
+        const originalUserName = user.userName;
 
+        const updateRequest =
+          await this.userModal.openEdit(user);
+
+        if (!updateRequest) {
+          return false;
+        }
+
+        try {
+          await firstValueFrom(
+            this.usersClient.updateUser(
+              originalUserName,
+              updateRequest
+            )
+          );
+
+          console.log(
+            "User updated:",
+            originalUserName
+          );
+
+          return true;
+
+        } catch (error) {
+
+          console.error(
+            "Failed to update user:",
+            error
+          );
+
+          return false;
+        }
       }
 
 

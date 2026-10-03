@@ -9,12 +9,13 @@ namespace PingApp.Controllers
     [Route("api/[controller]")]
     public class UserController : ControllerBase
     {
-   
+        private readonly ILogger<UserController> _logger;
         private readonly UserManager<ApplicationUser> _userManager;
 
-        public UserController(UserManager<ApplicationUser> userManager)
+        public UserController(ILogger<UserController> logger, UserManager<ApplicationUser> userManager)
         {
-           _userManager = userManager;
+            _logger = logger;
+            _userManager = userManager;
         }
         
      
@@ -96,17 +97,101 @@ namespace PingApp.Controllers
         
         [Authorize(Roles = "Admin")]
         [HttpGet("users")]
-        public ActionResult<IEnumerable<UserResponse>> GetUsers()
+        public async Task <ActionResult<IEnumerable<UserResponse>>> GetUsers()
         {
-            var users = _userManager.Users
-                .Select(user => new UserResponse(
-                    user.UserName!,
-                    user.Email!
-                ))
-                .ToList();
+            
+            var users = _userManager.Users.ToList();
+            var response = new List<UserResponse>();
+            
+            foreach (var user in users)
+            {
+                var roles = await _userManager.GetRolesAsync(user);
 
-            return Ok(users);
+                response.Add(new UserResponse(
+                    user.UserName!,
+                    user.Email!,
+                    roles.FirstOrDefault() ?? string.Empty
+                )); 
+            }
+            return Ok(response);    
+       }
+        
+        
+        [Authorize(Roles = "Admin")]
+        [HttpPut("{userName}")]
+        public async Task<IActionResult> UpdateUser(
+            string userName,
+            UpdateUserRequest request)
+        {
+            var user = await _userManager.FindByNameAsync(userName);
+
+            if (user is null)
+            {
+                return NotFound();
+            }
+
+            if (request.Role != "Viewer" && request.Role != "Admin")
+            {
+                return BadRequest("Role must be either Viewer or Admin.");
+            }
+            
+            
+            var isCurrentUser =
+                user.UserName == User.Identity?.Name;
+
+            if (isCurrentUser && request.Role != "Admin")
+            {
+                return BadRequest(
+                    "You cannot remove the Admin role from the currently logged-in user.");
+            }
+
+            user.UserName = request.UserName;
+            user.Email = request.Email;
+
+            var updateResult = await _userManager.UpdateAsync(user);
+
+            if (!updateResult.Succeeded)
+            {
+                return BadRequest(
+                    updateResult.Errors.Select(e => e.Description));
+            }
+
+            var currentRoles = await _userManager.GetRolesAsync(user);
+
+            if (!currentRoles.Contains(request.Role))
+            {
+                if (currentRoles.Any())
+                {
+                    var removeResult =
+                        await _userManager.RemoveFromRolesAsync(
+                            user,
+                            currentRoles);
+
+                    if (!removeResult.Succeeded)
+                    {
+                        return BadRequest(
+                            removeResult.Errors.Select(e => e.Description));
+                    }
+                }
+
+                var addResult =
+                    await _userManager.AddToRoleAsync(
+                        user,
+                        request.Role);
+
+                if (!addResult.Succeeded)
+                {
+                    return BadRequest(
+                        addResult.Errors.Select(e => e.Description));
+                }
+            }
+
+            return Ok();
         }
+        
+        
+        
+        
         
         
         public sealed record RegisterRequest(
@@ -119,6 +204,17 @@ namespace PingApp.Controllers
         
         public sealed record UserResponse(
             string UserName,
-            string Email);
+            string Email,
+            string Role);
+        
+        
+        
+        public sealed record UpdateUserRequest(
+            string UserName,
+            string Email,
+            string Role);
+        
+        
+        
     }
 }
