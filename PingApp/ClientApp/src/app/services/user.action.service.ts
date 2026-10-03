@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core";
 
-import { UsersClient } from "./api/pingapp-api.service";
+import {UserResponse, UsersClient} from "./api/pingapp-api.service";
 import { UserModalService } from "./user.modal.service";
 import {firstValueFrom} from 'rxjs';
 
@@ -13,7 +13,7 @@ export class UserActionService {
     private readonly userModal: UserModalService,
   ) {}
 
-  async select(action: "New" | "Edit" | "Delete"): Promise<boolean> {
+  async select(action: "New" | "Edit" | "Delete", user?: UserResponse): Promise<boolean> {
     console.log("1. UserActionService.select called:", action);
 
     switch (action) {
@@ -68,13 +68,41 @@ export class UserActionService {
 
       case "Delete": {
 
-        console.log("Delete presssed");
-        return false;
+        if (!user?.userName) {
+          console.error("Cannot delete user: username is missing");
+          return false;
+        }
+
+        const confirmed =
+          await this.userModal.openDeleteConfirmation(user.userName);
+
+        if (!confirmed) {
+          return false;
+        }
+
+        try {
+          await firstValueFrom(
+            this.usersClient.deleteUser(user.userName)
+          );
+
+          console.log(
+            "User deleted:",
+            user.userName
+          );
+
+        return true;
+
+        } catch (error) {
+
+          console.error(
+            "Failed to delete user:",
+            error
+          );
+
+          return false;
+        }
 
       }
-
-
-
     }
   }
 }

@@ -3,7 +3,10 @@ import { UtilityService } from "./utility.service";
 import { NgbModal } from "@ng-bootstrap/ng-bootstrap";
 import { RegisterRequest } from './api/pingapp-api.service';
 import { NewUserModalComponent } from '../components/new-user-modal/new-user-modal.component';
-import {ManageUserModalComponent} from '../components/manage-user-modal/manage-user-modal.component';
+import { ManageUserModalComponent } from '../components/manage-user-modal/manage-user-modal.component';
+import {
+  ConfirmDeleteUserModalComponent
+} from '../components/confirm-delete-user-modal/confirm-delete-user-modal.component';
 
 
   @Injectable({
@@ -36,6 +39,24 @@ import {ManageUserModalComponent} from '../components/manage-user-modal/manage-u
         return undefined;
       }
     }
+
+    async openDeleteConfirmation(
+      userName: string
+    ): Promise<boolean> {
+
+      const modalRef = this.modalService.open(
+        ConfirmDeleteUserModalComponent
+      );
+
+      modalRef.componentInstance.userName = userName;
+
+      try {
+        return await modalRef.result;
+      } catch {
+        return false;
+      }
+    }
+
 
 
 }
